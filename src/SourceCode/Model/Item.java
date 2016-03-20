@@ -9,17 +9,19 @@ public class Item {
     private final IntegerProperty itemBarcode;
     private final IntegerProperty itemNo;
     private final StringProperty description;
+    private final StringProperty category;
 
     //DEFAULT CONSTRUCTOR
     public Item() {
-        this(0, 0, null);
+        this(0, 0, null, null);
     }
 
     //CONSTRUCTOR
-    public Item(int itemBarcode, int itemNo, String description) {
+    public Item(int itemBarcode, int itemNo, String description, String category) {
         this.itemBarcode = new SimpleIntegerProperty(itemBarcode);
         this.itemNo = new SimpleIntegerProperty(itemNo);
         this.description = new SimpleStringProperty(description);
+        this.category = new SimpleStringProperty(category);
     }
 
     //GET METHODS
@@ -35,15 +37,14 @@ public class Item {
         return description.get();
     }
 
-    public IntegerProperty itemBarcodeProperty() {
-        return itemBarcode;
-    }
+    public String getCategory() { return category.get(); }
 
-    public IntegerProperty itemNoProperty() {
-        return itemNo;
-    }
 
-    public StringProperty descriptionProperty() {
-        return description;
-    }
+    public IntegerProperty itemBarcodeProperty() { return itemBarcode; }
+
+    public IntegerProperty itemNoProperty() { return itemNo; }
+
+    public StringProperty descriptionProperty() { return description; }
+
+    public StringProperty categoryProperty() { return category; }
 }
