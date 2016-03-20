@@ -12,10 +12,11 @@ public class Model {
     public static Connection conn = null;
 
     //CONSTRUCTOR
-    public Model(){};
+    public Model() {
+    }
 
     public void connectToDatabase() {
-        System.out.println("Welcome to Racoon");
+        System.out.println("***********Welcome to Racoon**************");
         try {
             String DB_URL = "jdbc:mysql://db4free.net:3306/ctis_racoon";
             String USER = "ctis_admin";
@@ -36,8 +37,7 @@ public class Model {
             preparedStatement.setString(2, identificationNo);
             preparedStatement.setString(3, employeeName);
             preparedStatement.setString(4, telephoneNo);
-            int numberOfRows = preparedStatement.executeUpdate();
-            System.out.println("New employee was successfully added to the database: " + numberOfRows);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -51,8 +51,7 @@ public class Model {
             preparedStatement.setString(1, itemBarcode);
             preparedStatement.setString(2, itemNo);
             preparedStatement.setString(3, description);
-            int numberOfRows = preparedStatement.executeUpdate();
-            System.out.println("New item was successfully added to the database: " + numberOfRows);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -66,8 +65,7 @@ public class Model {
 
             preparedStatement.setString(1, timeReturned);
             preparedStatement.setString(2, itemBarcode);
-            int numberOfRows = preparedStatement.executeUpdate();
-            System.out.println("Completed update of time returned. Number of rows updated: " + numberOfRows);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -80,12 +78,10 @@ public class Model {
         String sql = "UPDATE " + table + " SET employeeBarcode=?, name=? WHERE employeeBarcode=?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-
             preparedStatement.setString(1, employeeBarcode);
             preparedStatement.setString(2, name);
             preparedStatement.setString(3, oldBarcode);
-            int numberOfRows = preparedStatement.executeUpdate();
-            System.out.println("Update employee successful. Number of rows updated: " + numberOfRows);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -98,12 +94,10 @@ public class Model {
         String sql = "UPDATE " + table + " SET itemBarcode=?, description=? WHERE itemBarcode=?;";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-
             preparedStatement.setString(1, itemBarcode);
             preparedStatement.setString(2, description);
             preparedStatement.setString(3, oldBarcode);
-            int numberOfRows = preparedStatement.executeUpdate();
-            System.out.println("Update item successful. Number of rows updated: " + numberOfRows);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -164,8 +158,7 @@ public class Model {
             preparedStatement.setString(1, employeeBarcode);
             preparedStatement.setString(2, itemBarcode);
             preparedStatement.setString(3, timeTaken);
-            int numberOfRows = preparedStatement.executeUpdate();
-            System.out.println("Successful register of the item take. Number of rows affected:" + numberOfRows);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -214,7 +207,6 @@ public class Model {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("rez:" + out);
         return out;
     }
 
@@ -293,8 +285,7 @@ public class Model {
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setInt(1, employeeBarcode);
-            int numberOfRows = preparedStatement.executeUpdate();
-            System.out.println("Completed delete. Number of rows affected:" + numberOfRows);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -306,8 +297,7 @@ public class Model {
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setInt(1, itemBarcode);
-            int numberOfRows = preparedStatement.executeUpdate();
-            System.out.println("Completed delete. Number of rows affected:" + numberOfRows);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -319,8 +309,7 @@ public class Model {
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setInt(1, id);
-            int numberOfRows = preparedStatement.executeUpdate();
-            System.out.println("Completed delete. Number of rows affected:" + numberOfRows);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

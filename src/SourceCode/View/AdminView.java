@@ -2,8 +2,8 @@ package SourceCode.View;
 
 import SourceCode.Controller.AdminController;
 import SourceCode.Model.Employee;
-import SourceCode.Model.Item;
 import SourceCode.BusinessLogic.Model;
+import SourceCode.Model.Item;
 import SourceCode.Model.UsedItem;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -124,16 +124,16 @@ public class AdminView {
 
         //BUTTONS ACTION
         createEmployee.setOnAction(event -> {
-            mainBorderPane.setCenter(createEmployee(scene));
+            mainBorderPane.setCenter(createEmployee());
         });
 
         createItem.setOnAction(event1 -> {
-            mainBorderPane.setCenter(createItem(scene));
+            mainBorderPane.setCenter(createItem());
 
         });
 
         updateButton.setOnAction(event -> {
-            //mainBorderPane.setCenter(updateRow(scene));
+            mainBorderPane.setCenter(updateRow());
         });
 
         deleteButton.setOnAction(event -> {
@@ -218,7 +218,7 @@ public class AdminView {
     }
 
     //THE VIEW FOR CREATE EMPLOYEE BUTTON
-    private Pane createEmployee(Scene scene) {
+    private Pane createEmployee() {
 
         //THE LAYOUT FOR THE PANE
         borderPane = new BorderPane();
@@ -285,7 +285,7 @@ public class AdminView {
     }
 
     //THE VIEW FOR CREATE ITEM BUTTON
-    private Pane createItem(Scene scene) {
+    private Pane createItem() {
 
         //THE LAYOUT FOR THE PANE
         borderPane = new BorderPane();
@@ -346,7 +346,7 @@ public class AdminView {
     }
 
     //THE VIEW FOR UPDATE BUTTON
-    private Pane updateRow(Scene scene) {
+    private Pane updateRow() {
 
         //THE LAYOUT FOR THE PANE
         borderPane = new BorderPane();
@@ -462,6 +462,7 @@ public class AdminView {
             String sql = "SELECT * FROM Employee;";
             String sql2 = "SELECT * FROM Item;";
             String sql3 = "SELECT * FROM UsedItem;";
+            //String sql3 = "SELECT id, name, itemNo, timeTaken, timeReturned FROM UsedItem JOIN Employee ON Employee.employeeBarcode = UsedItem.employeeBarcode JOIN Item ON Item.itemBarcode = UsedItem.itemBarcode;";
 
             //EXECUTE QUERIES
             ResultSet result = conn.createStatement().executeQuery(sql);
@@ -490,9 +491,13 @@ public class AdminView {
 
             while (result3.next()) {
                 UsedItem usedItem = new UsedItem();
+                //Employee employee = new Employee();
+                //Item item = new Item();
                 usedItem.idProperty().set(result3.getInt("id"));
                 usedItem.employeeBarcodeProperty().set(result3.getInt("employeeBarcode"));
                 usedItem.itemBarcodeProperty().set(result3.getInt("itemBarcode"));
+                //employee.nameProperty().set(result3.getString("name"));
+                //item.itemNoProperty().set(result3.getInt("itemNo"));
                 usedItem.timeTakenProperty().set(result3.getString("timeTaken"));
                 usedItem.timeReturnedProperty().set(result3.getString("timeReturned"));
 
