@@ -12,8 +12,6 @@ public class AdminController {
         this.adminView = adminView;
         this.model = model;
     }
-    public AdminController(){
-    }
 
     //METHOD FOR CREATE EMPLOYEE BUTTON
     public void createEmployee(String inputBarcode, String inputIdNo, String inputName, String inputTelephoneNo ){
@@ -32,14 +30,14 @@ public class AdminController {
     }
 
     //METHOD FOR CREATE ITEM BUTTON
-    public void createItem(String inputBarcode,String inputItemNo, String inputDescription){
+    public void createItem(String inputBarcode,String inputItemNo, String inputDescription, String inputCategory){
         try {
-            if (inputBarcode.length() > 0 && inputItemNo.length() > 0 && inputDescription.length() > 0) {
-                model.insertItem(inputBarcode, inputItemNo,inputDescription);
+            if (inputBarcode.length() > 0 && inputItemNo.length() > 0 && inputDescription.length() > 0 && inputCategory.length() > 0) {
+                model.insertItem(inputBarcode, inputItemNo,inputDescription, inputCategory);
                 adminView.updateAlertMessage(" New item was created ");
                 adminView.setBorderPaneNotVisible();
                 adminView.setMainBorderPaneCenter();
-            } else if(inputBarcode.length() == 0 || inputItemNo.length() == 0 || inputDescription.length() == 0){
+            } else if(inputBarcode.length() == 0 || inputItemNo.length() == 0 || inputDescription.length() == 0 || inputCategory.length() == 0){
                 adminView.updateAlertMessage(" Please insert values in all text fields ");
             }
         }catch(Exception e){
@@ -48,13 +46,13 @@ public class AdminController {
     }
 
     //METHOD FOR UPDATING EMPLOYEE TABLE
-    public void updateEmployeeTable(String inputBarcode, String inputName, String row) {
-        model.updateEmployeeTable("Employee", inputBarcode, inputName, row);
+    public void updateEmployeeTable(int barcode, String identificationNo, String name, int telephoneNo, int oldBarcode) {
+        model.updateEmployeeTable("Employee", barcode, identificationNo, name, telephoneNo, oldBarcode);
     }
 
     //METHOD FOR UPDATING KEY TABLE
-    public void updateItemTable(String inputBarcode, String inputProperty, String row) {
-        model.updateItemTable("Item", inputBarcode, inputProperty, row);
+    public void updateItemTable(int barcode, String itemNo, String description, String category, int oldBarcode) {
+        model.updateItemTable("Item", barcode, itemNo, description, category, oldBarcode);
     }
 
     //METHOD FOR DELETING AN EMPLOYEE FROM EMPLOYEE TABLE

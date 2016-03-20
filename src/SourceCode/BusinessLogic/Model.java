@@ -3,6 +3,8 @@ package SourceCode.BusinessLogic;
 
 import SourceCode.Model.Employee;
 import SourceCode.Model.Item;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
 
@@ -44,13 +46,14 @@ public class Model {
     }
 
     //METHOD FOR INSERTING KEY INTO THE DATABASE
-    public void insertItem(String itemBarcode, String itemNo, String description) {
-        String sql = "INSERT INTO Item VALUES (?, ?, ?)";
+    public void insertItem(String itemBarcode, String itemNo, String description, String category) {
+        String sql = "INSERT INTO Item VALUES (?, ?, ?, ?)";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, itemBarcode);
             preparedStatement.setString(2, itemNo);
             preparedStatement.setString(3, description);
+            preparedStatement.setString(4, category);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -74,13 +77,15 @@ public class Model {
     }
 
     //METHOD FOR UPDATING THE EMPLOYEE TABLE
-    public Employee updateEmployeeTable(String table, String employeeBarcode, String name, String oldBarcode) {
-        String sql = "UPDATE " + table + " SET employeeBarcode=?, name=? WHERE employeeBarcode=?";
+    public Employee updateEmployeeTable(String table, int employeeBarcode, String identificationNo, String name, int telephoneNo, int oldBarcode) {
+        String sql = "UPDATE " + table + " SET employeeBarcode=?, identificationNo=?, name=?, telephoneNo=? WHERE employeeBarcode=?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, employeeBarcode);
-            preparedStatement.setString(2, name);
-            preparedStatement.setString(3, oldBarcode);
+            preparedStatement.setInt(1, employeeBarcode);
+            preparedStatement.setString(2, identificationNo);
+            preparedStatement.setString(3, name);
+            preparedStatement.setInt(4, telephoneNo);
+            preparedStatement.setInt(5, oldBarcode);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -90,13 +95,15 @@ public class Model {
     }
 
     //METHOD FOR UPDATING THE ITEM TABLE
-    public Item updateItemTable(String table, String itemBarcode, String description, String oldBarcode) {
-        String sql = "UPDATE " + table + " SET itemBarcode=?, description=? WHERE itemBarcode=?;";
+    public Item updateItemTable(String table, int itemBarcode, String itemNo, String description, String category, int oldBarcode) {
+        String sql = "UPDATE " + table + " SET itemBarcode=?, itemNo=?, description=?, category=? WHERE itemBarcode=?;";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, itemBarcode);
-            preparedStatement.setString(2, description);
-            preparedStatement.setString(3, oldBarcode);
+            preparedStatement.setInt(1, itemBarcode);
+            preparedStatement.setString(2, itemNo);
+            preparedStatement.setString(3, description);
+            preparedStatement.setString(4, category);
+            preparedStatement.setInt(5, oldBarcode);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -277,6 +284,32 @@ public class Model {
             e.printStackTrace();
         }
         return out;
+    }
+
+    //METHOD FOR RETURNING THE CATEGORY
+    public ObservableList<String> getCategory() {
+        ObservableList<String> observableList = FXCollections.observableArrayList();
+
+        try {
+            String sql = "SELECT category FROM Item";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+
+
+                String category = (resultSet.getString(1));
+
+
+                observableList.add(category);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return observableList;
     }
 
     //METHOD FOR DELETING AN EMPLOYEE FROM THE DATABASE

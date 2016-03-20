@@ -45,6 +45,9 @@ public class AdminView {
     private Tab itemTab;
     private Tab usedItemTab;
 
+    //COMBO BOX
+    ComboBox categoryCombo;
+
     //TEXT FIELDS
     TextField employeeBarcodeTxt, itemBarcodeTxt, nameTxt, identificationNoTxt, telephoneNoTxt, itemNoTxt, descriptionTxt;
 
@@ -85,13 +88,16 @@ public class AdminView {
         //SETTING COLUMNS FOR ITEM TABLE VIEW
         TableColumn columnItem = new TableColumn<Item, Integer>("Barcode: ");
         columnItem.setCellValueFactory(new PropertyValueFactory<Item, Integer>("itemBarcode"));
-        columnItem.setMinWidth(200);
+        columnItem.setMinWidth(150);
         TableColumn columnItemNo = new TableColumn<Item, Integer>("Item number: ");
         columnItemNo.setCellValueFactory(new PropertyValueFactory<Item, Integer>("itemNo"));
-        columnItemNo.setMinWidth(200);
+        columnItemNo.setMinWidth(150);
         TableColumn colProperty = new TableColumn<Item, String>("Description: ");
         colProperty.setCellValueFactory(new PropertyValueFactory<Item, String>("description"));
-        colProperty.setMinWidth(300);
+        colProperty.setMinWidth(270);
+        TableColumn colCategory = new TableColumn<Item, String>("Category: ");
+        colCategory.setCellValueFactory(new PropertyValueFactory<Item, String>("category"));
+        colCategory.setMinWidth(200);
 
         //SETTING COLUMNS FOR USED ITEM TABLE VIEW
         TableColumn columnId = new TableColumn<UsedItem, Integer>("Id: ");
@@ -112,7 +118,7 @@ public class AdminView {
 
         //ASSIGNING THE COLUMNS TO THE TABLE VIEW
         employeeTable.getColumns().addAll(columnBarcode, columnIdentificationNo, columnName, columnTelephoneNo);
-        itemTable.getColumns().addAll(columnItem, columnItemNo, colProperty);
+        itemTable.getColumns().addAll(columnItem, columnItemNo, colProperty, colCategory);
         usedItemTable.getColumns().addAll(columnId, columnBarcodeEmployee, columnBarcodeItem, columnTimeTaken, columnTimeReturned);
 
         //BUTTONS
@@ -254,7 +260,7 @@ public class AdminView {
             adminController.createEmployee(employeeBarcodeTxt.getText(), identificationNoTxt.getText(), nameTxt.getText(), telephoneNoTxt.getText());
             employeeData.add(new Employee(
                     Integer.valueOf(employeeBarcodeTxt.getText()),
-                    Integer.valueOf(identificationNoTxt.getText()),
+                    identificationNoTxt.getText(),
                     nameTxt.getText(),
                     Integer.valueOf(telephoneNoTxt.getText())));
             employeeBarcodeTxt.clear();
@@ -308,17 +314,24 @@ public class AdminView {
         descriptionTxt = new TextField();
         descriptionTxt.setPromptText("-item description-");
 
+        //COMBO BOX
+        ObservableList<String> options = model.getCategory();
+        categoryCombo = new ComboBox(options);
+        categoryCombo.setPromptText("Choose a categoryCombo");
+        categoryCombo.setMinWidth(200);
+
         //BUTTONS
         saveButton = new Button("Save");
         cancelButton = new Button("Cancel");
 
         //BUTTONS ACTIONS
         saveButton.setOnAction(event -> {
-            adminController.createItem(itemBarcodeTxt.getText(),itemNoTxt.getText(), descriptionTxt.getText());
+            adminController.createItem(itemBarcodeTxt.getText(), itemNoTxt.getText(), descriptionTxt.getText(), String.valueOf(categoryCombo.getValue()));
             itemData.add(new Item(
                     Integer.valueOf(itemBarcodeTxt.getText()),
-                    Integer.valueOf(itemNoTxt.getText()),
-                    descriptionTxt.getText()));
+                    itemNoTxt.getText(),
+                    descriptionTxt.getText(),
+                    String.valueOf(categoryCombo.getValue())));
             itemBarcodeTxt.clear();
             descriptionTxt.clear();
         });
@@ -330,7 +343,7 @@ public class AdminView {
 
         //ADDING CHILDREN TO THE BOXES
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(barcodeLbl, itemBarcodeTxt, itemNoLbl, itemNoTxt, descriptionLbl, descriptionTxt);
+        vBox.getChildren().addAll(barcodeLbl, itemBarcodeTxt, itemNoLbl, itemNoTxt, descriptionLbl, descriptionTxt, categoryCombo);
         HBox hBox = new HBox();
         hBox.getChildren().addAll(cancelButton, saveButton);
 
@@ -364,9 +377,9 @@ public class AdminView {
         nameTxt = new TextField();
 
         //GETTING THE INFORMATION FROM THE SELECTED ROW AND ADDING IT TO THE TEXT FIELDS
-        try{
-                Employee employee = (Employee) employeeTable.getSelectionModel().getSelectedItem();
-                Item item = (Item) itemTable.getSelectionModel().getSelectedItem();
+        try {
+            Employee employee = (Employee) employeeTable.getSelectionModel().getSelectedItem();
+            Item item = (Item) itemTable.getSelectionModel().getSelectedItem();
             if (employeeTab.isSelected()) {
                 String getBarcode = String.valueOf(employee.getBarcode());
                 String getName = employee.getName();
@@ -378,7 +391,7 @@ public class AdminView {
                 itemBarcodeTxt.appendText(getBarcode);
                 nameTxt.appendText(getName);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             updateAlertMessage(" Please select a row to update! ");
             System.out.println("Exception in updateRow(): " + e.getMessage());
         }
@@ -391,29 +404,26 @@ public class AdminView {
         saveButton.setOnAction(event -> {
             if (employeeTab.isSelected()) {
                 Employee employee = (Employee) employeeTable.getSelectionModel().getSelectedItem();
-                String getBarcodeEmployee = String.valueOf(employee.getBarcode());
-                //String newBarcodeEmployee = equals().getText();
-                String newName = nameTxt.getText();
-                /*adminViewController.updateEmployeeTable(newBarcodeEmployee, newName, getBarcodeEmployee);
+                int oldBarcode = employee.getBarcode();
+                adminController.updateEmployeeTable(Integer.valueOf(employeeBarcodeTxt.getText()), identificationNoTxt.getText(), nameTxt.getText(), Integer.valueOf(telephoneNoTxt.getText()), oldBarcode);
                 employeeData.remove(employee);
                 employeeData.add(new Employee(
-                        Integer.valueOf(employeeBarcode.getText()),
-                        Integer.valueOf(identificationNoTxt.getText()),
-                        nameTxt.getText()),
-                        Integer.valueOf(telephoneNoTxt.getText()));*/
+                        Integer.valueOf(employeeBarcodeTxt.getText()),
+                        identificationNoTxt.getText(),
+                        nameTxt.getText(),
+                        Integer.valueOf(telephoneNoTxt.getText())));
 
                 updateAlertMessage(" Employee saved ");
             } else if (itemTab.isSelected()) {
                 Item item = (Item) itemTable.getSelectionModel().getSelectedItem();
-                String getBarcodeKey = String.valueOf(item.getBarcode());
-                String newBarcodeKey = itemBarcodeTxt.getText();
-                String newProperty = nameTxt.getText();
-                adminController.updateItemTable(newBarcodeKey, newProperty, getBarcodeKey);
+                int oldBarcode = item.getBarcode();
+                adminController.updateItemTable(Integer.valueOf(itemBarcodeTxt.getText()), itemNoTxt.getText(), descriptionTxt.getText(), String.valueOf(categoryCombo.getValue()), oldBarcode);
                 itemData.remove(item);
                 itemData.add(new Item(
                         Integer.valueOf(itemBarcodeTxt.getText()),
-                        Integer.valueOf(itemNoTxt.getText()),
-                        nameTxt.getText()));
+                        itemNoTxt.getText(),
+                        descriptionTxt.getText(),
+                        String.valueOf(categoryCombo.getValue())));
                 updateAlertMessage(" Item saved ");
             }
             setBorderPaneNotVisible();
@@ -444,7 +454,7 @@ public class AdminView {
 
     //METHOD FOR RETRIEVING DATA FROM THE DATABASE AND ADDING IT TO THE TABLE VIEWS
     public void buildData() {
-       //THE CONNECTION
+        //THE CONNECTION
         Model model = new Model();
         Connection conn;
 
@@ -462,7 +472,7 @@ public class AdminView {
             String sql = "SELECT * FROM Employee;";
             String sql2 = "SELECT * FROM Item;";
             String sql3 = "SELECT * FROM UsedItem;";
-            //String sql3 = "SELECT id, name, itemNo, timeTaken, timeReturned FROM UsedItem JOIN Employee ON Employee.employeeBarcode = UsedItem.employeeBarcode JOIN Item ON Item.itemBarcode = UsedItem.itemBarcode;";
+            //String sql3 = "SELECT id, Employee.name, itemNo, timeTaken, timeReturned FROM UsedItem JOIN Employee ON Employee.employeeBarcode = UsedItem.employeeBarcode JOIN Item ON Item.itemBarcode = UsedItem.itemBarcode;";
 
             //EXECUTE QUERIES
             ResultSet result = conn.createStatement().executeQuery(sql);
@@ -473,7 +483,7 @@ public class AdminView {
             while (result.next()) {
                 Employee employee = new Employee();
                 employee.employeeBarcodeProperty().set(result.getInt("employeeBarcode"));
-                employee.identificationNoProperty().set(result.getInt("identificationNo"));
+                employee.identificationNoProperty().set(result.getString("identificationNo"));
                 employee.nameProperty().set(result.getString("name"));
                 employee.telephoneProperty().set(result.getInt("telephoneNo"));
 
@@ -483,25 +493,23 @@ public class AdminView {
             while (result2.next()) {
                 Item item = new Item();
                 item.itemBarcodeProperty().set(result2.getInt("itemBarcode"));
-                item.itemNoProperty().set(result2.getInt("itemNo"));
+                item.itemNoProperty().set(result2.getString("itemNo"));
                 item.descriptionProperty().set(result2.getString("description"));
+                item.categoryProperty().set(result2.getString("category"));
 
                 itemData.add(item);
             }
 
             while (result3.next()) {
                 UsedItem usedItem = new UsedItem();
-                //Employee employee = new Employee();
-                //Item item = new Item();
+
                 usedItem.idProperty().set(result3.getInt("id"));
                 usedItem.employeeBarcodeProperty().set(result3.getInt("employeeBarcode"));
                 usedItem.itemBarcodeProperty().set(result3.getInt("itemBarcode"));
-                //employee.nameProperty().set(result3.getString("name"));
-                //item.itemNoProperty().set(result3.getInt("itemNo"));
                 usedItem.timeTakenProperty().set(result3.getString("timeTaken"));
                 usedItem.timeReturnedProperty().set(result3.getString("timeReturned"));
 
-                usedItemData.add(usedItem);
+                usedItemData.addAll(usedItem);
             }
 
             //OBSERVABLE LIST ADDED TO TABLE VIEW
