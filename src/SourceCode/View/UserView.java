@@ -55,9 +55,9 @@ public class UserView extends Application {
         mainBorderPane = new BorderPane();
 
         //BUTTONS
-        takeButton = new Button("  Take key  ");
-        returnButton = new Button(" Return key ");
-        searchButton = new Button(" Search key ");
+        takeButton = new Button("  Take item  ");
+        returnButton = new Button(" Return item ");
+        searchButton = new Button(" Search item ");
 
         //BUTTONS ACTIONS
         takeButton.setOnAction(event -> {
