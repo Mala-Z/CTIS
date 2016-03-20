@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-<<<<<<< Updated upstream
-    <list default="true" id="7fc9b022-7cf1-41ec-b632-7382fd6f82bb" name="Default" comment="renaming the main buttons">
+    <list default="true" id="7fc9b022-7cf1-41ec-b632-7382fd6f82bb" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CTIS.iml" afterPath="$PROJECT_DIR$/CTIS.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/SourceCode/View/UserView.java" afterPath="$PROJECT_DIR$/src/SourceCode/View/UserView.java" />
-=======
-    <list default="true" id="5b34755f-d424-4824-bc30-042885127544" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
->>>>>>> Stashed changes
     </list>
     <ignored path="CTIS.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,49 +24,12 @@
     <favorites_list name="CTIS" />
   </component>
   <component name="FileEditorManager">
-<<<<<<< Updated upstream
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="UserView.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/SourceCode/View/UserView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.37241378">
-              <caret line="51" column="34" selection-start-line="51" selection-start-column="34" selection-end-line="51" selection-end-column="34" />
-              <folding />
-=======
-    <leaf>
-      <file leaf-file-name="Model.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/SourceCode/BusinessLogic/Model.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-              <folding>
-                <marker date="1458075457000" expanded="true" signature="1021:1061" placeholder="INSERT INTO Employee..." />
-                <marker date="1458075457000" expanded="true" signature="1681:1714" placeholder="INSERT INTO Item..." />
-                <marker date="1458075457000" expanded="true" signature="2267:2353" placeholder="UPDATE missi..." />
-                <marker date="1458075457000" expanded="true" signature="2898:2972" placeholder="UPDATE missi..." />
-                <marker date="1458075457000" expanded="true" signature="3562:3635" placeholder="UPDATE missi..." />
-                <marker date="1458075457000" expanded="true" signature="4259:4319" placeholder="SELECT emplo..Employee..." />
-                <marker date="1458075457000" expanded="true" signature="4969:5019" placeholder="SELECT itemB..Item..." />
-                <marker date="1458075457000" expanded="true" signature="5633:5686" placeholder="INSERT INTO UsedItem..." />
-                <marker date="1458075457000" expanded="true" signature="6281:6410" placeholder="SELECT itemB..UsedItem..." />
-                <marker date="1458075457000" expanded="true" signature="7050:7298" placeholder="SELECT descr..UsedItem..." />
-                <marker date="1458075457000" expanded="true" signature="7991:8035" placeholder="SELECT usern..Admin..." />
-                <marker date="1458075457000" expanded="true" signature="8656:8699" placeholder="SELECT passw..Admin..." />
-                <marker date="1458075457000" expanded="true" signature="9309:9363" placeholder="SELECT * FRO..Admin..." />
-                <marker date="1458075457000" expanded="true" signature="10036:10080" placeholder="DELETE FROM ..." />
-                <marker date="1458075457000" expanded="true" signature="10485:10521" placeholder="DELETE FROM ..." />
-                <marker date="1458075457000" expanded="true" signature="10934:10965" placeholder="DELETE FROM ..." />
-              </folding>
->>>>>>> Stashed changes
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Employee.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/SourceCode/Model/Employee.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.23338048">
-              <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+            <state vertical-scroll-proportion="0.2389937">
+              <caret line="34" column="12" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -99,7 +55,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-<<<<<<< Updated upstream
         <option value="$PROJECT_DIR$/src/CTIS/Model/Model.java" />
         <option value="$PROJECT_DIR$/src/CTIS/BusinessLogic/Model.java" />
         <option value="$PROJECT_DIR$/src/CTIS/Model/Admin.java" />
@@ -121,9 +76,6 @@
         <option value="$PROJECT_DIR$/src/SourceCode/Model/Item.java" />
         <option value="$PROJECT_DIR$/src/SourceCode/View/AdminView.java" />
         <option value="$PROJECT_DIR$/src/SourceCode/View/UserView.java" />
-=======
-        <option value="$PROJECT_DIR$/src/SourceCode/Model/Employee.java" />
->>>>>>> Stashed changes
       </list>
     </option>
   </component>
@@ -161,7 +113,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -241,13 +192,10 @@
               <option name="myItemId" value="SourceCode" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-<<<<<<< Updated upstream
             <PATH_ELEMENT>
               <option name="myItemId" value="Controller" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-=======
->>>>>>> Stashed changes
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -289,6 +237,7 @@
       </pane>
       <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -323,6 +272,7 @@
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="UPDATED" />
           <PATH vcs="Git" revision="">$PROJECT_DIR$/.gitignore</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/workspace.xml</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Created" />
@@ -879,7 +829,6 @@
       <changelist id="7fc9b022-7cf1-41ec-b632-7382fd6f82bb" name="Default" comment="" />
       <created>1457949458509</created>
       <option name="number" value="Default" />
-<<<<<<< Updated upstream
       <updated>1457949458509</updated>
       <workItem from="1457949459843" duration="2438000" />
       <workItem from="1457956535358" duration="839000" />
@@ -890,27 +839,27 @@
       <workItem from="1458480373181" duration="37000" />
       <workItem from="1458480563191" duration="248000" />
       <workItem from="1458485986068" duration="776000" />
-      <workItem from="1458487055104" duration="325000" />
+      <workItem from="1458487055104" duration="459000" />
+      <workItem from="1458487650629" duration="269000" />
+      <workItem from="1458488043755" duration="282000" />
     </task>
     <task id="LOCAL-00001" summary="CTIS start of the project">
       <created>1458486016171</created>
       <option name="number" value="00001" />
       <option name="project" value="LOCAL" />
       <updated>1458486016171</updated>
-=======
-      <updated>1458486306071</updated>
-      <workItem from="1458486307277" duration="561000" />
->>>>>>> Stashed changes
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="renaming the main buttons">
+      <created>1458487436191</created>
+      <option name="number" value="00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1458487436191</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-<<<<<<< Updated upstream
-    <option name="totallyTimeSpent" value="29058000" />
-=======
-    <option name="totallyTimeSpent" value="561000" />
->>>>>>> Stashed changes
+    <option name="totallyTimeSpent" value="29743000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -923,7 +872,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934928" sideWeight="0.5046875" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934928" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934928" sideWeight="0.496875" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32934928" sideWeight="0.496875" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -976,14 +925,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/src.zip!/java/lang/Thread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334">
-          <caret line="744" column="0" selection-start-line="744" selection-start-column="0" selection-end-line="744" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/src/SourceCode/View/UserView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -993,39 +935,44 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SourceCode/View/UserView.java">
       <provider selected="true" editor-type-id="text-editor">
-<<<<<<< Updated upstream
-        <state vertical-scroll-proportion="0.37241378">
-          <caret line="51" column="34" selection-start-line="51" selection-start-column="34" selection-end-line="51" selection-end-column="34" />
-          <folding />
-=======
         <state vertical-scroll-proportion="0.0">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-          <folding>
-            <marker date="1458075457000" expanded="true" signature="1021:1061" placeholder="INSERT INTO Employee..." />
-            <marker date="1458075457000" expanded="true" signature="1681:1714" placeholder="INSERT INTO Item..." />
-            <marker date="1458075457000" expanded="true" signature="2267:2353" placeholder="UPDATE missi..." />
-            <marker date="1458075457000" expanded="true" signature="2898:2972" placeholder="UPDATE missi..." />
-            <marker date="1458075457000" expanded="true" signature="3562:3635" placeholder="UPDATE missi..." />
-            <marker date="1458075457000" expanded="true" signature="4259:4319" placeholder="SELECT emplo..Employee..." />
-            <marker date="1458075457000" expanded="true" signature="4969:5019" placeholder="SELECT itemB..Item..." />
-            <marker date="1458075457000" expanded="true" signature="5633:5686" placeholder="INSERT INTO UsedItem..." />
-            <marker date="1458075457000" expanded="true" signature="6281:6410" placeholder="SELECT itemB..UsedItem..." />
-            <marker date="1458075457000" expanded="true" signature="7050:7298" placeholder="SELECT descr..UsedItem..." />
-            <marker date="1458075457000" expanded="true" signature="7991:8035" placeholder="SELECT usern..Admin..." />
-            <marker date="1458075457000" expanded="true" signature="8656:8699" placeholder="SELECT passw..Admin..." />
-            <marker date="1458075457000" expanded="true" signature="9309:9363" placeholder="SELECT * FRO..Admin..." />
-            <marker date="1458075457000" expanded="true" signature="10036:10080" placeholder="DELETE FROM ..." />
-            <marker date="1458075457000" expanded="true" signature="10485:10521" placeholder="DELETE FROM ..." />
-            <marker date="1458075457000" expanded="true" signature="10934:10965" placeholder="DELETE FROM ..." />
-          </folding>
->>>>>>> Stashed changes
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SourceCode/Model/Employee.java">
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/src.zip!/java/lang/Thread.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.23338048">
-          <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+        <state vertical-scroll-proportion="0.33333334">
+          <caret line="744" column="0" selection-start-line="744" selection-start-column="0" selection-end-line="744" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CTIS.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.0656204">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.08595989">
+          <caret line="4" column="5" selection-start-line="4" selection-start-column="5" selection-end-line="4" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SourceCode/View/UserView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2389937">
+          <caret line="34" column="12" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="12" />
           <folding />
         </state>
       </provider>
