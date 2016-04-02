@@ -49,10 +49,10 @@ public class AdminView {
     ComboBox categoryCombo;
 
     //TEXT FIELDS
-    TextField employeeBarcodeTxt, itemBarcodeTxt, nameTxt, identificationNoTxt, telephoneNoTxt, itemNoTxt, descriptionTxt;
+    TextField employeeBarcodeTxt, itemBarcodeTxt, nameTxt, employeeNoTxt, telephoneNoTxt, itemNoTxt, descriptionTxt;
 
     //LABELS
-    Label title, barcodeLbl, nameLbl, identificationNoLbl, telephoneNoLbl, itemNoLbl, descriptionLbl;
+    Label title, barcodeLbl, nameLbl, employeeNoLbl, telephoneNoLbl, itemNoLbl, descriptionLbl;
 
     //BUTTONS
     Button createEmployee, createItem, saveButton, cancelButton, deleteButton, updateButton, logOutButton;
@@ -71,29 +71,29 @@ public class AdminView {
         buildData();
 
         //SETTING COLUMNS FOR EMPLOYEE TABLE VIEW
-        TableColumn columnBarcode = new TableColumn<Employee, Integer>("Barcode: ");
+        TableColumn columnBarcode = new TableColumn<Employee, Integer>("Employee barcode: ");
         columnBarcode.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("employeeBarcode"));
         columnBarcode.setMinWidth(170);
-        TableColumn columnIdentificationNo = new TableColumn<Employee, Integer>("Identification number: ");
-        columnIdentificationNo.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("identificationNo"));
+        TableColumn columnIdentificationNo = new TableColumn<Employee, Integer>("Employee number: ");
+        columnIdentificationNo.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("employeeNo"));
         columnIdentificationNo.setMinWidth(170);
-        TableColumn columnName = new TableColumn<Employee, String>("Name: ");
-        columnName.setCellValueFactory(new PropertyValueFactory<Employee, String>("name"));
+        TableColumn columnName = new TableColumn<Employee, String>("Employee name: ");
+        columnName.setCellValueFactory(new PropertyValueFactory<Employee, String>("employeeName"));
         columnName.setMinWidth(170);
         TableColumn columnTelephoneNo = new TableColumn<Employee, Integer>("Telephone number: ");
-        columnTelephoneNo.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("telephoneNo"));
+        columnTelephoneNo.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("phoneNumber"));
         columnTelephoneNo.setMinWidth(170);
 
 
         //SETTING COLUMNS FOR ITEM TABLE VIEW
-        TableColumn columnItem = new TableColumn<Item, Integer>("Barcode: ");
+        TableColumn columnItem = new TableColumn<Item, Integer>("Item barcode: ");
         columnItem.setCellValueFactory(new PropertyValueFactory<Item, Integer>("itemBarcode"));
         columnItem.setMinWidth(150);
         TableColumn columnItemNo = new TableColumn<Item, Integer>("Item number: ");
         columnItemNo.setCellValueFactory(new PropertyValueFactory<Item, Integer>("itemNo"));
         columnItemNo.setMinWidth(150);
-        TableColumn colProperty = new TableColumn<Item, String>("Description: ");
-        colProperty.setCellValueFactory(new PropertyValueFactory<Item, String>("description"));
+        TableColumn colProperty = new TableColumn<Item, String>("Item name: ");
+        colProperty.setCellValueFactory(new PropertyValueFactory<Item, String>("itemName"));
         colProperty.setMinWidth(270);
         TableColumn colCategory = new TableColumn<Item, String>("Category: ");
         colCategory.setCellValueFactory(new PropertyValueFactory<Item, String>("category"));
@@ -234,8 +234,8 @@ public class AdminView {
         title.setId("titleInsertEmployee");
         barcodeLbl = new Label(" Barcode ");
         barcodeLbl.setId("employeeBarcode");
-        identificationNoLbl = new Label("Identification number ");
-        identificationNoLbl.setId("identificationNo");
+        employeeNoLbl = new Label("Employee number ");
+        employeeNoLbl.setId("employeeNumber");
         nameLbl = new Label(" Name ");
         nameLbl.setId("nameEmployee");
         telephoneNoLbl = new Label(" Telephone number ");
@@ -246,8 +246,8 @@ public class AdminView {
         employeeBarcodeTxt.setPromptText("-employee barcode-");
         nameTxt = new TextField();
         nameTxt.setPromptText("-employee name-");
-        identificationNoTxt = new TextField();
-        identificationNoTxt.setPromptText("-identification number-");
+        employeeNoTxt = new TextField();
+        employeeNoTxt.setPromptText("-employee number-");
         telephoneNoTxt = new TextField();
         telephoneNoTxt.setPromptText("-telephone number-");
 
@@ -257,10 +257,10 @@ public class AdminView {
 
         //BUTTONS ACTIONS
         saveButton.setOnAction(event -> {
-            adminController.createEmployee(employeeBarcodeTxt.getText(), identificationNoTxt.getText(), nameTxt.getText(), telephoneNoTxt.getText());
+            adminController.createEmployee(employeeBarcodeTxt.getText(), employeeNoTxt.getText(), nameTxt.getText(), telephoneNoTxt.getText());
             employeeData.add(new Employee(
                     Integer.valueOf(employeeBarcodeTxt.getText()),
-                    identificationNoTxt.getText(),
+                    employeeNoTxt.getText(),
                     nameTxt.getText(),
                     Integer.valueOf(telephoneNoTxt.getText())));
             employeeBarcodeTxt.clear();
@@ -274,7 +274,7 @@ public class AdminView {
 
         //BOXES
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(barcodeLbl, employeeBarcodeTxt, identificationNoLbl, identificationNoTxt, nameLbl, nameTxt,
+        vBox.getChildren().addAll(barcodeLbl, employeeBarcodeTxt, employeeNoLbl, employeeNoTxt, nameLbl, nameTxt,
                 telephoneNoLbl, telephoneNoTxt);
         HBox hBox = new HBox();
         hBox.getChildren().addAll(cancelButton, saveButton);
@@ -303,8 +303,8 @@ public class AdminView {
         barcodeLbl.setId("barcode");
         itemNoLbl = new Label(" Item number ");
         itemNoLbl.setId("itemNo");
-        descriptionLbl = new Label(" Description ");
-        descriptionLbl.setId("description");
+        descriptionLbl = new Label(" Item Name ");
+        descriptionLbl.setId("itemName");
 
         //TEXT FIELDS
         itemBarcodeTxt = new TextField();
@@ -312,7 +312,7 @@ public class AdminView {
         itemNoTxt = new TextField();
         itemNoTxt.setPromptText("-item number-");
         descriptionTxt = new TextField();
-        descriptionTxt.setPromptText("-item description-");
+        descriptionTxt.setPromptText("-item name-");
 
         //COMBO BOX
         ObservableList<String> options = model.getCategory();
@@ -369,7 +369,7 @@ public class AdminView {
         title.setId("titleUpdateRow");
         barcodeLbl = new Label(" Employee barcode/Item barcode ");
         barcodeLbl.setId("barcodeItem");
-        nameLbl = new Label(" Employee name/Item description ");
+        nameLbl = new Label(" Employee name/Item name ");
         nameLbl.setId("nameProperty");
 
         //TEXT FIELDS
@@ -405,11 +405,11 @@ public class AdminView {
             if (employeeTab.isSelected()) {
                 Employee employee = (Employee) employeeTable.getSelectionModel().getSelectedItem();
                 int oldBarcode = employee.getBarcode();
-                adminController.updateEmployeeTable(Integer.valueOf(employeeBarcodeTxt.getText()), identificationNoTxt.getText(), nameTxt.getText(), Integer.valueOf(telephoneNoTxt.getText()), oldBarcode);
+                adminController.updateEmployeeTable(Integer.valueOf(employeeBarcodeTxt.getText()), employeeNoTxt.getText(), nameTxt.getText(), Integer.valueOf(telephoneNoTxt.getText()), oldBarcode);
                 employeeData.remove(employee);
                 employeeData.add(new Employee(
                         Integer.valueOf(employeeBarcodeTxt.getText()),
-                        identificationNoTxt.getText(),
+                        employeeNoTxt.getText(),
                         nameTxt.getText(),
                         Integer.valueOf(telephoneNoTxt.getText())));
 
@@ -470,46 +470,50 @@ public class AdminView {
 
             //SQL QUERIES
             String sql = "SELECT * FROM Employee;";
+            String sql1 = "SELECT * FROM PhoneNumber;";
             String sql2 = "SELECT * FROM Item;";
-            String sql3 = "SELECT * FROM UsedItem;";
+            String sql3 = "SELECT * FROM BorrowedItem;";
+            String sql4 = "SELECT * FROM Category;";
             //String sql3 = "SELECT id, Employee.name, itemNo, timeTaken, timeReturned FROM BorrowedItem JOIN Employee ON Employee.employeeBarcode = BorrowedItem.employeeBarcode JOIN Item ON Item.itemBarcode = BorrowedItem.itemBarcode;";
 
             //EXECUTE QUERIES
             ResultSet result = conn.createStatement().executeQuery(sql);
+            ResultSet result1 = conn.createStatement().executeQuery(sql1);
             ResultSet result2 = conn.createStatement().executeQuery(sql2);
             ResultSet result3 = conn.createStatement().executeQuery(sql3);
+            ResultSet result4 = conn.createStatement().executeQuery(sql4);
 
             //DATA ADDED TO OBSERVABLE LIST
-            while (result.next()) {
+            while (result.next() && result1.next()) {
                 Employee employee = new Employee();
                 employee.employeeBarcodeProperty().set(result.getInt("employeeBarcode"));
-                employee.identificationNoProperty().set(result.getString("identificationNo"));
-                employee.nameProperty().set(result.getString("name"));
-                employee.telephoneProperty().set(result.getInt("telephoneNo"));
+                employee.employeeNoProperty().set(result.getString("employeeNo"));
+                employee.nameProperty().set(result.getString("employeeName"));
+                employee.telephoneProperty().set(result1.getInt("phoneNumber"));
 
                 employeeData.add(employee);
             }
 
-            while (result2.next()) {
+            while (result2.next() && result4.next()) {
                 Item item = new Item();
                 item.itemBarcodeProperty().set(result2.getInt("itemBarcode"));
                 item.itemNoProperty().set(result2.getString("itemNo"));
-                item.itemNameProperty().set(result2.getString("description"));
-                item.categoryProperty().set(result2.getString("category"));
+                item.itemNameProperty().set(result2.getString("itemName"));
+                item.categoryProperty().set(result4.getString("category"));
 
                 itemData.add(item);
             }
 
             while (result3.next()) {
-                BorrowedItem usedItem = new BorrowedItem();
+                BorrowedItem borrowedItem = new BorrowedItem();
 
-                usedItem.idProperty().set(result3.getInt("id"));
-                usedItem.employeeBarcodeProperty().set(result3.getInt("employeeBarcode"));
-                usedItem.itemBarcodeProperty().set(result3.getInt("itemBarcode"));
-                usedItem.timeTakenProperty().set(result3.getString("timeTaken"));
-                usedItem.timeReturnedProperty().set(result3.getString("timeReturned"));
+                borrowedItem.idProperty().set(result3.getInt("id"));
+                borrowedItem.employeeBarcodeProperty().set(result3.getInt("employeeBarcode"));
+                borrowedItem.itemBarcodeProperty().set(result3.getInt("itemBarcode"));
+                borrowedItem.timeTakenProperty().set(result3.getString("timeTaken"));
+                borrowedItem.timeReturnedProperty().set(result3.getString("timeReturned"));
 
-                usedItemData.addAll(usedItem);
+                usedItemData.addAll(borrowedItem);
             }
 
             //OBSERVABLE LIST ADDED TO TABLE VIEW

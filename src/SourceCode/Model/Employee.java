@@ -8,9 +8,9 @@ import javafx.beans.property.StringProperty;
 public class Employee {
 
     private final IntegerProperty employeeBarcode;
-    private final StringProperty identificationNo;
+    private final StringProperty employeeNo;
     private final StringProperty employeeName;
-    private final IntegerProperty employeeTelephoneNo;
+    private final IntegerProperty phoneNumber;
 
     //DEFAULT CONSTRUCTOR
     public Employee() {
@@ -18,11 +18,11 @@ public class Employee {
     }
 
     //CONSTRUCTOR
-    public Employee(int employeeBarcode, String identificationNo, String employeeName, int employeeTelephoneNo) {
+    public Employee(int employeeBarcode, String employeeNo, String employeeName, int phoneNumber) {
         this.employeeBarcode = new SimpleIntegerProperty(employeeBarcode);
-        this.identificationNo = new SimpleStringProperty(identificationNo);
+        this.employeeNo = new SimpleStringProperty(employeeNo);
         this.employeeName = new SimpleStringProperty(employeeName);
-        this.employeeTelephoneNo = new SimpleIntegerProperty(employeeTelephoneNo);
+        this.phoneNumber = new SimpleIntegerProperty(phoneNumber);
 
     }
 
@@ -31,20 +31,20 @@ public class Employee {
         return employeeBarcode.get();
     }
 
-    public final String getIdentificationNo() {
-        return identificationNo.get();
+    public final String getEmployeeNo() {
+        return employeeNo.get();
     }
 
     public final String getName() { return employeeName.get(); }
 
-    public final int getTelephoneNo() { return employeeTelephoneNo.get(); }
+    public final int getTelephoneNo() { return phoneNumber.get(); }
 
     public IntegerProperty employeeBarcodeProperty() {
         return employeeBarcode;
     }
 
-    public StringProperty identificationNoProperty() {
-        return identificationNo;
+    public StringProperty employeeNoProperty() {
+        return employeeNo;
     }
 
     public StringProperty nameProperty() {
@@ -52,7 +52,7 @@ public class Employee {
     }
 
     public IntegerProperty telephoneProperty() {
-        return employeeTelephoneNo;
+        return phoneNumber;
     }
 
 }
