@@ -7,20 +7,21 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import java.time.format.DateTimeFormatter;
 
-public class UsedItem {
+public class BorrowedItem {
     private final IntegerProperty id;
     private final IntegerProperty employeeBarcode;
     private final IntegerProperty itemBarcode;
     private final ObjectProperty<DateTimeFormatter> timeTaken;
     private final ObjectProperty<DateTimeFormatter> timeReturned;
+    //set a place for the item - either address or car plate number
 
     //DEFAULT CONSTRUCTOR
-    public UsedItem() {
+    public BorrowedItem() {
         this(0, 0, 0, null, null);
     }
 
     //CONSTRUCTOR
-    public UsedItem(int id, int employeeBarcode, int itemBarcode, String timeTaken, String timeReturned) {
+    public BorrowedItem(int id, int employeeBarcode, int itemBarcode, String timeTaken, String timeReturned) {
         this.id = new SimpleIntegerProperty(id);
         this.employeeBarcode = new SimpleIntegerProperty(employeeBarcode);
         this.itemBarcode = new SimpleIntegerProperty(itemBarcode);

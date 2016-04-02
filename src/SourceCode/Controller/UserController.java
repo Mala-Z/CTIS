@@ -45,7 +45,7 @@ public class UserController {
             String item = model.checkIfItemIsTaken(itemInput);
             if (item.length() > 0 && timeDateInput.length() > 0) {
                 if (item.equals(itemInput)) {
-                    model.updateUsedItemTable("UsedItem", timeDateInput, itemInput);
+                    model.updateUsedItemTable("BorrowedItem", timeDateInput, itemInput);
                     userView.updateAlertMessage(" Item return successful");
                     userView.setBorderPaneNotVisible();  //closing the window after taking key
                 } else if (!item.equals(itemInput)) {

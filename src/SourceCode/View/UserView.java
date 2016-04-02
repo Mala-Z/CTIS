@@ -184,7 +184,7 @@ public class UserView extends Application {
         itemTxt = new TextField();
         itemTxt.setPromptText("Item barcode");
 
-        int id = 0; //id column from UsedItem in MySQL
+        int id = 0; //id column from BorrowedItem in MySQL
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         String timestampString = timestamp.toString();

@@ -1,10 +1,10 @@
 package SourceCode.View;
 
 import SourceCode.Controller.AdminController;
+import SourceCode.Model.BorrowedItem;
 import SourceCode.Model.Employee;
 import SourceCode.BusinessLogic.Model;
 import SourceCode.Model.Item;
-import SourceCode.Model.UsedItem;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -100,20 +100,20 @@ public class AdminView {
         colCategory.setMinWidth(200);
 
         //SETTING COLUMNS FOR USED ITEM TABLE VIEW
-        TableColumn columnId = new TableColumn<UsedItem, Integer>("Id: ");
-        columnId.setCellValueFactory(new PropertyValueFactory<UsedItem, Integer>("id"));
+        TableColumn columnId = new TableColumn<BorrowedItem, Integer>("Id: ");
+        columnId.setCellValueFactory(new PropertyValueFactory<BorrowedItem, Integer>("id"));
         columnId.setMinWidth(50);
-        TableColumn columnBarcodeEmployee = new TableColumn<UsedItem, Integer>("Employee barcode: ");
-        columnBarcodeEmployee.setCellValueFactory(new PropertyValueFactory<UsedItem, Integer>("employeeBarcode"));
+        TableColumn columnBarcodeEmployee = new TableColumn<BorrowedItem, Integer>("Employee barcode: ");
+        columnBarcodeEmployee.setCellValueFactory(new PropertyValueFactory<BorrowedItem, Integer>("employeeBarcode"));
         columnBarcodeEmployee.setMinWidth(170);
-        TableColumn columnBarcodeItem = new TableColumn<UsedItem, Integer>("Item barcode: ");
-        columnBarcodeItem.setCellValueFactory(new PropertyValueFactory<UsedItem, Integer>("itemBarcode"));
+        TableColumn columnBarcodeItem = new TableColumn<BorrowedItem, Integer>("Item barcode: ");
+        columnBarcodeItem.setCellValueFactory(new PropertyValueFactory<BorrowedItem, Integer>("itemBarcode"));
         columnBarcodeItem.setMinWidth(170);
-        TableColumn columnTimeTaken = new TableColumn<UsedItem, DateTimeFormatter>("Time taken: ");
-        columnTimeTaken.setCellValueFactory(new PropertyValueFactory<UsedItem, DateTimeFormatter>("timeTaken"));
+        TableColumn columnTimeTaken = new TableColumn<BorrowedItem, DateTimeFormatter>("Time taken: ");
+        columnTimeTaken.setCellValueFactory(new PropertyValueFactory<BorrowedItem, DateTimeFormatter>("timeTaken"));
         columnTimeTaken.setMinWidth(170);
-        TableColumn columnTimeReturned = new TableColumn<UsedItem, DateTimeFormatter>("Time returned: ");
-        columnTimeReturned.setCellValueFactory(new PropertyValueFactory<UsedItem, DateTimeFormatter>("timeReturned"));
+        TableColumn columnTimeReturned = new TableColumn<BorrowedItem, DateTimeFormatter>("Time returned: ");
+        columnTimeReturned.setCellValueFactory(new PropertyValueFactory<BorrowedItem, DateTimeFormatter>("timeReturned"));
         columnTimeReturned.setMinWidth(170);
 
         //ASSIGNING THE COLUMNS TO THE TABLE VIEW
@@ -155,10 +155,10 @@ public class AdminView {
                 itemData.remove(itemTable.getSelectionModel().getSelectedIndex());
                 updateAlertMessage(" Item deleted ");
             } else if (usedItemTab.isSelected()) {
-                UsedItem usedItem = (UsedItem) usedItemTable.getSelectionModel().getSelectedItem();
+                BorrowedItem usedItem = (BorrowedItem) usedItemTable.getSelectionModel().getSelectedItem();
                 adminController.deleteUsedItem(usedItem.getId());
                 usedItemData.remove(usedItemTable.getSelectionModel().getSelectedIndex());
-                updateAlertMessage(" UsedItem row deleted ");
+                updateAlertMessage(" BorrowedItem row deleted ");
             }
         });
 
@@ -178,7 +178,7 @@ public class AdminView {
         itemTab.setClosable(false); //SETTING TAB TO NOT CLOSABLE
 
         usedItemTab = new Tab();
-        usedItemTab.setText("UsedItem");
+        usedItemTab.setText("BorrowedItem");
         usedItemTab.setContent(new Rectangle(450, 250, Color.WHITE));
         usedItemTab.setClosable(false); //SETTING TAB TO NOT CLOSABLE
 
@@ -387,7 +387,7 @@ public class AdminView {
                 nameTxt.appendText(getName);
             } else if (itemTab.isSelected()) {
                 String getBarcode = String.valueOf(item.getBarcode());
-                String getName = item.getDescription();
+                String getName = item.getItemName();
                 itemBarcodeTxt.appendText(getBarcode);
                 nameTxt.appendText(getName);
             }
@@ -472,7 +472,7 @@ public class AdminView {
             String sql = "SELECT * FROM Employee;";
             String sql2 = "SELECT * FROM Item;";
             String sql3 = "SELECT * FROM UsedItem;";
-            //String sql3 = "SELECT id, Employee.name, itemNo, timeTaken, timeReturned FROM UsedItem JOIN Employee ON Employee.employeeBarcode = UsedItem.employeeBarcode JOIN Item ON Item.itemBarcode = UsedItem.itemBarcode;";
+            //String sql3 = "SELECT id, Employee.name, itemNo, timeTaken, timeReturned FROM BorrowedItem JOIN Employee ON Employee.employeeBarcode = BorrowedItem.employeeBarcode JOIN Item ON Item.itemBarcode = BorrowedItem.itemBarcode;";
 
             //EXECUTE QUERIES
             ResultSet result = conn.createStatement().executeQuery(sql);
@@ -494,14 +494,14 @@ public class AdminView {
                 Item item = new Item();
                 item.itemBarcodeProperty().set(result2.getInt("itemBarcode"));
                 item.itemNoProperty().set(result2.getString("itemNo"));
-                item.descriptionProperty().set(result2.getString("description"));
+                item.itemNameProperty().set(result2.getString("description"));
                 item.categoryProperty().set(result2.getString("category"));
 
                 itemData.add(item);
             }
 
             while (result3.next()) {
-                UsedItem usedItem = new UsedItem();
+                BorrowedItem usedItem = new BorrowedItem();
 
                 usedItem.idProperty().set(result3.getInt("id"));
                 usedItem.employeeBarcodeProperty().set(result3.getInt("employeeBarcode"));

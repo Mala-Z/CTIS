@@ -8,7 +8,7 @@ import javafx.beans.property.StringProperty;
 public class Item {
     private final IntegerProperty itemBarcode;
     private final StringProperty itemNo;
-    private final StringProperty description;
+    private final StringProperty itemName;
     private final StringProperty category;
 
     //DEFAULT CONSTRUCTOR
@@ -17,10 +17,10 @@ public class Item {
     }
 
     //CONSTRUCTOR
-    public Item(int itemBarcode, String itemNo, String description, String category) {
+    public Item(int itemBarcode, String itemNo, String itemName, String category) {
         this.itemBarcode = new SimpleIntegerProperty(itemBarcode);
         this.itemNo = new SimpleStringProperty(itemNo);
-        this.description = new SimpleStringProperty(description);
+        this.itemName = new SimpleStringProperty(itemName);
         this.category = new SimpleStringProperty(category);
     }
 
@@ -33,8 +33,8 @@ public class Item {
         return itemNo.get();
     }
 
-    public final String getDescription() {
-        return description.get();
+    public final String getItemName() {
+        return itemName.get();
     }
 
     public String getCategory() { return category.get(); }
@@ -44,7 +44,7 @@ public class Item {
 
     public StringProperty itemNoProperty() { return itemNo; }
 
-    public StringProperty descriptionProperty() { return description; }
+    public StringProperty itemNameProperty() { return itemName; }
 
     public StringProperty categoryProperty() { return category; }
 }

@@ -45,14 +45,14 @@ public class Model {
         }
     }
 
-    //METHOD FOR INSERTING KEY INTO THE DATABASE
-    public void insertItem(String itemBarcode, String itemNo, String description, String category) {
+    //METHOD FOR INSERTING ITEM INTO THE DATABASE  ---insert category into category table---?
+    public void insertItem(String itemBarcode, String itemNo, String itemName, String category) {
         String sql = "INSERT INTO Item VALUES (?, ?, ?, ?)";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, itemBarcode);
             preparedStatement.setString(2, itemNo);
-            preparedStatement.setString(3, description);
+            preparedStatement.setString(3, itemName);
             preparedStatement.setString(4, category);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -60,7 +60,7 @@ public class Model {
         }
     }
 
-    //METHOD FOR UPDATING THE USED KEY TABLE
+    //METHOD FOR UPDATING THE USED ITEM TABLE
     public Item updateUsedItemTable(String table, String timeReturned, String itemBarcode) {
         String sql = "UPDATE " + table + " SET timeReturned =? WHERE itemBarcode =? AND timeReturned IS null;";
         try {
@@ -171,7 +171,7 @@ public class Model {
         }
     }
 
-    //METHOD FOR CHECKING IF THE KEY IS ALREADY TAKEN BY AN EMPLOYEE
+    //METHOD FOR CHECKING IF THE ITEM IS ALREADY REGISTERED TAKEN
     public String checkIfItemIsTaken(String itemBarcode) {
         String out = "";
         try {
