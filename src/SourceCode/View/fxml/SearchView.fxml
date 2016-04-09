@@ -73,7 +73,7 @@
             <Region prefHeight="54.0" prefWidth="123.0" />
             <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../Image/Rac3.png" />
+                  <Image url="@../../../Image/Rac3.png" />
                </image>
             </ImageView>
          </children>

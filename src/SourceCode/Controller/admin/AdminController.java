@@ -1,6 +1,6 @@
 package SourceCode.Controller.admin;
 
-import SourceCode.View.RunView;
+import SourceCode.Controller.RunView;
 import javafx.fxml.FXML;
 
 import java.io.IOException;
@@ -8,6 +8,7 @@ import java.io.IOException;
 public class AdminController {
 
     private RunView runView;
+
 
 
     @FXML

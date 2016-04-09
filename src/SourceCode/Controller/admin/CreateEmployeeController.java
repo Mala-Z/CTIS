@@ -1,6 +1,6 @@
 package SourceCode.Controller.admin;
 
-import SourceCode.View.RunView;
+import SourceCode.Controller.RunView;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;

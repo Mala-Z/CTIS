@@ -1,6 +1,6 @@
 package SourceCode.Controller.user;
 
-import SourceCode.View.RunView;
+import SourceCode.Controller.RunView;
 import javafx.fxml.FXML;
 
 import java.io.IOException;
