@@ -1,17 +1,15 @@
-package View.admin;
+package SourceCode.Controller.admin;
 
-import View.RunView;
+import SourceCode.View.RunView;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class CreateEmployeeController {
+public class CreateItemController {
     @FXML
-    Button btnCreateEmployee;
-    @FXML
-    Button btnCancel;
+    private Button btnCancel;
 
     private RunView runView;
 
