@@ -2,25 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7fc9b022-7cf1-41ec-b632-7382fd6f82bb" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/CSS/returnCSS.css" afterPath="$PROJECT_DIR$/src/SourceCode/View/CSS/returnCSS.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/CSS/searchCSS.css" afterPath="$PROJECT_DIR$/src/SourceCode/View/CSS/searchCSS.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/CSS/takeCSS.css" afterPath="$PROJECT_DIR$/src/SourceCode/View/CSS/takeCSS.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/RunView.java" afterPath="$PROJECT_DIR$/src/SourceCode/View/RunView.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/admin/AdminController.java" afterPath="$PROJECT_DIR$/src/SourceCode/Controller/admin/AdminController.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/admin/CreateEmployeeController.java" afterPath="$PROJECT_DIR$/src/SourceCode/Controller/admin/CreateEmployeeController.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/admin/CreateItemController.java" afterPath="$PROJECT_DIR$/src/SourceCode/Controller/admin/CreateItemController.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/fxml/AdminLogIn.fxml" afterPath="$PROJECT_DIR$/src/SourceCode/View/fxml/AdminLogIn.fxml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/fxml/AdminView.fxml" afterPath="$PROJECT_DIR$/src/SourceCode/View/fxml/AdminView.fxml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/fxml/CreateEmployee.fxml" afterPath="$PROJECT_DIR$/src/SourceCode/View/fxml/CreateEmployee.fxml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/fxml/CreateItem.fxml" afterPath="$PROJECT_DIR$/src/SourceCode/View/fxml/CreateItem.fxml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/fxml/MainView.fxml" afterPath="$PROJECT_DIR$/src/SourceCode/View/fxml/MainView.fxml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/fxml/ReturnView.fxml" afterPath="$PROJECT_DIR$/src/SourceCode/View/fxml/ReturnView.fxml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/fxml/SearchView.fxml" afterPath="$PROJECT_DIR$/src/SourceCode/View/fxml/SearchView.fxml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/fxml/TakeItem.fxml" afterPath="$PROJECT_DIR$/src/SourceCode/View/fxml/TakeItem.fxml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/user/MainViewController.java" afterPath="$PROJECT_DIR$/src/SourceCode/Controller/user/MainViewController.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/user/ReturnItemController.java" afterPath="$PROJECT_DIR$/src/SourceCode/Controller/user/ReturnItemController.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/user/SearchController.java" afterPath="$PROJECT_DIR$/src/SourceCode/Controller/user/SearchController.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/View/user/TakeItemController.java" afterPath="$PROJECT_DIR$/src/SourceCode/Controller/user/TakeItemController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="CTIS.iws" />
@@ -865,7 +846,7 @@
       <workItem from="1460116797863" duration="81000" />
       <workItem from="1460119672175" duration="409000" />
       <workItem from="1460210209424" duration="1747000" />
-      <workItem from="1460212585312" duration="1742000" />
+      <workItem from="1460212585312" duration="1767000" />
     </task>
     <task id="LOCAL-00001" summary="CTIS start of the project">
       <created>1458486016171</created>
@@ -927,11 +908,17 @@
       <option name="project" value="LOCAL" />
       <updated>1460215822611</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="rearranging packages">
+      <created>1460216357275</created>
+      <option name="number" value="00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1460216357275</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="53492000" />
+    <option name="totallyTimeSpent" value="53517000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="825" extended-state="6" />
@@ -1007,7 +994,8 @@
     <MESSAGE value="used product class" />
     <MESSAGE value="the old code together with the new fxml view" />
     <MESSAGE value="rearranging code" />
-    <option name="LAST_COMMIT_MESSAGE" value="rearranging code" />
+    <MESSAGE value="rearranging packages" />
+    <option name="LAST_COMMIT_MESSAGE" value="rearranging packages" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
