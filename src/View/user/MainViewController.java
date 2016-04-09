@@ -1,13 +1,7 @@
-package SourceCode.View.employee.view;
+package View.user;
 
-import SourceCode.View.employee.Main;
-import javafx.event.ActionEvent;
+import View.RunView;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -15,31 +9,30 @@ import java.io.IOException;
  * Created by St_Muerte on 3/24/16.
  */
 public class MainViewController {
-    private Main main;
+    private RunView runView;
 
 
     @FXML
     private void goHome() throws IOException {
-        main.showMainView();
+        runView.showMainView();
     }
 
     @FXML
     private void goTakeItem() throws IOException{
-        main.showTakeItem();
-
-
+        runView.showTakeItem();
     }
     @FXML
     private void goReturnItem() throws IOException{
-        main.showReturnItemView();
+        runView.showReturnItemView();
     }
     @FXML
     private void goSearch() throws IOException{
-        main.showSearch();
+        runView.showSearch();
+
     }
     @FXML
     private void goAdminView() throws IOException{
-        main.showAdminView();
+        runView.showAdminView();
     }
 
 

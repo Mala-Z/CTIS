@@ -1,6 +1,6 @@
-package SourceCode.View.employee.returnItem;
+package View.user;
 
-import SourceCode.View.employee.Main;
+import View.RunView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
-public class ReturnItemController {
+public class TakeItemController {
     @FXML
     private TextField tfEmployeeBarcode;
     @FXML
@@ -18,13 +18,15 @@ public class ReturnItemController {
     @FXML
     private Button btnBack;
     @FXML
+    private Button btnDelete;
+    @FXML
     private Button btnSubmit;
 
-    private Main main;
+    private RunView runView;
 
     @FXML
     private void btnBackAction() throws IOException {
-        main.showMainView();
+        runView.showMainView();
     }
     @FXML
     private void btnDeleteAction() throws IOException {
@@ -36,5 +38,6 @@ public class ReturnItemController {
 
 
     }
+
 
 }

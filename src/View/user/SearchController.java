@@ -1,22 +1,11 @@
-package SourceCode.View.employee.search;
+package View.user;
 
-import SourceCode.View.employee.Main;
+import View.RunView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import javafx.util.converter.DefaultStringConverter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,12 +14,10 @@ import java.util.*;
 
 public class SearchController implements Initializable {
     @FXML
-    TextField EmployeeBarcodeTextField;
-    @FXML
     Label employeeBarcodeLabel;
     @FXML
     TextField tfItemNumber;
-    private Main main;
+    private RunView runView;
     @FXML
     ComboBox comboBox;
     @FXML
@@ -41,21 +28,15 @@ public class SearchController implements Initializable {
     TableColumn numberColumn;
     @FXML
     TableColumn nameColumn;
-    @FXML
-    RadioButton radio;
 
 
 
-    public void radioButton(ActionEvent e){
-        radio.requestFocus();
 
-    }
 
 
     @FXML
     private void btnBackAction() throws IOException {
-        main.showMainView();
-        System.out.println("goes to main");
+        runView.showMainView();
     }
 
     public void searchButtonClicked() {
@@ -70,7 +51,9 @@ public class SearchController implements Initializable {
         if(comboBox.getItems()!= null){
             //tableview.
         }
+
     }
+
 
 
     public void setData(){
