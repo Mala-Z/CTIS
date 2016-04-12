@@ -51,7 +51,7 @@
                <children>
                   <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../Image/Rac3.png" />
+                        <Image url="@../../../Image/Rac3.png" />
                      </image>
                      <HBox.margin>
                         <Insets right="5.0" top="15.0" />

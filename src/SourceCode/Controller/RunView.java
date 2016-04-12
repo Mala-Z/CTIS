@@ -15,14 +15,14 @@ public class RunView extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Employee");
+        this.primaryStage.setTitle("Racoon");
         showMainView();
 
     }
     //MainView
     public static void showMainView() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(RunView.class.getResource("fxml/MainView.fxml"));
+        loader.setLocation(RunView.class.getResource("/SourceCode/View/fxml/MainView.fxml"));
         mainLayout = loader.load();
         Scene scene= new Scene(mainLayout);
         primaryStage.setScene(scene);
@@ -33,7 +33,7 @@ public class RunView extends Application {
     //TakeItem
     public static void showTakeItem() throws IOException{
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(RunView.class.getResource("fxml/TakeItem.fxml"));
+        loader.setLocation(RunView.class.getResource("/SourceCode/View/fxml/TakeItem.fxml"));
         BorderPane takeItem = loader.load();
         mainLayout.setCenter(takeItem);
         primaryStage.setHeight(480);
@@ -42,7 +42,7 @@ public class RunView extends Application {
     //ReturnItem
     public static void showReturnItemView() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation((RunView.class.getResource("fxml/ReturnView.fxml")));
+        loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/ReturnView.fxml")));
         BorderPane returnItem = loader.load();
         mainLayout.setCenter(returnItem);
         primaryStage.setHeight(480);
@@ -52,7 +52,7 @@ public class RunView extends Application {
     //Search
     public static void showSearch()throws IOException{
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation((RunView.class.getResource("fxml/SearchView.fxml")));
+        loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/SearchView.fxml")));
         BorderPane search = loader.load();
         mainLayout.setCenter(search);
         primaryStage.setHeight(480);
@@ -64,7 +64,7 @@ public class RunView extends Application {
     //AdminView
     public static void showAdminView() throws IOException{
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation((RunView.class.getResource("fxml/AdminView.fxml")));
+        loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/AdminView.fxml")));
         BorderPane admin = loader.load();
         primaryStage.setWidth(800);
         primaryStage.setHeight(500);
@@ -75,7 +75,7 @@ public class RunView extends Application {
     public static void showCreateEmployee() throws IOException{
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation((RunView.class.getResource("fxml/CreateEmployee.fxml")));
+            loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/CreateEmployee.fxml")));
             BorderPane borderPane = (BorderPane) loader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(borderPane));
@@ -89,7 +89,7 @@ public class RunView extends Application {
     public static void showCreateItem() throws IOException{
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation((RunView.class.getResource("fxml/CreateItem.fxml")));
+            loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/CreateItem.fxml")));
             BorderPane borderPane = (BorderPane) loader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(borderPane));

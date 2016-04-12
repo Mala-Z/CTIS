@@ -30,12 +30,11 @@ public class TakeItemController {
     }
     @FXML
     private void btnDeleteAction() throws IOException {
-        // YOUR CODE HERE
+
 
     }
     @FXML
     private void setBtnSubmitAction() throws IOException {
-
 
     }
 
