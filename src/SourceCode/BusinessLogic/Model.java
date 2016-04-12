@@ -15,6 +15,7 @@ public class Model {
 
     //CONSTRUCTOR
     public Model() {
+        connectToDatabase();
     }
 
     public void connectToDatabase() {
@@ -113,8 +114,7 @@ public class Model {
     }
 
     //METHOD FOR CHECKING THE EMPLOYEE BARCODE STORED INTO THE DATABASE
-    public String checkEmployeeBarcode(String employeeBarcode) {
-        String out = "";
+    public boolean checkEmployeeBarcode(String employeeBarcode) {
         try {
             String query = "SELECT employeeBarcode FROM Employee WHERE employeeBarcode=?";
 
@@ -124,15 +124,16 @@ public class Model {
             ResultSet results = preparedStatement.executeQuery();
 
             if (results.next()) {
-                out = results.getString(1);
+                return true;
             } else {
-                out = "";
+                return false;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
+
         }
-        return out;
+        return false;
     }
 
     //METHOD FOR CHECKING THE ITEM BARCODE STORED INTO THE DATABASE
