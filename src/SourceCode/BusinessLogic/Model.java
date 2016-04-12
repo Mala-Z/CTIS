@@ -114,13 +114,13 @@ public class Model {
     }
 
     //METHOD FOR CHECKING THE EMPLOYEE BARCODE STORED INTO THE DATABASE
-    public boolean checkEmployeeBarcode(String employeeBarcode) {
+    public boolean checkEmployeeBarcode(int employeeBarcode) {
         try {
             String query = "SELECT employeeBarcode FROM Employee WHERE employeeBarcode=?";
 
             PreparedStatement preparedStatement = conn.prepareStatement(query);
 
-            preparedStatement.setString(1, employeeBarcode);
+            preparedStatement.setInt(1, employeeBarcode);
             ResultSet results = preparedStatement.executeQuery();
 
             if (results.next()) {
@@ -137,35 +137,34 @@ public class Model {
     }
 
     //METHOD FOR CHECKING THE ITEM BARCODE STORED INTO THE DATABASE
-    public String checkItemBarcode(String itemBarcode) {
-        String out = "";
+    public boolean checkItemBarcode(int itemBarcode) {
         try {
             String query = "SELECT itemBarcode FROM Item WHERE itemBarcode = ?";
 
             PreparedStatement preparedStatement = conn.prepareStatement(query);
 
-            preparedStatement.setString(1, itemBarcode);
+            preparedStatement.setInt(1, itemBarcode);
             ResultSet results = preparedStatement.executeQuery();
 
             if (results.next()) {
-                out = results.getString(1);
+                return true;
             } else {
-                out = "";
+                return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return out;
+        return false;
     }
 
     //METHOD FOR INSERTING ITEM INTO THE DATABASE
-    public void takeItem(String employeeBarcode, String itemBarcode, String timeTaken) {
-        String sql = "INSERT INTO UsedItem VALUES (null , ? , ? , ? , null)";
+    public void takeItem(int employeeBarcode, int itemBarcode, Timestamp timeTaken) {
+        String sql = "INSERT INTO BorrowedItem VALUES (null , ? , ? , ? , null)";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, employeeBarcode);
-            preparedStatement.setString(2, itemBarcode);
-            preparedStatement.setString(3, timeTaken);
+            preparedStatement.setInt(1, employeeBarcode);
+            preparedStatement.setInt(2, itemBarcode);
+            preparedStatement.setTimestamp(3, timeTaken);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -173,27 +172,24 @@ public class Model {
     }
 
     //METHOD FOR CHECKING IF THE ITEM IS ALREADY REGISTERED TAKEN
-    public String checkIfItemIsTaken(String itemBarcode) {
-        String out = "";
+    public boolean checkIfItemIsTaken(int itemBarcode) {
         try {
-            String query = "SELECT itemBarcode FROM UsedItem \n" +
-                    "WHERE itemBarcode =?" +
-                    "AND timeReturned is null;";
+            String query = "SELECT itemBarcode FROM BorrowedItem WHERE itemBarcode =? AND timeReturned is null;";
 
             PreparedStatement preparedStatement = conn.prepareStatement(query);
 
-            preparedStatement.setString(1, itemBarcode);
+            preparedStatement.setInt(1, itemBarcode);
             ResultSet results = preparedStatement.executeQuery();
 
             if (results.next()) {
-                out = results.getString(1);
+                return true;
             } else {
-                out = "";
+                return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return out;
+        return false;
     }
 
     //METHOD FOR RETURNING THE TAKEN ITEM TO THE DATABASE
