@@ -62,12 +62,13 @@ public class Model {
     }
 
     //METHOD FOR UPDATING THE USED ITEM TABLE
-    public Item updateUsedItemTable(String table, String timeReturned, String itemBarcode) {
+    public Item updateUsedItemTable(String table, Timestamp timeReturned, String itemBarcode) {
         String sql = "UPDATE " + table + " SET timeReturned =? WHERE itemBarcode =? AND timeReturned IS null;";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
 
-            preparedStatement.setString(1, timeReturned);
+            //preparedStatement.setString(1, timeReturned);
+            preparedStatement.setTimestamp(1, timeReturned);
             preparedStatement.setString(2, itemBarcode);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -196,7 +197,7 @@ public class Model {
     public String returnItemInfoToUser(String itemBarcode) {
         String out = "";
         try {
-            String query = "SELECT description, name, timeTaken FROM UsedItem INNER JOIN Item ON UsedItem.itemBarcode = Item.itemBarcode INNER JOIN Employee ON UsedItem.employeeBarcode = Employee.employeeBarcode WHERE UsedItem.itemBarcode = ? AND UsedItem.timeReturned IS NULL;";
+            String query = "SELECT itemName, timeTaken, employeeName FROM BorrowedItem INNER JOIN Item ON BorrowedItem.itemBarcode = Item.itemBarcode INNER JOIN Employee ON BorrowedItem.employeeBarcode = Employee.employeeBarcode WHERE BorrowedItem.itemBarcode = ? AND BorrowedItem.timeReturned IS NULL;";
 
             PreparedStatement preparedStatement = conn.prepareStatement(query);
 
@@ -308,6 +309,31 @@ public class Model {
         }
         return observableList;
     }
+    //method to populate tableview
+    /*public ObservableList<String> getCategory() {
+        ObservableList<String> observableList = FXCollections.observableArrayList();
+
+        try {
+            String sql = "SELECT category FROM Item";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+
+
+                String category = (resultSet.getString(1));
+
+
+                observableList.add(category);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return observableList;
+    }*/
 
     //METHOD FOR DELETING AN EMPLOYEE FROM THE DATABASE
     public void deleteEmployee(int employeeBarcode) {

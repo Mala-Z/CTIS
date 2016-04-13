@@ -1,6 +1,8 @@
 package SourceCode.Controller;
 
+import SourceCode.BusinessLogic.Model;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -11,6 +13,8 @@ import java.io.IOException;
 public class RunView extends Application {
     private static Stage primaryStage;
     private static BorderPane mainLayout;
+    Model model = new Model();
+
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -18,6 +22,10 @@ public class RunView extends Application {
         this.primaryStage.setTitle("Racoon");
         showMainView();
 
+    }
+    @FXML
+    private void initialize(){
+        model.connectToDatabase();
     }
     //MainView
     public static void showMainView() throws IOException {
