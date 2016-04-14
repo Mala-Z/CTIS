@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 public class TakeItemController {
     Model model = new Model();
 
-    ObservableList<String> placeList = FXCollections.observableArrayList("Car", "Address");
+    ObservableList<String> placeList = FXCollections.observableArrayList("Address", "Car", "One day use");
 
     @FXML
     private TextField tfEmployeeBarcode;
@@ -51,11 +51,11 @@ public class TakeItemController {
     @FXML
     private void btnSubmitAction() {
         try {
-            if (tfEmployeeBarcode.getLength() > 0 && tfItemBarcode.getLength() > 0) {
+            if (tfEmployeeBarcode.getLength() > 0 && tfItemBarcode.getLength() > 0 && placeCombo.getSelectionModel().getSelectedIndex() > 0) {
                 if (!model.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
                     java.util.Date today = new java.util.Date();
                     Timestamp timeTaken = new Timestamp(today.getTime());
-                    model.takeItem(Integer.parseInt(tfEmployeeBarcode.getText()), Integer.parseInt(tfItemBarcode.getText()), timeTaken);
+                    model.takeItem(Integer.parseInt(tfEmployeeBarcode.getText()), Integer.parseInt(tfItemBarcode.getText()), timeTaken, placeCombo.getValue().toString());
                     updateAlertMessage("Registration successful");
                     runView.showMainView();
                 } else if (model.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {

@@ -53,8 +53,8 @@ public class ReturnItemController {
 
                    java.util.Date today = new java.util.Date();
                     Timestamp timeReturned = new Timestamp(today.getTime());
-                    model.returnItemInfoToUser(tfItemBarcode.getText());
-                    model.updateUsedItemTable("BorrowedItem", timeReturned, tfItemBarcode.getText());
+                    model.returnItem(Integer.parseInt(tfItemBarcode.getText()));
+                    model.updateBorrowedItemTable("BorrowedItem", timeReturned, Integer.parseInt(tfItemBarcode.getText()));
 
                     updateAlertMessage("Item returned");
                     runView.showMainView();
