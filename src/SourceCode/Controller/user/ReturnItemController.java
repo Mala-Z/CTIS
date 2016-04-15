@@ -153,11 +153,12 @@ public class ReturnItemController {
             //EXECUTE QUERIES
             ResultSet result = conn.createStatement().executeQuery(sql);
 
-            int rowBarcode = result.getInt("employeeBarcode");
-            String employeeBarcodeString = tfItemBarcode.getText();
-            int employeeBarcodeInt = Integer.parseInt(employeeBarcodeString);
+
 
             while ((result.next())){
+                int rowBarcode = result.getInt("employeeBarcode");
+                String employeeBarcodeString = tfItemBarcode.getText();
+                int employeeBarcodeInt = Integer.parseInt(employeeBarcodeString);
 
                 if (rowBarcode == employeeBarcodeInt) {
                     BorrowedItem borrowedItem = new BorrowedItem();
