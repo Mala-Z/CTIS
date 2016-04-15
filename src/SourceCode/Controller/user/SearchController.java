@@ -1,18 +1,26 @@
 package SourceCode.Controller.user;
 
+import SourceCode.BusinessLogic.Model;
 import SourceCode.Controller.RunView;
+import SourceCode.Model.Employee;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
 
-public class SearchController implements Initializable {
+public class SearchController  {
+
+    Model model = new Model();
+    @FXML
+    TableColumn columnX;
+
     @FXML
     Label employeeBarcodeLabel;
     @FXML
@@ -49,36 +57,51 @@ public class SearchController implements Initializable {
             employeeBarcodeLabel.setText("You have not left a comment.");
         }
         if(comboBox.getItems()!= null){
-            //tableview.
         }
 
     }
+    @FXML
+    private void checkItemBarcode() {
+        try {
+
+            int barcode = Integer.parseInt(tfItemNumber.getText());
+            if (model.checkItemBarcode(barcode)) {
+
+//                final ObservableList<Employee> data = FXCollections.observableArrayList(
+//                        new Employee(3123, "1", "Alex", 62993),
+//                        new Employee(4345, "2", "Ana", 42234),
+//                        new Employee(3423, "3", "Ani", 23322)
+//                );
+//                TableColumn columnX = new TableColumn("Primary");
+//                columnX.setMinWidth(100);
+//                columnX.setCellValueFactory(
+//                        new PropertyValueFactory<Employee, String>("columnX")
+//                );
+//                tableview.setItems(data);
+//                tableview.getColumns().addAll(columnX);
+
+                tableview.requestFocus();
+                //show scanned item in the list
 
 
-
-    public void setData(){
-        comboBox.getItems().clear();
-
-        ArrayList list = new ArrayList();
-        list.add("S");
-        list.add("M");
-        list.add("P");
-        list.add("C");
-        comboBox.getItems().addAll(list);
-        ObservableList<String> obList = FXCollections.observableArrayList(list);
-        /*TableColumn<String, Map> col = new TableColumn<>("Objects:", obList);
-        col.setCellFactory(new PropertyValueFactory<String>("shit");
-        itemColumn.setCellFactory(new PropertyValueFactory<String, Collections>());*/
-
+            } else {
+                updateAlertMessage("Please scan the barcode again");
+                tfItemNumber.setText(null);
+            }
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+        }
     }
 
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        /*itemColumn.setCellValueFactory(new PropertyValueFactory<>("item"));
-        numberColumn.setCellFactory(new PropertyValueFactory<>("number"));
-        nameColumn.setCellFactory(new PropertyValueFactory<>("name"));
-        //tableview.getItems().setAll(obList);*/
+    //METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER
+    public void updateAlertMessage(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
+
+
+
 
 }

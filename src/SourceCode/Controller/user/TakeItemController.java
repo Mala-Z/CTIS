@@ -32,9 +32,9 @@ public class TakeItemController {
 
     private RunView runView;
 
-    @FXML
+   @FXML
     private void initialize(){
-        placeCombo.setItems(placeList);
+        placeCombo.setItems(model.getCategory());
     }
 
     @FXML
@@ -44,7 +44,6 @@ public class TakeItemController {
 
     @FXML
     private void btnDeleteAction() throws IOException {
-
 
     }
 
@@ -57,7 +56,7 @@ public class TakeItemController {
                     Timestamp timeTaken = new Timestamp(today.getTime());
                     model.takeItem(Integer.parseInt(tfEmployeeBarcode.getText()), Integer.parseInt(tfItemBarcode.getText()), timeTaken, placeCombo.getValue().toString());
                     updateAlertMessage("Registration successful");
-                    runView.showMainView();
+                    //runView.showMainView();
                 } else if (model.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
                     updateAlertMessage("Item has been already taken by another employee");
                     tfItemBarcode.setText(null);

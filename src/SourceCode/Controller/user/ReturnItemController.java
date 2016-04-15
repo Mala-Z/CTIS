@@ -140,11 +140,11 @@ public class ReturnItemController {
     public void buildData(){
         //THE CONNECTION
         Connection conn;
+
         //THE OBSERVABLE LIST
         borrowedItemData = FXCollections.observableArrayList();
         try {
             model.connectToDatabase();
-            //conn =  model.conn;
             conn = model.conn;
 
             //SQL QUERIES
@@ -152,15 +152,23 @@ public class ReturnItemController {
 
             //EXECUTE QUERIES
             ResultSet result = conn.createStatement().executeQuery(sql);
-            if ((result.next())){
-                BorrowedItem  borrowedItem = new BorrowedItem();
-                borrowedItem.idProperty().set(result.getInt("id"));
-                borrowedItem.employeeBarcodeProperty().set(result.getInt("employeeBarcode"));
-                borrowedItem.itemBarcodeProperty().set(result.getInt("itemBarcode"));
-                borrowedItem.timeTakenProperty().set(result.getString("timeTaken"));
-                borrowedItem.timeReturnedProperty().set(result.getString("timeReturned"));
 
-                borrowedItemData.add(borrowedItem);
+            int rowBarcode = result.getInt("employeeBarcode");
+            String employeeBarcodeString = tfItemBarcode.getText();
+            int employeeBarcodeInt = Integer.parseInt(employeeBarcodeString);
+
+            while ((result.next())){
+
+                if (rowBarcode == employeeBarcodeInt) {
+                    BorrowedItem borrowedItem = new BorrowedItem();
+                    borrowedItem.idProperty().set(result.getInt("id"));
+                    borrowedItem.employeeBarcodeProperty().set(result.getInt("employeeBarcode"));
+                    borrowedItem.itemBarcodeProperty().set(result.getInt("itemBarcode"));
+                    borrowedItem.timeTakenProperty().set(result.getString("timeTaken"));
+                    borrowedItem.timeReturnedProperty().set(result.getString("timeReturned"));
+
+                    borrowedItemData.add(borrowedItem);
+                }
 
 
             }
