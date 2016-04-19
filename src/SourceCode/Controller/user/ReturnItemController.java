@@ -35,6 +35,7 @@ public class ReturnItemController {
     private RunView runView;
 
 
+
     @FXML
     private void btnBackAction() throws IOException {
         runView.showMainView();
@@ -72,10 +73,11 @@ public class ReturnItemController {
 
     @FXML
     private void checkItemBarcode() {
+        int barcode = Integer.parseInt(tfItemBarcode.getText());
         try {
-            if (model.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) {
+            if (model.checkItemBarcode(barcode)) {
 
-                tableView.requestFocus();
+
                 initComponents();
                 //tableView.getItems(buildData());
                /* TableColumn firstNameCol = new TableColumn("First Name");
@@ -97,7 +99,7 @@ public class ReturnItemController {
         }
     }
 
-    private void initComponents() {
+    public void initComponents() {
 
         //CALLING BUILD DATA METHOD
         buildData();
@@ -120,10 +122,10 @@ public class ReturnItemController {
         columnId.setMinWidth(50);
         TableColumn columnBarcodeEmployee = new TableColumn<BorrowedItem, Integer>("Employee barcode: ");
         columnBarcodeEmployee.setCellValueFactory(new PropertyValueFactory<BorrowedItem, Integer>("employeeBarcode"));
-        columnBarcodeEmployee.setMinWidth(170);
+        columnBarcodeEmployee.setMinWidth(100);
         TableColumn columnBarcodeItem = new TableColumn<BorrowedItem, Integer>("Item barcode: ");
         columnBarcodeItem.setCellValueFactory(new PropertyValueFactory<BorrowedItem, Integer>("itemBarcode"));
-        columnBarcodeItem.setMinWidth(170);
+        columnBarcodeItem.setMinWidth(100);
         TableColumn columnTimeTaken = new TableColumn<BorrowedItem, DateTimeFormatter>("Time taken: ");
         columnTimeTaken.setCellValueFactory(new PropertyValueFactory<BorrowedItem, DateTimeFormatter>("timeTaken"));
         columnTimeTaken.setMinWidth(170);
@@ -133,7 +135,7 @@ public class ReturnItemController {
 
         //ASSIGNING THE COLUMNS TO THE TABLE VIEW
 
-        tableView.getColumns().addAll(columnId, columnBarcodeEmployee, columnBarcodeItem, columnTimeTaken, columnTimeReturned);
+        tableView.getColumns().setAll(columnId, columnBarcodeEmployee, columnBarcodeItem, columnTimeTaken, columnTimeReturned);
     }
 
 
@@ -161,6 +163,7 @@ public class ReturnItemController {
                 int employeeBarcodeInt = Integer.parseInt(employeeBarcodeString);
 
                 if (rowBarcode == employeeBarcodeInt) {
+
                     BorrowedItem borrowedItem = new BorrowedItem();
                     borrowedItem.idProperty().set(result.getInt("id"));
                     borrowedItem.employeeBarcodeProperty().set(result.getInt("employeeBarcode"));
@@ -169,12 +172,15 @@ public class ReturnItemController {
                     borrowedItem.timeReturnedProperty().set(result.getString("timeReturned"));
 
                     borrowedItemData.add(borrowedItem);
+
                 }
 
 
             }
             //OBSERVABLE LIST ADDED TO TABLE VIEW
-            tableView.setItems(borrowedItemData);
+            //tableView.setItems(borrowedItemData);
+            tableView.getItems().addAll(borrowedItemData);
+            //tableView.edit();
         } catch(Exception e){
             e.printStackTrace();
             System.out.println("Error on Building BorrowedItem Data");
