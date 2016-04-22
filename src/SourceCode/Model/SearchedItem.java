@@ -23,7 +23,7 @@ public class SearchedItem {
         this.timeTaken = new SimpleObjectProperty(timeTaken);
     }
 
-    public String getEmployeeName() {
+    public final String getEmployeeName() {
         return employeeName.get();
     }
 
@@ -31,7 +31,7 @@ public class SearchedItem {
         return employeeName;
     }
 
-    public String getItemName() {
+    public final String getItemName() {
         return itemName.get();
     }
 
@@ -39,7 +39,7 @@ public class SearchedItem {
         return itemName;
     }
 
-    public String getItemPlace() {
+    public final String getItemPlace() {
         return itemPlace.get();
     }
 
@@ -47,7 +47,7 @@ public class SearchedItem {
         return itemPlace;
     }
 
-    public DateTimeFormatter getTimeTaken() {
+    public final DateTimeFormatter getTimeTaken() {
         return timeTaken.get();
     }
 

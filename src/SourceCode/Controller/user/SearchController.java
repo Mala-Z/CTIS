@@ -3,7 +3,6 @@ package SourceCode.Controller.user;
 import SourceCode.BusinessLogic.Model;
 import SourceCode.Controller.RunView;
 import SourceCode.Model.BorrowedItem;
-import SourceCode.Model.Item;
 import SourceCode.Model.SearchedItem;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,13 +12,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.format.DateTimeFormatter;
 
 
 public class SearchController  {
 
-    Model model = new Model();
+    Model model = Model.getInstance();
     private ObservableList searchItemData;
     @FXML
     TableColumn columnX;
@@ -69,19 +69,8 @@ public class SearchController  {
         try {
             if (model.checkItemBarcode(barcode)) {
 
-
                 initComponents();
-                //tableView.getItems(buildData());
-               /* TableColumn firstNameCol = new TableColumn("First Name");
-                firstNameCol.setMinWidth(100);
-                firstNameCol.setCellValueFactory(
-                        new PropertyValueFactory<Item, String>("itemName"));
 
-                TableColumn lastNameCol = new TableColumn("Last Name");
-                TableColumn emailCol = new TableColumn("Email");
-
-                tableView.getColumns().addAll(firstNameCol, lastNameCol, emailCol);*/
-                //show scanned item in the list
             } else {
                 updateAlertMessage("Please scan the barcode again");
                 tfItemNumber.setText(null);
@@ -95,17 +84,6 @@ public class SearchController  {
         //CALLING BUILD DATA METHOD
         buildData();
 
-
-        //SETTING COLUMNS FOR ITEM TABLE VIEW
-        TableColumn columnItem = new TableColumn<Item, Integer>("Barcode: ");
-        columnItem.setCellValueFactory(new PropertyValueFactory<Item, Integer>("itemBarcode"));
-        columnItem.setMinWidth(200);
-        TableColumn columnItemNo = new TableColumn<Item, Integer>("Item number: ");
-        columnItemNo.setCellValueFactory(new PropertyValueFactory<Item, Integer>("itemNo"));
-        columnItemNo.setMinWidth(200);
-        TableColumn colProperty = new TableColumn<Item, String>("Description: ");
-        colProperty.setCellValueFactory(new PropertyValueFactory<Item, String>("description"));
-        colProperty.setMinWidth(300);
 
         //SETTING COLUMNS FOR USED ITEM TABLE VIEW
         TableColumn columnEmployeeName = new TableColumn<SearchedItem, String>("Employee: ");
@@ -128,36 +106,36 @@ public class SearchController  {
     }
     public void buildData(){
         //THE CONNECTION
-        Connection conn;
+        //Connection conn;
+
 
         //THE OBSERVABLE LIST
         searchItemData = FXCollections.observableArrayList();
         try {
-            model.connectToDatabase();
-            conn = model.conn;
 
-            String itemBarcodeString1 = tfItemNumber.getText();
-            int employeeBarcodeInt1 = Integer.parseInt(itemBarcodeString1);
+            //conn = model.conn;
 
             //SQL QUERIES
-            String sql = "use ctis_racoon;\n" +
-                    "SELECT employeeName, itemName, place, timeTaken FROM BorrowedItem\n" +
+            String sql = "SELECT employeeName, itemName, place, timeTaken FROM BorrowedItem\n" +
                     "INNER JOIN Item ON BorrowedItem.itemBarcode = Item.itemBarcode\n" +
                     "INNER JOIN Employee ON BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Place ON BorrowedItem.itemBarcode = Place.itemBarcode\n" +
-                    "WHERE BorrowedItem.itemBarcode = 'employeeBarcodeInt1' AND BorrowedItem.timeReturned IS NULL;";
+                    "WHERE BorrowedItem.itemBarcode = ? AND BorrowedItem.timeReturned IS NULL;";
 
             //EXECUTE QUERIES
-            ResultSet result = conn.createStatement().executeQuery(sql);
+            int inputBarcode = Integer.parseInt(tfItemNumber.getText());
+            PreparedStatement preparedStatement = model.preparedStatement(sql);
+            preparedStatement.setInt(1, inputBarcode);
+
+            ResultSet result = model.resultSet(sql);
 
 
 
             while ((result.next())){
                 int rowBarcode = result.getInt("itemBarcode");
-                String itemBarcodeString = tfItemNumber.getText();
-                int employeeBarcodeInt = Integer.parseInt(itemBarcodeString);
+                int itemBarcodeInt = Integer.parseInt(tfItemNumber.getText());
 
-                if (rowBarcode == employeeBarcodeInt) {
+                if (rowBarcode == itemBarcodeInt) {
 
                     SearchedItem searchedItem = new SearchedItem();
                     searchedItem.employeeNameProperty().set(result.getString("employeeName"));
@@ -165,19 +143,17 @@ public class SearchController  {
                     searchedItem.itemPlaceProperty().set(result.getString("place"));
                     searchedItem.timeTakenProperty().set(result.getString("timeTaken"));
 
-                    searchItemData.add(searchItemData);
+                    searchItemData.add(searchedItem);
+
 
                 }
-
-
             }
             //OBSERVABLE LIST ADDED TO TABLE VIEW
             //tableView.setItems(searchItemData);
             tableView.getItems().addAll(searchItemData);
-            //tableView.edit();
         } catch(Exception e){
             e.printStackTrace();
-            System.out.println("Error on Building BorrowedItem Data");
+            System.out.println("Error on Building SearchedItem Data");
         }
 
     }

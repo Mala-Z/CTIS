@@ -1,7 +1,6 @@
 package SourceCode.Controller;
 
 import SourceCode.BusinessLogic.Model;
-import SourceCode.Controller.user.ReturnItemController;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,21 +13,21 @@ import java.io.IOException;
 public class RunView extends Application {
     private static Stage primaryStage;
     private static BorderPane mainLayout;
-    Model model = new Model();
+    Model model;
 
 
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Racoon");
         showMainView();
 
+        model.getInstance();
+
     }
-    @FXML
-    private void initialize(){
-        model.connectToDatabase();
-    }
+
     //MainView
     public static void showMainView() throws IOException {
         FXMLLoader loader = new FXMLLoader();

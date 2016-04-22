@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class CreateEmployeeController {
-    Model model = new Model();
+    Model model=null;
 
     @FXML
     private Button btnSubmit;

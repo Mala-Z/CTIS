@@ -12,13 +12,15 @@ public class Model {
     private Item item;
     private Employee employee;
     public static Connection conn = null;
+    private static Model model = null;
+
 
     //CONSTRUCTOR
-    public Model() {
+    private Model() {
         connectToDatabase();
     }
 
-    public void connectToDatabase() {
+    private void connectToDatabase() {
         System.out.println("***********Welcome to Racoon**************");
         try {
             String DB_URL = "jdbc:mysql://db4free.net:3306/ctis_racoon";
@@ -28,6 +30,29 @@ public class Model {
             System.out.println("conn obj created " + conn + " message: ");
         } catch (SQLException e) {
             System.out.println("db error" + e.getMessage());
+        }
+    }
+
+    public static Model getInstance(){
+        if(model == null){
+            return new Model();
+        }
+        return model;
+    }
+    public ResultSet resultSet(String sql){
+        try{
+            return conn.createStatement().executeQuery(sql);
+        }
+        catch (SQLException ex){
+            return null;
+        }
+    }
+    public PreparedStatement preparedStatement(String sql){
+        try{
+            return conn.prepareStatement(sql);
+        }
+        catch (SQLException ex){
+            return null;
         }
     }
 
@@ -146,6 +171,7 @@ public class Model {
 
     //METHOD FOR CHECKING THE ITEM BARCODE STORED INTO THE DATABASE
     public boolean checkItemBarcode(int itemBarcode) {
+
         try {
             String query = "SELECT itemBarcode FROM Item WHERE itemBarcode = ?";
 

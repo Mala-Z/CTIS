@@ -3,7 +3,6 @@ package SourceCode.Controller.user;
 import SourceCode.BusinessLogic.Model;
 import SourceCode.Controller.RunView;
 import SourceCode.Model.BorrowedItem;
-import SourceCode.Model.Item;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,13 +15,13 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 
-import static SourceCode.BusinessLogic.Model.conn;
+//import static SourceCode.BusinessLogic.Model.conn;
 
 public class ReturnItemController {
     // Observable list
     private ObservableList borrowedItemData;
 
-    Model model = new Model();
+    Model model = Model.getInstance();
     @FXML
     private TextField tfItemBarcode;
     @FXML
@@ -74,22 +73,13 @@ public class ReturnItemController {
     @FXML
     private void checkItemBarcode() {
         int barcode = Integer.parseInt(tfItemBarcode.getText());
+
         try {
+
             if (model.checkItemBarcode(barcode)) {
 
-
                 initComponents();
-                //tableView.getItems(buildData());
-               /* TableColumn firstNameCol = new TableColumn("First Name");
-                firstNameCol.setMinWidth(100);
-                firstNameCol.setCellValueFactory(
-                        new PropertyValueFactory<Item, String>("itemName"));
 
-                TableColumn lastNameCol = new TableColumn("Last Name");
-                TableColumn emailCol = new TableColumn("Email");
-
-                tableView.getColumns().addAll(firstNameCol, lastNameCol, emailCol);*/
-                //show scanned item in the list
             } else {
                 updateAlertMessage("Please scan the barcode again");
                 tfItemBarcode.setText(null);
@@ -105,16 +95,16 @@ public class ReturnItemController {
         buildData();
 
 
-        //SETTING COLUMNS FOR ITEM TABLE VIEW
-        TableColumn columnItem = new TableColumn<Item, Integer>("Barcode: ");
-        columnItem.setCellValueFactory(new PropertyValueFactory<Item, Integer>("itemBarcode"));
-        columnItem.setMinWidth(200);
-        TableColumn columnItemNo = new TableColumn<Item, Integer>("Item number: ");
-        columnItemNo.setCellValueFactory(new PropertyValueFactory<Item, Integer>("itemNo"));
-        columnItemNo.setMinWidth(200);
-        TableColumn colProperty = new TableColumn<Item, String>("Description: ");
-        colProperty.setCellValueFactory(new PropertyValueFactory<Item, String>("description"));
-        colProperty.setMinWidth(300);
+//        //SETTING COLUMNS FOR ITEM TABLE VIEW
+//        TableColumn columnItem = new TableColumn<Item, Integer>("Barcode: ");
+//        columnItem.setCellValueFactory(new PropertyValueFactory<Item, Integer>("itemBarcode"));
+//        columnItem.setMinWidth(200);
+//        TableColumn columnItemNo = new TableColumn<Item, Integer>("Item number: ");
+//        columnItemNo.setCellValueFactory(new PropertyValueFactory<Item, Integer>("itemNo"));
+//        columnItemNo.setMinWidth(200);
+//        TableColumn colProperty = new TableColumn<Item, String>("Description: ");
+//        colProperty.setCellValueFactory(new PropertyValueFactory<Item, String>("description"));
+//        colProperty.setMinWidth(300);
 
         //SETTING COLUMNS FOR USED ITEM TABLE VIEW
         TableColumn columnId = new TableColumn<BorrowedItem, Integer>("Id: ");
@@ -141,28 +131,26 @@ public class ReturnItemController {
 
     public void buildData(){
         //THE CONNECTION
-        Connection conn;
+        //Connection conn;
 
         //THE OBSERVABLE LIST
         borrowedItemData = FXCollections.observableArrayList();
         try {
-            model.connectToDatabase();
-            conn = model.conn;
+            //conn = model.conn;
 
             //SQL QUERIES
             String sql = "SELECT * FROM BorrowedItem;";
 
             //EXECUTE QUERIES
-            ResultSet result = conn.createStatement().executeQuery(sql);
+            ResultSet result = model.resultSet(sql);
 
 
 
             while ((result.next())){
-                int rowBarcode = result.getInt("employeeBarcode");
-                String employeeBarcodeString = tfItemBarcode.getText();
-                int employeeBarcodeInt = Integer.parseInt(employeeBarcodeString);
+                int rowBarcode = result.getInt("itemBarcode");
+                int itemBarcodeInt = Integer.parseInt(tfItemBarcode.getText());
 
-                if (rowBarcode == employeeBarcodeInt) {
+                if (rowBarcode == itemBarcodeInt) {
 
                     BorrowedItem borrowedItem = new BorrowedItem();
                     borrowedItem.idProperty().set(result.getInt("id"));
@@ -180,7 +168,6 @@ public class ReturnItemController {
             //OBSERVABLE LIST ADDED TO TABLE VIEW
             //tableView.setItems(borrowedItemData);
             tableView.getItems().addAll(borrowedItemData);
-            //tableView.edit();
         } catch(Exception e){
             e.printStackTrace();
             System.out.println("Error on Building BorrowedItem Data");
@@ -194,8 +181,4 @@ public class ReturnItemController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-
-
-
 }

@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 
 public class TakeItemController {
-    Model model = new Model();
+    Model model = Model.getInstance();
 
     ObservableList<String> placeList = FXCollections.observableArrayList("Address", "Car", "One day use");
 

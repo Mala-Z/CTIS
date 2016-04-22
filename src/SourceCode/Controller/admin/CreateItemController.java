@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class CreateItemController {
-    Model model = new Model();
+    Model model=null;
 
     ObservableList<String> categoryList = FXCollections.observableArrayList("Apartment cleaning", "Clothes", "Green areas", "Key", "Snow");
 
