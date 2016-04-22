@@ -1,6 +1,7 @@
 package SourceCode.Controller.admin;
 
-import SourceCode.BusinessLogic.Model;
+import SourceCode.BusinessLogic.BusinessLogic;
+import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -9,7 +10,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class CreateEmployeeController {
-    Model model=null;
+    BusinessLogic businessLogic;
+
 
     @FXML
     private Button btnSubmit;
@@ -28,22 +30,22 @@ public class CreateEmployeeController {
 
     @FXML
     private void btnSubmit() {
-        try {
-            if (tfEmployeeBarcode.getLength() > 0 && tfEmployeeNo.getLength() > 0 && tfEmployeeName.getLength() > 0 && tfPhoneNumber.getLength() > 0) {
-                if (!model.checkEmployeeBarcode(Integer.parseInt(tfEmployeeBarcode.getText()))) {
-                    model.insertEmployee(Integer.parseInt(tfEmployeeBarcode.getText()), tfEmployeeNo.getText(), tfEmployeeName.getText(), Integer.parseInt(tfPhoneNumber.getText()));
-                    updateAlertMessage("Registration successful");
-                    Stage stage = (Stage) btnCancel.getScene().getWindow();
-                    stage.close();
-                    runView.showAdminView();
-                }
-            } else {
-                updateAlertMessage("Please insert values in all fields to be able to save an employee");
-            }
-
-        } catch(Exception e) {
-            System.out.println("Exception: " + e);
-        }
+//        try {
+//            if (tfEmployeeBarcode.getLength() > 0 && tfEmployeeNo.getLength() > 0 && tfEmployeeName.getLength() > 0 && tfPhoneNumber.getLength() > 0) {
+//                if (!businessLogic.checkEmployeeBarcode(Integer.parseInt(tfEmployeeBarcode.getText()))) {
+//                    businessLogic.insertEmployee(Integer.parseInt(tfEmployeeBarcode.getText()), tfEmployeeNo.getText(), tfEmployeeName.getText(), Integer.parseInt(tfPhoneNumber.getText()));
+//                    updateAlertMessage("Registration successful");
+//                    Stage stage = (Stage) btnCancel.getScene().getWindow();
+//                    stage.close();
+//                    runView.showAdminView();
+//                }
+//            } else {
+//                updateAlertMessage("Please insert values in all fields to be able to save an employee");
+//            }
+//
+//        } catch(Exception e) {
+//            System.out.println("Exception: " + e);
+//        }
     }
 
     @FXML

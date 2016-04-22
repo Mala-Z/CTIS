@@ -1,6 +1,7 @@
 package SourceCode.Controller.user;
 
-import SourceCode.BusinessLogic.Model;
+import SourceCode.BusinessLogic.BusinessLogic;
+import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
 import SourceCode.Model.BorrowedItem;
 import javafx.collections.FXCollections;
@@ -15,13 +16,15 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 
-//import static SourceCode.BusinessLogic.Model.conn;
+//import static SourceCode.BusinessLogic.Factory.conn;
 
 public class ReturnItemController {
     // Observable list
     private ObservableList borrowedItemData;
+    Connection conn;
 
-    Model model = Model.getInstance();
+    Factory factory = Factory.getInstance();
+    BusinessLogic businessLogic;
     @FXML
     private TextField tfItemBarcode;
     @FXML
@@ -47,27 +50,27 @@ public class ReturnItemController {
 
     @FXML
     private void btnSubmitAction() {
-        try {
-            if (tfItemBarcode.getLength() > 0) {
-                if (model.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
-
-                   java.util.Date today = new java.util.Date();
-                    Timestamp timeReturned = new Timestamp(today.getTime());
-                    model.returnItem(Integer.parseInt(tfItemBarcode.getText()));
-                    model.updateBorrowedItemTable("BorrowedItem", timeReturned, Integer.parseInt(tfItemBarcode.getText()));
-
-                    updateAlertMessage("Item returned");
-                    runView.showMainView();
-                } else if (!model.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
-                    updateAlertMessage("Item has not been taken by employee");
-                    tfItemBarcode.setText(null);
-                }
-            } else {
-                updateAlertMessage("Missing item barcode");
-            }
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
-        }
+//        try {
+//            if (tfItemBarcode.getLength() > 0) {
+//                if (businessLogic.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
+//
+//                   java.util.Date today = new java.util.Date();
+//                    Timestamp timeReturned = new Timestamp(today.getTime());
+//                    businessLogic.returnItem(Integer.parseInt(tfItemBarcode.getText()));
+//                    businessLogic.updateBorrowedItemTable("BorrowedItem", timeReturned, Integer.parseInt(tfItemBarcode.getText()));
+//
+//                    updateAlertMessage("Item returned");
+//                    runView.showMainView();
+//                } else if (!businessLogic.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
+//                    updateAlertMessage("Item has not been taken by employee");
+//                    tfItemBarcode.setText(null);
+//                }
+//            } else {
+//                updateAlertMessage("Missing item barcode");
+//            }
+//        } catch (Exception e) {
+//            System.out.println("Exception: " + e.getMessage());
+//        }
     }
 
     @FXML
@@ -76,7 +79,8 @@ public class ReturnItemController {
 
         try {
 
-            if (model.checkItemBarcode(barcode)) {
+            if (businessLogic.checkItemBarcode(barcode)) {
+
 
                 initComponents();
 
@@ -85,7 +89,7 @@ public class ReturnItemController {
                 tfItemBarcode.setText(null);
             }
         } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
+            System.out.println("Exception in checkItemBarcode() from ReturnItemController class: " + e.getMessage());
         }
     }
 
@@ -136,13 +140,13 @@ public class ReturnItemController {
         //THE OBSERVABLE LIST
         borrowedItemData = FXCollections.observableArrayList();
         try {
-            //conn = model.conn;
+            //conn = factory.conn;
 
             //SQL QUERIES
             String sql = "SELECT * FROM BorrowedItem;";
 
             //EXECUTE QUERIES
-            ResultSet result = model.resultSet(sql);
+            ResultSet result = conn.prepareStatement(sql).executeQuery();
 
 
 

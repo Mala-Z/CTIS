@@ -1,6 +1,7 @@
 package SourceCode.Controller.user;
 
-import SourceCode.BusinessLogic.Model;
+import SourceCode.BusinessLogic.BusinessLogic;
+import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
 import SourceCode.Model.BorrowedItem;
 import SourceCode.Model.SearchedItem;
@@ -11,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +19,8 @@ import java.time.format.DateTimeFormatter;
 
 public class SearchController  {
 
-    Model model = Model.getInstance();
+    Factory factory = Factory.getInstance();
+    BusinessLogic businessLogic;
     private ObservableList searchItemData;
     @FXML
     TableColumn columnX;
@@ -67,7 +68,7 @@ public class SearchController  {
     private void checkItemBarcode() {
         int barcode = Integer.parseInt(tfItemNumber.getText());
         try {
-            if (model.checkItemBarcode(barcode)) {
+            if (businessLogic.checkItemBarcode(barcode)) {
 
                 initComponents();
 
@@ -108,12 +109,11 @@ public class SearchController  {
         //THE CONNECTION
         //Connection conn;
 
-
         //THE OBSERVABLE LIST
         searchItemData = FXCollections.observableArrayList();
         try {
 
-            //conn = model.conn;
+            //conn = factory.conn;
 
             //SQL QUERIES
             String sql = "SELECT employeeName, itemName, place, timeTaken FROM BorrowedItem\n" +
@@ -124,18 +124,18 @@ public class SearchController  {
 
             //EXECUTE QUERIES
             int inputBarcode = Integer.parseInt(tfItemNumber.getText());
-            PreparedStatement preparedStatement = model.preparedStatement(sql);
+            PreparedStatement preparedStatement = factory.preparedStatement(sql);
             preparedStatement.setInt(1, inputBarcode);
 
-            ResultSet result = model.resultSet(sql);
+            ResultSet result = factory.resultSet(sql);
 
 
 
             while ((result.next())){
                 int rowBarcode = result.getInt("itemBarcode");
-                int itemBarcodeInt = Integer.parseInt(tfItemNumber.getText());
+                //int itemBarcodeInt = Integer.parseInt(tfItemNumber.getText());
 
-                if (rowBarcode == itemBarcodeInt) {
+                if (rowBarcode == inputBarcode) {
 
                     SearchedItem searchedItem = new SearchedItem();
                     searchedItem.employeeNameProperty().set(result.getString("employeeName"));

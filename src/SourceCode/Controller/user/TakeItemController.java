@@ -1,6 +1,7 @@
 package SourceCode.Controller.user;
 
-import SourceCode.BusinessLogic.Model;
+import SourceCode.BusinessLogic.BusinessLogic;
+import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,9 +12,10 @@ import java.io.IOException;
 import java.sql.Timestamp;
 
 public class TakeItemController {
-    Model model = Model.getInstance();
+    BusinessLogic businessLogic = new BusinessLogic();
 
     ObservableList<String> placeList = FXCollections.observableArrayList("Address", "Car", "One day use");
+
 
     @FXML
     private TextField tfEmployeeBarcode;
@@ -34,7 +36,7 @@ public class TakeItemController {
 
    @FXML
     private void initialize(){
-        placeCombo.setItems(model.getCategory());
+       placeCombo.setItems(placeList);
     }
 
     @FXML
@@ -50,16 +52,19 @@ public class TakeItemController {
     @FXML
     private void btnSubmitAction() {
         try {
-            if (tfEmployeeBarcode.getLength() > 0 && tfItemBarcode.getLength() > 0 && placeCombo.getSelectionModel().getSelectedIndex() > 0) {
-                if (!model.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
+            if (tfEmployeeBarcode.getLength() > 0 && tfItemBarcode.getLength() > 0) {
+                if (!businessLogic.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
                     java.util.Date today = new java.util.Date();
                     Timestamp timeTaken = new Timestamp(today.getTime());
-                    model.takeItem(Integer.parseInt(tfEmployeeBarcode.getText()), Integer.parseInt(tfItemBarcode.getText()), timeTaken, placeCombo.getValue().toString());
+                    businessLogic.takeItem(Integer.parseInt(tfEmployeeBarcode.getText()), Integer.parseInt(tfItemBarcode.getText()), timeTaken, placeCombo.getValue().toString());
                     updateAlertMessage("Registration successful");
                     //runView.showMainView();
-                } else if (model.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
+                } else if (businessLogic.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
                     updateAlertMessage("Item has been already taken by another employee");
                     tfItemBarcode.setText(null);
+                }else if (placeCombo.getSelectionModel().getSelectedIndex() > 0) {
+                        updateAlertMessage("Missing place for item");
+                        tfItemBarcode.setText(null);
                 }
             } else {
                 updateAlertMessage("Missing barcode for employee or item");
@@ -72,7 +77,7 @@ public class TakeItemController {
     @FXML
     private void checkEmployeeBarcode() {
         try {
-            if (model.checkEmployeeBarcode(Integer.parseInt(tfEmployeeBarcode.getText()))) {
+            if (businessLogic.checkEmployeeBarcode(Integer.parseInt(tfEmployeeBarcode.getText()))) {
                 tfItemBarcode.requestFocus();
             } else {
                 updateAlertMessage("Please scan the barcode again");
@@ -86,7 +91,7 @@ public class TakeItemController {
     @FXML
     private void checkItemBarcode() {
         try {
-            if (model.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) {
+            if (businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) {
                 tableView.requestFocus();
                 //show scanned item in the list
             } else {

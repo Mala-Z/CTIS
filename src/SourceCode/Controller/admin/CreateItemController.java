@@ -1,6 +1,6 @@
 package SourceCode.Controller.admin;
 
-import SourceCode.BusinessLogic.Model;
+import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.Controller.RunView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class CreateItemController {
-    Model model=null;
+    BusinessLogic businessLogic;
 
     ObservableList<String> categoryList = FXCollections.observableArrayList("Apartment cleaning", "Clothes", "Green areas", "Key", "Snow");
 
@@ -50,23 +50,23 @@ public class CreateItemController {
 
     @FXML
     private void btnSubmit() {
-        try {
-            if (tfItemBarcode.getLength() > 0 && tfItemNo.getLength() > 0 && tfItemName.getLength() > 0 && categoryCombo.getSelectionModel().getSelectedIndex() > 0) {
-                if (!model.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) {
-                    model.insertItem(Integer.parseInt(tfItemBarcode.getText()), tfItemNo.getText(), tfItemName.getText(),
-                            categoryCombo.getValue().toString());
-                    updateAlertMessage("Registration successful");
-                    Stage stage = (Stage) btnCancel.getScene().getWindow();
-                    stage.close();
-                    runView.showAdminView();
-                }
-            } else {
-                updateAlertMessage("Please insert values in all fields to be able to save an item");
-            }
-
-        } catch(Exception e) {
-        System.out.println("Exception: " + e);
-        }
+//        try {
+//            if (tfItemBarcode.getLength() > 0 && tfItemNo.getLength() > 0 && tfItemName.getLength() > 0 && categoryCombo.getSelectionModel().getSelectedIndex() > 0) {
+//                if (!businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) {
+//                    businessLogic.insertItem(Integer.parseInt(tfItemBarcode.getText()), tfItemNo.getText(), tfItemName.getText(),
+//                            categoryCombo.getValue().toString());
+//                    updateAlertMessage("Registration successful");
+//                    Stage stage = (Stage) btnCancel.getScene().getWindow();
+//                    stage.close();
+//                    runView.showAdminView();
+//                }
+//            } else {
+//                updateAlertMessage("Please insert values in all fields to be able to save an item");
+//            }
+//
+//        } catch(Exception e) {
+//        System.out.println("Exception: " + e);
+//        }
     }
 
     //METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER
