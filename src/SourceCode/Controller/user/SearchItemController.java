@@ -12,19 +12,20 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.format.DateTimeFormatter;
 
 
-public class SearchController  {
-
+public class SearchItemController {
+    BusinessLogic businessLogic = new BusinessLogic();
     Factory factory = Factory.getInstance();
-    BusinessLogic businessLogic;
+
     private ObservableList searchItemData;
+
     @FXML
     TableColumn columnX;
-
     @FXML
     Label employeeBarcodeLabel;
     @FXML
@@ -40,11 +41,6 @@ public class SearchController  {
     TableColumn numberColumn;
     @FXML
     TableColumn nameColumn;
-
-
-
-
-
 
     @FXML
     private void btnBackAction() throws IOException {
@@ -86,7 +82,7 @@ public class SearchController  {
         buildData();
 
 
-        //SETTING COLUMNS FOR USED ITEM TABLE VIEW
+        //SETTING COLUMNS FOR RETURN ITEM TABLE VIEW
         TableColumn columnEmployeeName = new TableColumn<SearchedItem, String>("Employee: ");
         columnEmployeeName.setCellValueFactory(new PropertyValueFactory<SearchedItem, String>("employeeName"));
         columnEmployeeName.setMinWidth(50);
@@ -98,7 +94,7 @@ public class SearchController  {
         columnItemPlace.setMinWidth(100);
         TableColumn columnTimeTaken = new TableColumn<BorrowedItem, DateTimeFormatter>("Time taken: ");
         columnTimeTaken.setCellValueFactory(new PropertyValueFactory<BorrowedItem, DateTimeFormatter>("timeTaken"));
-        columnTimeTaken.setMinWidth(170);
+        columnTimeTaken.setMinWidth(150);
 
 
         //ASSIGNING THE COLUMNS TO THE TABLE VIEW
@@ -127,7 +123,7 @@ public class SearchController  {
             PreparedStatement preparedStatement = factory.preparedStatement(sql);
             preparedStatement.setInt(1, inputBarcode);
 
-            ResultSet result = factory.resultSet(sql);
+            ResultSet result = preparedStatement.executeQuery();
 
 
 
