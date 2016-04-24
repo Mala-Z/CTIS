@@ -10,9 +10,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
-import java.io.IOException;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.format.DateTimeFormatter;
@@ -25,12 +22,15 @@ public class SearchItemController {
     private ObservableList searchItemData;
 
     @FXML
+    Button btnSearch;
+    @FXML
+    Button btnBack;
+    @FXML
     TableColumn columnX;
     @FXML
     Label employeeBarcodeLabel;
     @FXML
     TextField tfItemNumber;
-    private RunView runView;
     @FXML
     ComboBox comboBox;
     @FXML
@@ -42,24 +42,35 @@ public class SearchItemController {
     @FXML
     TableColumn nameColumn;
 
+    private RunView runView;
+
     @FXML
-    private void btnBackAction() throws IOException {
-        runView.showMainView();
+    public void btnSearch(){
+        try{
+            System.out.println("Save button clicked");
+
+            if ((tfItemNumber.getText() != null && !tfItemNumber.getText().isEmpty())) {
+                employeeBarcodeLabel.setText(tfItemNumber.getText());
+                employeeBarcodeLabel.setVisible(true);
+            } else {
+                employeeBarcodeLabel.setText("You have not left a comment.");
+            }
+            if(comboBox.getItems()!= null){
+            }
+        }catch (Exception e){
+            System.out.println("Exception in btnSearch() from SearchItemController class:" + e.getMessage());
+        }
     }
 
-    public void searchButtonClicked() {
-        System.out.println("Save button clicked");
-
-        if ((tfItemNumber.getText() != null && !tfItemNumber.getText().isEmpty())) {
-            employeeBarcodeLabel.setText(tfItemNumber.getText());
-            employeeBarcodeLabel.setVisible(true);
-        } else {
-            employeeBarcodeLabel.setText("You have not left a comment.");
+    @FXML
+    private void btnBack(){
+        try{
+            runView.showMainView();
+        }catch (Exception e){
+            System.out.println("Exception in btnBack() from SearchItemController class:" + e.getMessage());
         }
-        if(comboBox.getItems()!= null){
-        }
-
     }
+
     @FXML
     private void checkItemBarcode() {
         int barcode = Integer.parseInt(tfItemNumber.getText());
@@ -73,9 +84,10 @@ public class SearchItemController {
                 tfItemNumber.setText(null);
             }
         } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
+            System.out.println("Exception in checkItemBarcode() from SearchItemController class:" + e.getMessage());
         }
     }
+
     public void initComponents() {
 
         //CALLING BUILD DATA METHOD
@@ -102,15 +114,10 @@ public class SearchItemController {
         tableView.getColumns().setAll(columnEmployeeName, columnItemName, columnItemPlace, columnTimeTaken);
     }
     public void buildData(){
-        //THE CONNECTION
-        //Connection conn;
-
         //THE OBSERVABLE LIST
         searchItemData = FXCollections.observableArrayList();
+
         try {
-
-            //conn = factory.conn;
-
             //SQL QUERIES
             String sql = "SELECT employeeName, itemName, place, timeTaken FROM BorrowedItem\n" +
                     "INNER JOIN Item ON BorrowedItem.itemBarcode = Item.itemBarcode\n" +
@@ -149,20 +156,16 @@ public class SearchItemController {
             tableView.getItems().addAll(searchItemData);
         } catch(Exception e){
             e.printStackTrace();
-            System.out.println("Error on Building SearchedItem Data");
+            System.out.println("Exception in buildData() from SearchItemController class:" + e.getMessage());
         }
 
     }
 
-
-    //METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER
+    /* METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER */
     public void updateAlertMessage(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-
-
 
 }

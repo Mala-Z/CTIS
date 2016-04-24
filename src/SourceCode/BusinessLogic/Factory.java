@@ -12,11 +12,12 @@ public class Factory {
     private static Factory factory = null;
 
 
-    //CONSTRUCTOR
+    /* CONSTRUCTOR */
     private Factory() {
         connectToDatabase();
     }
 
+    /* DATABASE CONNECTION */
     private void connectToDatabase() {
         System.out.println("***********Welcome to Racoon**************");
         try {
@@ -26,10 +27,11 @@ public class Factory {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             System.out.println("conn obj created " + conn + " message: ");
         } catch (SQLException e) {
-            System.out.println("db error" + e.getMessage());
+            System.out.println("DB error" + e.getMessage());
         }
     }
 
+    /* RETURN AN INSTANCE OF THE CONNECTION */
     public static Factory getInstance() {
         if (factory == null) {
             return new Factory();
@@ -37,23 +39,23 @@ public class Factory {
         return factory;
     }
 
+    /* RESULT SET METHOD */
     public ResultSet resultSet(String sql) {
         try {
             return conn.createStatement().executeQuery(sql);
         } catch (SQLException ex) {
-            System.out.println("resultSet method error");
+            System.out.println("Error in resultSet() from Factory class");
             return null;
         }
     }
 
+    /* PREPARED STATEMENT METHOD */
     public PreparedStatement preparedStatement(String sql) {
         try {
             return conn.prepareStatement(sql);
         } catch (SQLException ex) {
-            System.out.println("preparedStatment method error");
+            System.out.println("Error in preparedStatement() from Factory class");
             return null;
         }
     }
-
-
 }

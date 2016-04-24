@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class CreateItemController {
-    BusinessLogic businessLogic;
+    BusinessLogic businessLogic = new BusinessLogic();
 
     ObservableList<String> categoryList = FXCollections.observableArrayList("Apartment cleaning", "Clothes", "Green areas", "Key", "Snow");
 
@@ -40,33 +40,34 @@ public class CreateItemController {
         categoryCombo.setItems(categoryList);
     }
 
+
+    @FXML
+    private void btnSubmit() {
+        try {
+            if (tfItemBarcode.getLength() > 0 && tfItemNo.getLength() > 0 && tfItemName.getLength() > 0 && categoryCombo.getSelectionModel().getSelectedIndex() > 0) {
+                if (!businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) {
+                    businessLogic.insertItem(Integer.parseInt(tfItemBarcode.getText()), tfItemNo.getText(), tfItemName.getText(),
+                            categoryCombo.getValue().toString());
+                    updateAlertMessage("Registration successful");
+                    Stage stage = (Stage) btnCancel.getScene().getWindow();
+                    stage.close();
+                    runView.showAdminView();
+                }
+            } else {
+                updateAlertMessage("Please insert values in all fields to be able to save an item");
+            }
+
+        } catch(Exception e) {
+        System.out.println("Exception: " + e);
+        }
+    }
+
     @FXML
     private void btnCancel() throws IOException {
         // get a handle to the stage
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         // do what you have to do
         stage.close();
-    }
-
-    @FXML
-    private void btnSubmit() {
-//        try {
-//            if (tfItemBarcode.getLength() > 0 && tfItemNo.getLength() > 0 && tfItemName.getLength() > 0 && categoryCombo.getSelectionModel().getSelectedIndex() > 0) {
-//                if (!businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) {
-//                    businessLogic.insertItem(Integer.parseInt(tfItemBarcode.getText()), tfItemNo.getText(), tfItemName.getText(),
-//                            categoryCombo.getValue().toString());
-//                    updateAlertMessage("Registration successful");
-//                    Stage stage = (Stage) btnCancel.getScene().getWindow();
-//                    stage.close();
-//                    runView.showAdminView();
-//                }
-//            } else {
-//                updateAlertMessage("Please insert values in all fields to be able to save an item");
-//            }
-//
-//        } catch(Exception e) {
-//        System.out.println("Exception: " + e);
-//        }
     }
 
     //METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER

@@ -9,7 +9,6 @@ import javafx.scene.control.ComboBox;
 import java.io.IOException;
 
 public class AdminController {
-
     private RunView runView;
 
 

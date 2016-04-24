@@ -1,21 +1,17 @@
 package SourceCode.Controller.user;
 
 import SourceCode.BusinessLogic.BusinessLogic;
-import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
-import java.io.IOException;
 import java.sql.Timestamp;
 
 public class TakeItemController {
     BusinessLogic businessLogic = new BusinessLogic();
 
     ObservableList<String> placeList = FXCollections.observableArrayList("Address", "Car", "One day use");
-
 
     @FXML
     private TextField tfEmployeeBarcode;
@@ -39,27 +35,18 @@ public class TakeItemController {
        placeCombo.setItems(placeList);
     }
 
-    @FXML
-    private void btnBackAction() throws IOException {
-        runView.showMainView();
-    }
 
     @FXML
-    private void btnDeleteAction() throws IOException {
-
-    }
-
-    @FXML
-    private void btnSubmitAction() {
+    private void btnSubmit() {
         try {
             if (tfEmployeeBarcode.getLength() > 0 && tfItemBarcode.getLength() > 0) {
-                if (!businessLogic.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
+                if (!businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
                     java.util.Date today = new java.util.Date();
                     Timestamp timeTaken = new Timestamp(today.getTime());
                     businessLogic.takeItem(Integer.parseInt(tfEmployeeBarcode.getText()), Integer.parseInt(tfItemBarcode.getText()), timeTaken, placeCombo.getValue().toString());
                     updateAlertMessage("Registration successful");
-                    //runView.showMainView();
-                } else if (businessLogic.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
+                    runView.showMainView();
+                } else if (businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
                     updateAlertMessage("Item has been already taken by another employee");
                     tfItemBarcode.setText(null);
                 }else if (placeCombo.getSelectionModel().getSelectedIndex() > 0) {
@@ -70,7 +57,25 @@ public class TakeItemController {
                 updateAlertMessage("Missing barcode for employee or item");
             }
         } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
+            System.out.println("Exception in btnSubmit() from TakeItemController class:" + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void btnBack(){
+        try{
+
+        }catch (Exception e){
+            System.out.println("Exception in btnBack() from TakeItemController class: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void btnDelete(){
+        try{
+
+        }catch (Exception e){
+            System.out.println("Exception in btnDelete() from TakeItemController class: " + e.getMessage());
         }
     }
 
@@ -84,7 +89,7 @@ public class TakeItemController {
                 tfEmployeeBarcode.setText(null);
             }
         } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
+            System.out.println("Exception in checkEmployeeBarcode() from TakeItemController class: " + e.getMessage());
         }
     }
 
@@ -99,11 +104,11 @@ public class TakeItemController {
                 tfItemBarcode.setText(null);
             }
         } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
+            System.out.println("Exception in checkItemBarcode() from TakeItemController class: " + e.getMessage());
         }
     }
 
-    //METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER
+    /* METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER */
     public void updateAlertMessage(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText(message);

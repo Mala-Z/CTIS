@@ -13,7 +13,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -37,21 +36,11 @@ public class ReturnItemController {
     private RunView runView;
 
 
-
     @FXML
-    private void btnBackAction() throws IOException {
-        runView.showMainView();
-    }
-    @FXML
-    private void btnDeleteAction() throws IOException {
-
-    }
-
-    @FXML
-    private void btnSubmitAction() {
+    private void btnSubmit() {
         try {
             if (tfItemBarcode.getLength() > 0) {
-                if (businessLogic.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
+                if (businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
 
                    java.util.Date today = new java.util.Date();
                     Timestamp timeReturned = new Timestamp(today.getTime());
@@ -60,7 +49,7 @@ public class ReturnItemController {
 
                     updateAlertMessage("Item returned");
                     runView.showMainView();
-                } else if (!businessLogic.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
+                } else if (!businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
                     updateAlertMessage("Item has not been taken by employee");
                     tfItemBarcode.setText(null);
                 }
@@ -68,10 +57,18 @@ public class ReturnItemController {
                 updateAlertMessage("Missing item barcode");
             }
         } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
+            System.out.println("Exception in btnSubmit() from ReturnItemController class:" + e.getMessage());
         }
     }
 
+    @FXML
+    private void btnBack(){
+        try{
+            runView.showMainView();
+        }catch (Exception e){
+            System.out.println("Exception in btnBack() from ReturnItemController class:" + e.getMessage());
+        }
+    }
     @FXML
     private void checkItemBarcode() {
         int barcode = Integer.parseInt(tfItemBarcode.getText());
@@ -129,7 +126,7 @@ public class ReturnItemController {
                     "INNER JOIN Item ON\n" +
                     "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
                     "INNER JOIN Place ON\n" +
-                    "BorrowedItem.itemBarcode = Place.itemBarcode\n" +
+                    "BorrowedItem.id = Place.borrowedItemID\n" +
                     "WHERE BorrowedItem.itemBarcode = ? AND timeReturned IS NULL;";
 
             //EXECUTE QUERIES
@@ -140,7 +137,7 @@ public class ReturnItemController {
             ResultSet result = preparedStatement.executeQuery();
 
             while ((result.next())){
-                if (!businessLogic.checkIfItemIsTaken(Integer.parseInt(tfItemBarcode.getText()))) {
+                if (!businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
                     Employee employee = new Employee();
                     Item item = new Item();
                     BorrowedItem borrowedItem = new BorrowedItem();
@@ -157,11 +154,11 @@ public class ReturnItemController {
             tableView.getItems().addAll(borrowedItemData);
         } catch(Exception e){
             e.printStackTrace();
-            System.out.println("Error on Building BorrowedItem Data");
+            System.out.println("Exception in buildData() from ReturnItemController class: " + e.getMessage());
         }
     }
 
-    //METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER
+    /* METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER */
     public void updateAlertMessage(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText(message);
