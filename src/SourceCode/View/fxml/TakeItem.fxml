@@ -40,9 +40,9 @@
             </HBox>
             <TableView fx:id="tableView" prefHeight="260.0" prefWidth="400.0">
               <columns>
-                <TableColumn minWidth="-Infinity" prefWidth="152.0" text="Item number" />
-                  <TableColumn prefWidth="243.0" text="Item name" />
-                  <TableColumn prefWidth="75.0" text="Place" />
+                <TableColumn fx:id="itemNumberColumn" minWidth="-Infinity" prefWidth="152.0" text="Item number" />
+                  <TableColumn fx:id="itemNameColumn" prefWidth="243.0" text="Item name" />
+                  <TableColumn fx:id="placeColumn" prefWidth="75.0" text="Place" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
