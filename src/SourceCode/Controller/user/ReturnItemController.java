@@ -6,24 +6,23 @@ import SourceCode.Controller.RunView;
 import SourceCode.Model.BorrowedItem;
 import SourceCode.Model.Employee;
 import SourceCode.Model.Item;
-import SourceCode.Model.SearchedItem;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
+
 
 public class ReturnItemController {
     BusinessLogic businessLogic = new BusinessLogic();
     Factory factory = Factory.getInstance();
 
-    private ObservableList borrowedItemData;
+    private ObservableList returnItemData = FXCollections.observableArrayList();
+
     @FXML
     private TextField tfItemBarcode;
     @FXML
@@ -33,13 +32,13 @@ public class ReturnItemController {
     @FXML
     private Button btnSubmit;
     @FXML
-    private TableColumn employeeNameColumn;
+    private TableColumn <Employee, String> employeeNameColumn;
     @FXML
-    private TableColumn itemNameColumn;
+    private TableColumn <Item, String>itemNameColumn;
     @FXML
-    private TableColumn placeColumn;
+    private TableColumn <BorrowedItem, String> placeColumn;
     @FXML
-    private TableColumn timeTakenColumn;
+    private TableColumn <BorrowedItem, String> timeTakenColumn;
 
 
     private RunView runView;
@@ -78,14 +77,19 @@ public class ReturnItemController {
             System.out.println("Exception in btnBack() from ReturnItemController class:" + e.getMessage());
         }
     }
+
     @FXML
     private void checkItemBarcode() {
-        int barcode = Integer.parseInt(tfItemBarcode.getText());
-
         try {
-            if (businessLogic.checkItemBarcode(barcode)) {
-                populateTableView();
-            } else {
+            if (businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) { //if barcode exists
+                if (businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) { //if item was taken
+                    populateTableView();
+                    tableView.requestFocus();
+                } else if (!businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) { //item not taken
+                    updateAlertMessage("Item was not taken by any employee");
+                    tfItemBarcode.setText(null);
+                }
+            } else if (!businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText())))  {
                 updateAlertMessage("Please scan the barcode again");
                 tfItemBarcode.setText(null);
             }
@@ -115,17 +119,35 @@ public class ReturnItemController {
             ResultSet result = preparedStatement.executeQuery();
 
             while ((result.next())) {
-                SearchedItem searchedItem = new SearchedItem();
-                searchedItem.employeeNameProperty().set(result.getString("employeeName"));
-                searchedItem.itemNameProperty().set(result.getString("itemName"));
-                searchedItem.itemPlaceProperty().set(result.getString("place"));
-                searchedItem.timeTakenProperty().set(result.getString("timeTaken"));
-                borrowedItemData.add(searchedItem);
+                Employee employee = new Employee();
+                Item item = new Item();
+                BorrowedItem borrowedItem = new BorrowedItem();
+
+                employee.nameProperty().set(result.getString("employeeName"));
+                item.itemNameProperty().set(result.getString("itemName"));
+                borrowedItem.placeProperty().set(result.getString("place"));
+                borrowedItem.timeTakenProperty().set(result.getString("timeTaken"));
+
+
+                returnItemData.addAll(employee,item,borrowedItem);
+                /*System.out.println("emp:" + employee);
+                System.out.println("item:" + item);
+                System.out.println("borro:" + borrowedItem);*/
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Exception in populateTableView() from TakeItemController class: " + e.getMessage());
+            System.out.println("Exception in populateTableView() from ReturnItemController class: " + e.getMessage());
         }
+
+        /* SETTING UP COLUMNS FOR TABLE VIEW */
+        //employeeNameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        employeeNameColumn.setCellValueFactory(new PropertyValueFactory<>("employeeName"));
+        itemNameColumn.setCellValueFactory(new PropertyValueFactory<>("itemName"));
+        placeColumn.setCellValueFactory(new PropertyValueFactory<>("place"));
+        timeTakenColumn.setCellValueFactory(new PropertyValueFactory<>("timeTaken"));
+
+        /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
+        tableView.getItems().addAll(returnItemData);
     }
 
 //    public void initComponents() {
@@ -155,7 +177,7 @@ public class ReturnItemController {
 
 //    public void buildData(){
 //        //OBSERVABLE LIST
-//        borrowedItemData = FXCollections.observableArrayList();
+//        returnItemData = FXCollections.observableArrayList();
 //
 //        try {
 //            //SQL QUERIES
@@ -185,12 +207,12 @@ public class ReturnItemController {
 //                    borrowedItem.placeProperty().set(result.getString("place"));
 //                    borrowedItem.timeTakenProperty().set(result.getString("timeTaken"));
 //
-//                    borrowedItemData.add(borrowedItem);
+//                    returnItemData.add(borrowedItem);
 //                }
 //            }
 //            //OBSERVABLE LIST ADDED TO TABLE VIEW
-//            //tableView.setItems(borrowedItemData);
-//            tableView.getItems().addAll(borrowedItemData);
+//            //tableView.setItems(returnItemData);
+//            tableView.getItems().addAll(returnItemData);
 //        } catch(Exception e){
 //            e.printStackTrace();
 //            System.out.println("Exception in buildData() from ReturnItemController class: " + e.getMessage());
