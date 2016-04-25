@@ -6,10 +6,10 @@ import java.sql.*;
  * Created by Paula on 25/04/16.
  */
 public class ConnectDB {
-    public static Connection conn;
+    public static Connection conn = null;
 
     /* CONSTRUCTOR */
-    private ConnectDB() {
+    public ConnectDB() {
         connectToDatabase();
     }
 
@@ -32,7 +32,7 @@ public class ConnectDB {
         try {
             return conn.createStatement().executeQuery(sql);
         } catch (SQLException ex) {
-            System.out.println("Error in resultSet() from Factory class");
+            System.out.println("Error in resultSet() from ConnectDB class");
             return null;
         }
     }

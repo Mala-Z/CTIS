@@ -1,6 +1,7 @@
 package SourceCode.Controller.user;
 
 import SourceCode.BusinessLogic.BusinessLogic;
+import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
 import SourceCode.Model.BorrowedItem;
@@ -20,8 +21,8 @@ import java.time.format.DateTimeFormatter;
 
 public class SearchItemController {
     BusinessLogic businessLogic = new BusinessLogic();
-    Factory factory = Factory.getInstance();
-
+//    Factory factory = Factory.getInstance();
+    ConnectDB connectDB = Factory.connectDB;
     private ObservableList searchItemData = FXCollections.observableArrayList();
 
     @FXML
@@ -109,7 +110,7 @@ public class SearchItemController {
 
             /* EXECUTION OF QUERY */
             int inputBarcode = Integer.parseInt(tfItemNumber.getText());
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setInt(1, inputBarcode);
 
             ResultSet result = preparedStatement.executeQuery();
@@ -161,7 +162,7 @@ public class SearchItemController {
 
             /* EXECUTION OF QUERY */
             int inputBarcode = Integer.parseInt(tfItemNumber.getText());
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setInt(1, inputBarcode);
 
             ResultSet result = preparedStatement.executeQuery();

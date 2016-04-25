@@ -12,7 +12,7 @@ public class BusinessLogic {
 
     private Item item;
     private Employee employee;
-    Factory factory =
+    ConnectDB connectDB = Factory.connectDB;
 
 
     /* METHOD FOR INSERTING EMPLOYEE INTO THE DATABASE */
@@ -20,8 +20,8 @@ public class BusinessLogic {
         String sql = "INSERT INTO Employee VALUES (?, ?, ?)";
         String sql2 = "INSERT INTO PhoneNumber (id, phoneNumber, employeeBarcode) VALUES (null, ?, (SELECT employeeBarcode FROM Employee WHERE employeeBarcode =?));";
         try {
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
-            PreparedStatement preparedStatement2 = factory.preparedStatement(sql2);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
             preparedStatement.setInt(1, employeeBarcode);
             preparedStatement.setString(2, employeeNo);
             preparedStatement.setString(3, employeeName);
@@ -40,8 +40,8 @@ public class BusinessLogic {
         String sql = "INSERT INTO Item (itemBarcode, itemNo, itemName) VALUES (?, ?, ?); ";
         String sql2 = "INSERT INTO Category (id, category, itemBarcode) VALUES (null, ?, (SELECT itemBarcode FROM Item WHERE itemBarcode = ?));";
         try {
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
-            PreparedStatement preparedStatement2 = factory.preparedStatement(sql2);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
             preparedStatement.setInt(1, itemBarcode);
             preparedStatement.setString(2, itemNo);
             preparedStatement.setString(3, itemName);
@@ -59,7 +59,7 @@ public class BusinessLogic {
     public Employee updateEmployeeTable(String table, int employeeBarcode, String employeeNo, String employeeName, int telephoneNo, int oldBarcode) {
         String sql = "UPDATE " + table + " SET employeeBarcode=?, employeeNo=?, employeeName=?, telephoneNo=? WHERE employeeBarcode=?";
         try {
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setInt(1, employeeBarcode);
             preparedStatement.setString(2, employeeNo);
             preparedStatement.setString(3, employeeName);
@@ -77,7 +77,7 @@ public class BusinessLogic {
     public Item updateItemTable(String table, int itemBarcode, String itemNo, String itemName, String category, int oldBarcode) {
         String sql = "UPDATE " + table + " SET itemBarcode=?, itemNo=?, description=?, category=? WHERE itemBarcode=?;";
         try {
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setInt(1, itemBarcode);
             preparedStatement.setString(2, itemNo);
             preparedStatement.setString(3, itemName);
@@ -95,7 +95,7 @@ public class BusinessLogic {
     public Item updateBorrowedItemTable(String table, Timestamp timeReturned, int itemBarcode) {
         String sql = "UPDATE " + table + " SET timeReturned =? WHERE itemBarcode =? AND timeReturned IS null;";
         try {
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
 
             preparedStatement.setTimestamp(1, timeReturned);
             preparedStatement.setInt(2, itemBarcode);
@@ -111,7 +111,7 @@ public class BusinessLogic {
     public void deleteEmployee(int employeeBarcode) {
         String sql = "DELETE FROM Employee WHERE employeeBarcode=?";
         try {
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setInt(1, employeeBarcode);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -124,7 +124,7 @@ public class BusinessLogic {
     public void deleteItem(int itemBarcode) {
         String sql = "DELETE FROM Item WHERE itemBarcode=?";
         try {
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setInt(1, itemBarcode);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -138,8 +138,8 @@ public class BusinessLogic {
         String sql = "INSERT INTO BorrowedItem VALUES (null, ?, ?, ?, null);";
         String sql2 = "INSERT INTO Place VALUES (null, ?, (SELECT id FROM BorrowedItem WHERE itemBarcode = ? AND timeReturned IS NULL));";
         try {
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
-            PreparedStatement preparedStatement2 = factory.preparedStatement(sql2);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
             preparedStatement.setInt(1, employeeBarcode);
             preparedStatement.setInt(2, itemBarcode);
             preparedStatement.setTimestamp(3, timeTaken);
@@ -161,7 +161,7 @@ public class BusinessLogic {
         try {
             String query = "SELECT itemName, timeTaken, employeeName FROM BorrowedItem INNER JOIN Item ON BorrowedItem.itemBarcode = Item.itemBarcode INNER JOIN Employee ON BorrowedItem.employeeBarcode = Employee.employeeBarcode WHERE BorrowedItem.itemBarcode = ? AND BorrowedItem.timeReturned IS NULL;";
 
-            PreparedStatement preparedStatement = factory.preparedStatement(query);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
             preparedStatement.setInt(1, itemBarcode);
             preparedStatement.executeQuery();
         } catch (SQLException e) {
@@ -175,10 +175,10 @@ public class BusinessLogic {
         try {
             String query = "SELECT itemBarcode FROM BorrowedItem WHERE itemBarcode =? AND timeReturned is null;";
 
-            PreparedStatement preparedStatement = factory.preparedStatement(query);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
             preparedStatement.setInt(1, itemBarcode);
 
-            ResultSet results = factory.resultSet(query); //preparedStatement.executeQuery();
+            ResultSet results = connectDB.resultSet(query); //preparedStatement.executeQuery();
 
             if (results.next()) {
                 return true;
@@ -198,7 +198,7 @@ public class BusinessLogic {
         try {
             String query = "SELECT employeeBarcode FROM Employee WHERE employeeBarcode=?";
 
-            PreparedStatement preparedStatement = factory.preparedStatement(query);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
 
             preparedStatement.setInt(1, employeeBarcode);
             ResultSet results = preparedStatement.executeQuery();
@@ -222,7 +222,7 @@ public class BusinessLogic {
         try {
 
             String query = "SELECT itemBarcode FROM Item WHERE itemBarcode = ?";
-            PreparedStatement preparedStatement = factory.preparedStatement(query);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
 
             preparedStatement.setInt(1, itemBarcode);
             ResultSet results = preparedStatement.executeQuery();
@@ -244,7 +244,7 @@ public class BusinessLogic {
         try {
             String query = "SELECT * FROM Admin WHERE username=? AND password=?";
 
-            PreparedStatement preparedStatement = factory.preparedStatement(query);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
 
             preparedStatement.setString(1, username);
             preparedStatement.setString(1, password);
@@ -268,7 +268,7 @@ public class BusinessLogic {
         try {
             String nameAndPass = "SELECT * FROM Admin where username = ? AND password= ?";
 
-            PreparedStatement preparedStatement = factory.preparedStatement(nameAndPass);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(nameAndPass);
 
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, pass);
@@ -292,7 +292,7 @@ public class BusinessLogic {
 
         try {
             String sql = "SELECT category FROM Category";
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -316,7 +316,7 @@ public class BusinessLogic {
     public void deleteBorrowedItem(int id) {
         String sql = "DELETE FROM UsedItem WHERE id=?";
         try {
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

@@ -1,6 +1,7 @@
 package SourceCode.Controller.user;
 
 import SourceCode.BusinessLogic.BusinessLogic;
+import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
 import SourceCode.Model.BorrowedItem;
@@ -12,13 +13,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 
 public class TakeItemController {
     BusinessLogic businessLogic = new BusinessLogic();
-    Factory factory = Factory.getInstance();
+    //Factory factory = Factory.getInstance();
+    ConnectDB connectDB = Factory.connectDB;
 
     ObservableList<String> placeList = FXCollections.observableArrayList("Address", "Car");
     private ObservableList takeItemData = FXCollections.observableArrayList();
@@ -109,7 +112,7 @@ public class TakeItemController {
             if (businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) {
                 if (!businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
                     populateTableView();
-                    tableView.requestFocus();
+                    //tableView.requestFocus();
                 } else if (businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
                     updateAlertMessage("Item has been already taken by another employee");
                     tfItemBarcode.setText(null);
@@ -132,7 +135,7 @@ public class TakeItemController {
 
             /* EXECUTION OF QUERY */
             int inputBarcode = Integer.parseInt(tfItemBarcode.getText());
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setInt(1, inputBarcode);
 
             ResultSet result = preparedStatement.executeQuery();
@@ -154,7 +157,7 @@ public class TakeItemController {
         placeColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItem, String>("place"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
-        tableView.getItems().addAll(takeItemData);
+        tableView.getItems().setAll(takeItemData);
     }
 
     /* METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER */
