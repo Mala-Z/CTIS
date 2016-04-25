@@ -9,9 +9,10 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 
 public class BusinessLogic {
+
     private Item item;
     private Employee employee;
-    Factory factory = Factory.getInstance();
+    Factory factory =
 
 
     /* METHOD FOR INSERTING EMPLOYEE INTO THE DATABASE */
@@ -146,8 +147,8 @@ public class BusinessLogic {
             preparedStatement2.setInt(2, itemBarcode);
             preparedStatement.executeUpdate();
             preparedStatement2.executeUpdate();
-            preparedStatement.close();
-            preparedStatement2.close();
+            //preparedStatement.close();
+            //preparedStatement2.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -175,9 +176,9 @@ public class BusinessLogic {
             String query = "SELECT itemBarcode FROM BorrowedItem WHERE itemBarcode =? AND timeReturned is null;";
 
             PreparedStatement preparedStatement = factory.preparedStatement(query);
-
             preparedStatement.setInt(1, itemBarcode);
-            ResultSet results = preparedStatement.executeQuery();
+
+            ResultSet results = factory.resultSet(query); //preparedStatement.executeQuery();
 
             if (results.next()) {
                 return true;

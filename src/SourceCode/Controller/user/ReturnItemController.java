@@ -19,7 +19,7 @@ import java.sql.Timestamp;
 
 public class ReturnItemController {
     BusinessLogic businessLogic = new BusinessLogic();
-    Factory factory = Factory.getInstance();
+    Factory factory =  Factory.getInstance();
 
     private ObservableList returnItemData = FXCollections.observableArrayList();
 
@@ -98,7 +98,7 @@ public class ReturnItemController {
         }
     }
 
-    public void populateTableView() {
+    private void populateTableView() {
 
         try {
             /* SQL QUERY */
@@ -119,11 +119,11 @@ public class ReturnItemController {
             ResultSet result = preparedStatement.executeQuery();
 
             while ((result.next())) {
-                Employee employee = new Employee();
+                Employee employee = new Employee(0, null, (result.getString("employeeName")), 0);
                 Item item = new Item();
                 BorrowedItem borrowedItem = new BorrowedItem();
 
-                employee.nameProperty().set(result.getString("employeeName"));
+                //employee.nameProperty().set(result.getString("employeeName"));
                 item.itemNameProperty().set(result.getString("itemName"));
                 borrowedItem.placeProperty().set(result.getString("place"));
                 borrowedItem.timeTakenProperty().set(result.getString("timeTaken"));
