@@ -6,7 +6,7 @@ import java.sql.*;
  * Created by Paula on 25/04/16.
  */
 public class ConnectDB {
-    public static Connection conn = null;
+    public static Connection conn;
 
     /* CONSTRUCTOR */
     public ConnectDB() {
@@ -28,14 +28,14 @@ public class ConnectDB {
     }
 
     /* RESULT SET METHOD */
-    public ResultSet resultSet(String sql) {
-        try {
-            return conn.createStatement().executeQuery(sql);
-        } catch (SQLException ex) {
-            System.out.println("Error in resultSet() from ConnectDB class");
-            return null;
-        }
-    }
+//    public ResultSet resultSet(String sql) {
+//        try {
+//            return conn.createStatement().executeQuery(sql);
+//        } catch (SQLException ex) {
+//            System.out.println("Error in resultSet() from ConnectDB class");
+//            return null;
+//        }
+//    }
 
     /* PREPARED STATEMENT METHOD */
     public PreparedStatement preparedStatement(String sql) {

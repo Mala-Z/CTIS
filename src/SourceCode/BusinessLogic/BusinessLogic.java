@@ -178,7 +178,7 @@ public class BusinessLogic {
             PreparedStatement preparedStatement = connectDB.preparedStatement(query);
             preparedStatement.setInt(1, itemBarcode);
 
-            ResultSet results = connectDB.resultSet(query); //preparedStatement.executeQuery();
+            ResultSet results = preparedStatement.executeQuery(); //preparedStatement.executeQuery();
 
             if (results.next()) {
                 return true;
