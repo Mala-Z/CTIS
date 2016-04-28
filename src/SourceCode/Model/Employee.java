@@ -15,6 +15,7 @@ public class Employee {
     //DEFAULT CONSTRUCTOR
     public Employee() {
             this(0, null, null, 0);
+
     }
 
     //CONSTRUCTOR
@@ -55,4 +56,7 @@ public class Employee {
         return phoneNumber;
     }
 
+    public void setEmployeeName(String employeeName) {
+        this.employeeName.set(employeeName);
+    }
 }

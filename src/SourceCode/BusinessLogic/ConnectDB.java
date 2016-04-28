@@ -28,14 +28,14 @@ public class ConnectDB {
     }
 
     /* RESULT SET METHOD */
-//    public ResultSet resultSet(String sql) {
-//        try {
-//            return conn.createStatement().executeQuery(sql);
-//        } catch (SQLException ex) {
-//            System.out.println("Error in resultSet() from ConnectDB class");
-//            return null;
-//        }
-//    }
+    public ResultSet resultSet(String sql) {
+        try {
+            return conn.createStatement().executeQuery(sql);
+        } catch (SQLException ex) {
+            System.out.println("Error in resultSet() from ConnectDB class");
+            return null;
+        }
+    }
 
     /* PREPARED STATEMENT METHOD */
     public PreparedStatement preparedStatement(String sql) {

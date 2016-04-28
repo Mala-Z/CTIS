@@ -52,4 +52,28 @@ public class BorrowedItem {
     public ObjectProperty timeReturnedProperty() {
         return timeReturned;
     }
+
+    public void setId(int id) {
+        this.id.set(id);
+    }
+
+    public void setEmployeeBarcode(int employeeBarcode) {
+        this.employeeBarcode.set(employeeBarcode);
+    }
+
+    public void setItemBarcode(int itemBarcode) {
+        this.itemBarcode.set(itemBarcode);
+    }
+
+    public void setPlace(String place) {
+        this.place.set(place);
+    }
+
+    public void setTimeTaken(DateTimeFormatter timeTaken) {
+        this.timeTaken.set(timeTaken);
+    }
+
+    public void setTimeReturned(DateTimeFormatter timeReturned) {
+        this.timeReturned.set(timeReturned);
+    }
 }

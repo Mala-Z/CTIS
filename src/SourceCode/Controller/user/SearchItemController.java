@@ -7,6 +7,8 @@ import SourceCode.Controller.RunView;
 import SourceCode.Model.BorrowedItem;
 import SourceCode.Model.Employee;
 import SourceCode.Model.Item;
+import SourceCode.Model.tableViewObjects.ReturnObj;
+import SourceCode.Model.tableViewObjects.SearchObj;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -126,7 +128,6 @@ public class SearchItemController {
                 item.itemNameProperty().set(result.getString("itemName"));
                 borrowedItem.placeProperty().set(result.getString("place"));
                 borrowedItem.timeTakenProperty().set(result.getString("timeTaken"));
-
                 //searchItemData.addAll(employee, item, borrowedItem);
             }
         } catch (Exception e) {
@@ -169,17 +170,14 @@ public class SearchItemController {
 
             while ((result.next())) {
 
-                Employee employee = new Employee();
-                Item item = new Item();
-                BorrowedItem borrowedItem = new BorrowedItem();
+                String employeeName = result.getString("employeeName");
+                String phoneNumber = result.getString("phoneNumber");
+                String itemName = result.getString("itemName");
+                String place = result.getString("place");
+                String timeTaken = result.getString("timeTaken");
+                SearchObj searchObj = new SearchObj(employeeName, phoneNumber, itemName, place, timeTaken);
 
-                employee.nameProperty().set(result.getString("employeeName"));
-                employee.telephoneProperty().set(result.getInt("phoneNumber"));
-                item.itemNameProperty().set(result.getString("itemName"));
-                borrowedItem.placeProperty().set(result.getString("place"));
-                borrowedItem.timeTakenProperty().set(result.getString("timeTaken"));
-
-                searchItemData.addAll(item,borrowedItem);
+                searchItemData.setAll(searchObj);
 
             }
         } catch (Exception e) {
@@ -187,15 +185,16 @@ public class SearchItemController {
             System.out.println("Exception in searchByItemBarcode() from SearchItemController class: " + e.getMessage());
         }
 
-        /* SETTING UP COLUMNS FOR TABLE VIEW */
-        employeeNameColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("employeeName"));
-        telephoneNoColumn.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("phoneNumber"));
-        itemNameColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("itemName"));
-        placeColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItem, String>("place"));
-        timeTakenColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItem, String>("timeTaken"));
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+        employeeNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("employeeName"));
+        telephoneNoColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("phoneNo"));
+        itemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
+        placeColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("place"));
+        timeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
         tableView.getItems().addAll(searchItemData);
+        searchItemData.clear();  //i did this because it would duplicate the last element if the item was returned
 
     }
 

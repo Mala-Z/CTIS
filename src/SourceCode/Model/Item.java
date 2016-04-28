@@ -47,4 +47,20 @@ public class Item {
     public StringProperty itemNameProperty() { return itemName; }
 
     public StringProperty categoryProperty() { return category; }
+
+    public void setItemBarcode(int itemBarcode) {
+        this.itemBarcode.set(itemBarcode);
+    }
+
+    public void setItemNo(String itemNo) {
+        this.itemNo.set(itemNo);
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName.set(itemName);
+    }
+
+    public void setCategory(String category) {
+        this.category.set(category);
+    }
 }
