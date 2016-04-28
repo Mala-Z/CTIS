@@ -21,8 +21,8 @@ import java.time.format.DateTimeFormatter;
 
 public class SearchItemController {
     BusinessLogic businessLogic = new BusinessLogic();
-//    Factory factory = Factory.getInstance();
     ConnectDB connectDB = Factory.connectDB;
+
     private ObservableList searchItemData = FXCollections.observableArrayList();
 
     @FXML
@@ -85,7 +85,7 @@ public class SearchItemController {
                 searchByItemBarcode();
 
             } else {
-                updateAlertMessage("Please scan the barcode again");
+                MainViewController.updateAlertMessage("Please scan the barcode again");
                 tfItemNumber.setText(null);
             }
         } catch (Exception e) {
@@ -194,13 +194,6 @@ public class SearchItemController {
         tableView.getItems().addAll(searchItemData);
         searchItemData.clear();  //i did this because it would duplicate the last element if the item was returned
 
-    }
-
-    /* METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER */
-    public void updateAlertMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
 }

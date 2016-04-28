@@ -1,4 +1,3 @@
-
 package SourceCode.BusinessLogic;
 
 import SourceCode.Model.Employee;
@@ -31,7 +30,7 @@ public class BusinessLogic {
             preparedStatement2.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in insertEmployee() from BusinessLogic class");
+            System.out.println("Error in insertEmployee() from BusinessLogic class: " + e.getMessage());
         }
     }
 
@@ -51,7 +50,7 @@ public class BusinessLogic {
             preparedStatement2.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in insertItem() from BusinessLogic class");
+            System.out.println("Error in insertItem() from BusinessLogic class: " + e.getMessage());
         }
     }
 
@@ -68,7 +67,7 @@ public class BusinessLogic {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in updateEmployeeTable() from BusinessLogic class");
+            System.out.println("Error in updateEmployeeTable() from BusinessLogic class: " + e.getMessage());
         }
         return employee;
     }
@@ -86,7 +85,7 @@ public class BusinessLogic {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in updateItemTable() from BusinessLogic class");
+            System.out.println("Error in updateItemTable() from BusinessLogic class: " + e.getMessage());
         }
         return item;
     }
@@ -102,7 +101,7 @@ public class BusinessLogic {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in updateBorrowedItemTable() from BusinessLogic class");
+            System.out.println("Error in updateBorrowedItemTable() from BusinessLogic class: " + e.getMessage());
         }
         return item;
     }
@@ -116,7 +115,7 @@ public class BusinessLogic {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in deleteEmployee() from BusinessLogic class");
+            System.out.println("Error in deleteEmployee() from BusinessLogic class: " + e.getMessage());
         }
     }
 
@@ -129,7 +128,7 @@ public class BusinessLogic {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in deleteItem() from BusinessLogic class");
+            System.out.println("Error in deleteItem() from BusinessLogic class: " + e.getMessage());
         }
     }
 
@@ -152,7 +151,7 @@ public class BusinessLogic {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in takeItem() from BusinessLogic class");
+            System.out.println("Error in takeItem() from BusinessLogic class: " + e.getMessage());
         }
     }
 
@@ -166,7 +165,7 @@ public class BusinessLogic {
             preparedStatement.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in returnItem() from BusinessLogic class");
+            System.out.println("Error in returnItem() from BusinessLogic class: " + e.getMessage());
         }
     }
 
@@ -178,7 +177,7 @@ public class BusinessLogic {
             PreparedStatement preparedStatement = connectDB.preparedStatement(query);
             preparedStatement.setInt(1, itemBarcode);
 
-            ResultSet results = preparedStatement.executeQuery(); //preparedStatement.executeQuery();
+            ResultSet results = preparedStatement.executeQuery();
 
             if (results.next()) {
                 return true;
@@ -187,7 +186,7 @@ public class BusinessLogic {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in searchItem() from BusinessLogic class");
+            System.out.println("Error in searchItem() from BusinessLogic class: " + e.getMessage());
         }
         return false;
     }
@@ -211,7 +210,7 @@ public class BusinessLogic {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in checkEmployeeBarcode() from BusinessLogic class");
+            System.out.println("Error in checkEmployeeBarcode() from BusinessLogic class: " + e.getMessage());
         }
         return false;
     }
@@ -223,8 +222,8 @@ public class BusinessLogic {
 
             String query = "SELECT itemBarcode FROM Item WHERE itemBarcode = ?";
             PreparedStatement preparedStatement = connectDB.preparedStatement(query);
-
             preparedStatement.setInt(1, itemBarcode);
+
             ResultSet results = preparedStatement.executeQuery();
 
             if (results.next()) {
@@ -234,7 +233,7 @@ public class BusinessLogic {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in checkItemBarcode() from BusinessLogic class");
+            System.out.println("Error in checkItemBarcode() from BusinessLogic class: " + e.getMessage());
         }
         return false;
     }
@@ -257,7 +256,7 @@ public class BusinessLogic {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in checkLoginCredentials() from BusinessLogic class");
+            System.out.println("Error in checkLoginCredentials() from BusinessLogic class: " + e.getMessage());
         }
         return false;
     }
@@ -281,7 +280,7 @@ public class BusinessLogic {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in getLogin() from BusinessLogic class");
+            System.out.println("Error in getLogin() from BusinessLogic class: " + e.getMessage());
         }
         return out;
     }
@@ -307,7 +306,7 @@ public class BusinessLogic {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in getCategory() from BusinessLogic class");
+            System.out.println("Error in getCategory() from BusinessLogic class: "  + e.getMessage());
         }
         return observableList;
     }
@@ -321,7 +320,7 @@ public class BusinessLogic {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in deleteUsedItem() from BusinessLogic class");
+            System.out.println("Error in deleteUsedItem() from BusinessLogic class: " + e.getMessage());
         }
     }
 }

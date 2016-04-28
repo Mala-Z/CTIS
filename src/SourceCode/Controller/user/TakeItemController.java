@@ -17,7 +17,6 @@ import java.sql.Timestamp;
 
 public class TakeItemController {
     BusinessLogic businessLogic = new BusinessLogic();
-    //Factory factory = Factory.getInstance();
     ConnectDB connectDB = Factory.connectDB;
 
     ObservableList<String> placeList = FXCollections.observableArrayList("On Person", "Address", "Car");
@@ -60,11 +59,11 @@ public class TakeItemController {
                 java.util.Date today = new java.util.Date();
                 Timestamp timeTaken = new Timestamp(today.getTime());
                 businessLogic.takeItem(Integer.parseInt(tfEmployeeBarcode.getText()), Integer.parseInt(tfItemBarcode.getText()), timeTaken, placeCombo.getValue().toString());
-                updateAlertMessage("Registration successful");
+                MainViewController.updateAlertMessage("Registration successful");
                 runView.showMainView();
 
             } else {
-                updateAlertMessage("Missing barcode for employee or item");
+                MainViewController.updateAlertMessage("Missing barcode for employee or item");
             }
 
         } catch (Exception e) {
@@ -96,7 +95,7 @@ public class TakeItemController {
             if (businessLogic.checkEmployeeBarcode(Integer.parseInt(tfEmployeeBarcode.getText()))) {
                 tfItemBarcode.requestFocus();
             } else {
-                updateAlertMessage("Please scan the barcode again");
+                MainViewController.updateAlertMessage("Please scan the barcode again");
                 tfEmployeeBarcode.setText(null);
             }
         } catch (Exception e) {
@@ -112,11 +111,11 @@ public class TakeItemController {
                     populateTableView();
                     //tableView.requestFocus();
                 } else if (businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
-                    updateAlertMessage("Item has been already taken by another employee");
+                    MainViewController.updateAlertMessage("Item has been already taken by another employee");
                     tfItemBarcode.setText(null);
                 }
             } else if (!businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) {
-                updateAlertMessage("Please scan the barcode again");
+                MainViewController.updateAlertMessage("Please scan the barcode again");
                 tfItemBarcode.setText(null);
             }
         } catch (Exception e) {
@@ -165,10 +164,4 @@ public class TakeItemController {
         tableView.getItems().addAll(takeItemData);
     }
 
-    /* METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER */
-    public void updateAlertMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 }

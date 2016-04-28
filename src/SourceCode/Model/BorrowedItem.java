@@ -5,7 +5,7 @@ import javafx.beans.property.*;
 import java.time.format.DateTimeFormatter;
 
 public class BorrowedItem {
-    private final IntegerProperty id;
+    private final IntegerProperty id; //must stay final
     private final IntegerProperty employeeBarcode;
     private final IntegerProperty itemBarcode;
     private final StringProperty place;

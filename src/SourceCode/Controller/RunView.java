@@ -1,11 +1,11 @@
 package SourceCode.Controller;
 
-import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.admin.AdminController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -16,14 +16,16 @@ public class RunView extends Application {
     Factory factory;
     public static AdminController adminController;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage primaryStage) throws IOException {
 
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Racoon");
         showMainView();
-
-        //ConnectDB connectDB = Factory.getInstance();
 
         factory.getInstance();
 
@@ -130,7 +132,5 @@ public class RunView extends Application {
         }
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+
 }

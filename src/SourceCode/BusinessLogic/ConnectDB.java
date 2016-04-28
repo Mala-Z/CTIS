@@ -42,7 +42,7 @@ public class ConnectDB {
         try {
             return conn.prepareStatement(sql);
         } catch (SQLException ex) {
-            System.out.println("Error in preparedStatement() from Factory class");
+            System.out.println("Error in preparedStatement() from ConnectDB class");
             return null;
         }
     }
