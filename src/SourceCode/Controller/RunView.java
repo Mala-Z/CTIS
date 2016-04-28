@@ -2,6 +2,7 @@ package SourceCode.Controller;
 
 import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
+import SourceCode.Controller.admin.AdminController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ public class RunView extends Application {
     private static Stage primaryStage;
     private static BorderPane mainLayout;
     Factory factory;
+    public static AdminController adminController;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -94,6 +96,7 @@ public class RunView extends Application {
             primaryStage.setWidth(800);
             primaryStage.setHeight(500);
             mainLayout.setCenter(admin);
+            //adminController.populateTableView();
         }catch (Exception e){
             System.out.println("Exception in showAdminView() from RunView class:" + e.getMessage());
         }

@@ -1,16 +1,17 @@
-package SourceCode.Model.tableViewObjects;
+package SourceCode.Model.adminTableViewObjects;
 
-public class ReturnObj {
-    private String employeeName;
-    private String itemName;
-    private String place;
-    private String timeTaken;
+public class BorrowedItemObj {
 
-    public ReturnObj(String employeeName, String itemName, String place, String timeTaken) {
+        private String employeeName;
+        private String itemName;
+        private String timeTaken;
+        private String timeReturned;
+
+    public BorrowedItemObj(String employeeName, String itemName, String timeTaken, String timeReturned) {
         this.employeeName = employeeName;
         this.itemName = itemName;
-        this.place = place;
         this.timeTaken = timeTaken;
+        this.timeReturned = timeReturned;
     }
 
     public String getEmployeeName() {
@@ -29,19 +30,19 @@ public class ReturnObj {
         this.itemName = itemName;
     }
 
-    public String getPlace() {
-        return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
-    }
-
     public String getTimeTaken() {
         return timeTaken;
     }
 
     public void setTimeTaken(String timeTaken) {
         this.timeTaken = timeTaken;
+    }
+
+    public String getTimeReturned() {
+        return timeReturned;
+    }
+
+    public void setTimeReturned(String timeReturned) {
+        this.timeReturned = timeReturned;
     }
 }

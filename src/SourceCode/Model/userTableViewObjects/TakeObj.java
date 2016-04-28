@@ -1,4 +1,4 @@
-package SourceCode.Model.tableViewObjects;
+package SourceCode.Model.userTableViewObjects;
 
 public class TakeObj {
     private String itemNumber;

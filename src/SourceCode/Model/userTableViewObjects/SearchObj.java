@@ -1,4 +1,4 @@
-package SourceCode.Model.tableViewObjects;
+package SourceCode.Model.userTableViewObjects;
 
 public class SearchObj {
     private String employeeName;
