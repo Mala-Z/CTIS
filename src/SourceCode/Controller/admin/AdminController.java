@@ -146,7 +146,7 @@ public class AdminController {
 
         try {
             /* SQL QUERY */
-            String sql = " SELECT Item.itemBarcode, Item.itemNo, Item.itemName, Category.category FROM Item\n" +
+            String sql = "SELECT Item.itemBarcode, Item.itemNo, Item.itemName, Category.category FROM Item\n" +
                     "INNER JOIN Category ON\n" +
                     "Item.itemBarcode = Category.itemBarcode;";
 
