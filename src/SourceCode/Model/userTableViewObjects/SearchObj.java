@@ -3,13 +3,15 @@ package SourceCode.Model.userTableViewObjects;
 public class SearchObj {
     private String employeeName;
     private String phoneNo;
+    private String itemCategory;
     private String itemName;
     private String place;
     private String timeTaken;
 
-    public SearchObj(String employeeName, String phoneNo, String itemName, String place, String timeTaken) {
+    public SearchObj(String employeeName, String phoneNo, String itemCategory, String itemName, String place, String timeTaken) {
         this.employeeName = employeeName;
         this.phoneNo = phoneNo;
+        this.itemCategory = itemCategory;
         this.itemName = itemName;
         this.place = place;
         this.timeTaken = timeTaken;
@@ -29,6 +31,14 @@ public class SearchObj {
 
     public void setPhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
+    }
+
+    public String getItemCategory() {
+        return itemCategory;
+    }
+
+    public void setItemCategory(String itemCategory) {
+        this.itemCategory = itemCategory;
     }
 
     public String getItemName() {

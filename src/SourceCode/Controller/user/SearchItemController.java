@@ -4,9 +4,9 @@ import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
-import SourceCode.Model.BorrowedItem;
-import SourceCode.Model.Employee;
-import SourceCode.Model.Item;
+import SourceCode.Model.dbObj.BorrowedItem;
+import SourceCode.Model.dbObj.Employee;
+import SourceCode.Model.dbObj.Item;
 import SourceCode.Model.userTableViewObjects.SearchObj;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -29,16 +29,20 @@ public class SearchItemController {
     Button btnSearch;
     @FXML
     Button btnBack;
+    // Table Columns
     @FXML
     TableColumn employeeNameColumn;
     @FXML
     TableColumn telephoneNoColumn;
+    @FXML
+    TableColumn itemCategoryColumn;
     @FXML
     TableColumn itemNameColumn;
     @FXML
     TableColumn placeColumn;
     @FXML
     TableColumn timeTakenColumn;
+
     @FXML
     Label employeeBarcodeLabel;
     @FXML
@@ -148,11 +152,13 @@ public class SearchItemController {
 
         try {
             /* SQL QUERY */
-            String sql = "SELECT employeeName, phoneNumber, itemName, place, timeTaken FROM BorrowedItem\n" +
+            String sql = "SELECT employeeName, phoneNumber, itemName, place, timeTaken, category FROM BorrowedItem\n" +
                     "INNER JOIN Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN PhoneNumber ON\n" +
                     "BorrowedItem.employeeBarcode = PhoneNumber.employeeBarcode\n" +
+                    "INNER JOIN Category ON\n" +
+                    "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
                     "INNER JOIN Place ON\n" +
@@ -170,10 +176,11 @@ public class SearchItemController {
 
                 String employeeName = result.getString("employeeName");
                 String phoneNumber = result.getString("phoneNumber");
+                String itemCategory = result.getString("category");
                 String itemName = result.getString("itemName");
                 String place = result.getString("place");
                 String timeTaken = result.getString("timeTaken");
-                SearchObj searchObj = new SearchObj(employeeName, phoneNumber, itemName, place, timeTaken);
+                SearchObj searchObj = new SearchObj(employeeName, phoneNumber, itemCategory,  itemName, place, timeTaken);
 
                 searchItemData.setAll(searchObj);
 
@@ -186,6 +193,7 @@ public class SearchItemController {
         /* SETTING VALUES FROM OBJECT INTO COLUMNS */
         employeeNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("employeeName"));
         telephoneNoColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("phoneNo"));
+        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemCategory"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
         placeColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("place"));
         timeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));

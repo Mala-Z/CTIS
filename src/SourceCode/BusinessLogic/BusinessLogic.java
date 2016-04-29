@@ -1,7 +1,7 @@
 package SourceCode.BusinessLogic;
 
-import SourceCode.Model.Employee;
-import SourceCode.Model.Item;
+import SourceCode.Model.dbObj.Employee;
+import SourceCode.Model.dbObj.Item;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

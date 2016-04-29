@@ -53,9 +53,9 @@ public class RunView extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(RunView.class.getResource("/SourceCode/View/fxml/TakeItem.fxml"));
             BorderPane takeItem = loader.load();
+            primaryStage.setHeight(490);
+            primaryStage.setWidth(800);
             mainLayout.setCenter(takeItem);
-            primaryStage.setHeight(480);
-            primaryStage.setWidth(610);
         }catch (Exception e){
             System.out.println("Exception in showTakeItem() from RunView class:" + e.getMessage());
         }
@@ -68,8 +68,8 @@ public class RunView extends Application {
             loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/ReturnView.fxml")));
             BorderPane returnItem = loader.load();
             mainLayout.setCenter(returnItem);
-            primaryStage.setHeight(480);
-            primaryStage.setWidth(610);
+            primaryStage.setHeight(490);
+            primaryStage.setWidth(800);
         }catch(Exception e){
             System.out.println("Exception in showReturnItemView() from RunView class:" + e.getMessage());
         }
@@ -82,8 +82,8 @@ public class RunView extends Application {
             loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/SearchView.fxml")));
             BorderPane search = loader.load();
             mainLayout.setCenter(search);
-            primaryStage.setHeight(480);
-            primaryStage.setWidth(610);
+            primaryStage.setHeight(490);
+            primaryStage.setWidth(800);
         }catch (Exception e) {
             System.out.println("Exception in showSearch() from RunView class:" + e.getMessage());
         }

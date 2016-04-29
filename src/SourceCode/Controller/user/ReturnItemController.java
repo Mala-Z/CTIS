@@ -32,6 +32,8 @@ public class ReturnItemController {
     @FXML
     private TableColumn employeeNameColumn;
     @FXML
+    private TableColumn itemCategoryColumn;
+    @FXML
     private TableColumn itemNameColumn;
     @FXML
     private TableColumn placeColumn;
@@ -101,14 +103,18 @@ public class ReturnItemController {
 
         try {
             /* SQL QUERY */
-            String sql = "SELECT employeeName, itemName, place, timeTaken FROM BorrowedItem\n" +
+            String sql = " SELECT employeeName, itemName, place, timeTaken, category FROM BorrowedItem\n" +
                     "INNER JOIN Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
+                    "INNER JOIN Category ON\n" +
+                    "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
                     "INNER JOIN Place ON\n" +
                     "BorrowedItem.id = Place.borrowedItemID\n" +
                     "WHERE BorrowedItem.itemBarcode = ? and timeReturned IS NULL;";
+
+
 
             /* EXECUTION OF QUERY */
             int inputBarcode = Integer.parseInt(tfItemBarcode.getText());
@@ -125,22 +131,11 @@ public class ReturnItemController {
 //                BorrowedItem borrowedItem = new BorrowedItem(0, 0, 0, result.getString("place"), result.getString("timeTaken"), null);
 
                     String employeeName = result.getString("employeeName");
+                    String itemCategory = result.getString("category");
                     String itemName = result.getString("itemName");
                     String place = result.getString("place");
                     String timeTaken = result.getString("timeTaken");
-                    ReturnObj returnObj = new ReturnObj(employeeName, itemName, place, timeTaken);
-
-                    //employee.nameProperty().set(result.getString("employeeName"));
-                    //employee.setEmployeeName(result.getString("employeeName"));
-                    //item.setItemName(result.getString("itemName"));
-                    //item.itemNameProperty().set(result.getString("itemName"));
-                    //borrowedItem.placeProperty().set(result.getString("place"));
-                    //borrowedItem.timeTakenProperty().set(result.getString("timeTaken"));
-//                ObservableList<String> row = FXCollections.observableArrayList();
-//                String name = result.getString("employeeName");
-//                row.add(result.getString("employeeName"));
-//                row.add(result.getString("employeeName"));
-
+                    ReturnObj returnObj = new ReturnObj(employeeName, itemCategory,  itemName, place, timeTaken);
 
                     returnItemData.setAll(returnObj);
                 }
@@ -152,6 +147,7 @@ public class ReturnItemController {
 
         /* SETTING VALUES FROM OBJECT INTO COLUMNS */
         employeeNameColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("employeeName"));
+        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("itemCategory"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("itemName"));
         placeColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("place"));
         timeTakenColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("timeTaken"));

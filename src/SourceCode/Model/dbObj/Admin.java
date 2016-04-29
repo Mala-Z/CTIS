@@ -1,4 +1,4 @@
-package SourceCode.Model;
+package SourceCode.Model.dbObj;
 
 public class Admin {
     private int id;

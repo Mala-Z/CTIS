@@ -39,6 +39,8 @@ public class TakeItemController {
     @FXML
     private TableColumn itemNumberColumn;
     @FXML
+    private TableColumn itemCategoryColumn;
+    @FXML
     private TableColumn itemNameColumn;
     @FXML
     private TableColumn placeColumn;
@@ -128,7 +130,10 @@ public class TakeItemController {
 
         try {
             /* SQL QUERY */
-            String sql = "SELECT itemNo, itemName FROM Item WHERE itemBarcode = ?;";
+            String sql = " SELECT itemNo, itemName, category FROM Item \n" +
+                    "INNER JOIN Category ON \n" +
+                    "Item.itemBarcode = Category.itemBarcode\n" +
+                    "WHERE Item.itemBarcode = ?";
 
             /* EXECUTION OF QUERY */
             int inputBarcode = Integer.parseInt(tfItemBarcode.getText());
@@ -140,9 +145,10 @@ public class TakeItemController {
             while ((result.next())) {
 
                 String itemNo = result.getString("itemNo");
+                String itemCategory = result.getString("category");
                 String itemName = result.getString("itemName");
                 String place = placeCombo.getSelectionModel().getSelectedItem().toString(); // here we parse selected category into string
-                TakeObj takeObj = new TakeObj(itemNo, itemName, place);
+                TakeObj takeObj = new TakeObj(itemNo, itemCategory, itemName, place);
 
 //                Item item = new Item();
 //                item.itemNoProperty().set(result.getString("itemNo"));
@@ -157,6 +163,7 @@ public class TakeItemController {
 
         /* SETTING VALUES FROM OBJECT INTO COLUMNS */
         itemNumberColumn.setCellValueFactory(new PropertyValueFactory<TakeObj, String>("itemNumber"));
+        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<TakeObj, String>("itemCategory"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<TakeObj, String>("itemName"));
         placeColumn.setCellValueFactory(new PropertyValueFactory<TakeObj, String>("place"));
 

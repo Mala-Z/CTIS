@@ -1,4 +1,4 @@
-package SourceCode.Model;
+package SourceCode.Model.dbObj;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
