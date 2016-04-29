@@ -82,7 +82,7 @@ public class ReturnItemController {
     @FXML
     private void checkItemBarcode() {
         try {
-            if (businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) { //if barcode exists
+            if (businessLogic.checkItemBarcode(tfItemBarcode.getText())) { //if barcode exists
                 if (businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) { //if item was taken
                     populateTableView();
                     //tableView.requestFocus();
@@ -90,7 +90,7 @@ public class ReturnItemController {
                     updateAlertMessage("Item was not taken by any employee");
                     tfItemBarcode.setText(null);
                 }
-            } else if (!businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText())))  {
+            } else if (!businessLogic.checkItemBarcode(tfItemBarcode.getText()))  {
                 updateAlertMessage("Please scan the barcode again");
                 tfItemBarcode.setText(null);
             }

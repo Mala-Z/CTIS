@@ -216,13 +216,13 @@ public class BusinessLogic {
     }
 
     /* METHOD FOR CHECKING THE ITEM BARCODE STORED INTO THE DATABASE */
-    public boolean checkItemBarcode(int itemBarcode) {
+    public boolean checkItemBarcode(String itemBarcode) {
 
         try {
 
             String query = "SELECT itemBarcode FROM Item WHERE itemBarcode = ?";
             PreparedStatement preparedStatement = connectDB.preparedStatement(query);
-            preparedStatement.setInt(1, itemBarcode);
+            preparedStatement.setString(1, itemBarcode);
 
             ResultSet results = preparedStatement.executeQuery();
 
@@ -234,6 +234,26 @@ public class BusinessLogic {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Error in checkItemBarcode() from BusinessLogic class: " + e.getMessage());
+        }
+        return false;
+    }
+    public boolean checkItemNo(String itemNo) {
+
+        try {
+            String query = "SELECT itemNo FROM Item WHERE itemNo = ?";
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
+            preparedStatement.setString(1, itemNo);
+
+            ResultSet results = preparedStatement.executeQuery();
+
+            if (results.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in checkItemNo() from BusinessLogic class: " + e.getMessage());
         }
         return false;
     }

@@ -8,6 +8,7 @@ import SourceCode.Model.dbObj.BorrowedItem;
 import SourceCode.Model.dbObj.Employee;
 import SourceCode.Model.dbObj.Item;
 import SourceCode.Model.userTableViewObjects.SearchObj;
+import com.sun.xml.internal.bind.v2.TODO;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -83,70 +84,81 @@ public class SearchItemController {
 
     @FXML
     private void checkItemBarcode() {
-        try {
-            if (businessLogic.checkItemBarcode(Integer.parseInt(tfItemNumber.getText()))) {
 
+        try {
+
+            if (businessLogic.checkItemBarcode(tfItemNumber.getText())||businessLogic.checkItemNo(tfItemNumber.getText())) {
                 searchByItemBarcode();
+                searchByItemNumber();
 
             } else {
-                MainViewController.updateAlertMessage("Please scan the barcode again");
+                MainViewController.updateAlertMessage("Please check the barcode or the item number");
                 tfItemNumber.setText(null);
             }
         } catch (Exception e) {
-            System.out.println("Exception in checkItemBarcode() from SearchItemController class:" + e.getMessage());
+            System.out.println("Exception in checkItemBarcode()/itemNumber() from SearchItemController class:" + e.getMessage());
         }
     }
 
-    public void searchByItemNumber() {
 
-        try {
+        public void searchByItemNumber() {
+
+            try {
             /* SQL QUERY */
-            String sql = "SELECT employeeName, phoneNumber, itemName, place, timeTaken FROM BorrowedItem\n" +
-                    "INNER JOIN Employee ON\n" +
-                    "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
-                    "INNER JOIN PhoneNumber ON\n" +
-                    "BorrowedItem.employeeBarcode = PhoneNumber.employeeBarcode\n" +
-                    "INNER JOIN Item ON\n" +
-                    "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
-                    "INNER JOIN Place ON\n" +
-                    "BorrowedItem.id = Place.borrowedItemID\n" +
-                    "WHERE itemNo = ? and timeReturned IS NULL;";
+                String sql = "SELECT employeeName, phoneNumber, itemName, place, timeTaken, category FROM BorrowedItem\n" +
+                        "INNER JOIN Employee ON\n" +
+                        "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
+                        "INNER JOIN PhoneNumber ON\n" +
+                        "BorrowedItem.employeeBarcode = PhoneNumber.employeeBarcode\n" +
+                        "INNER JOIN Category ON\n" +
+                        "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
+                        "INNER JOIN Item ON\n" +
+                        "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
+                        "INNER JOIN Place ON\n" +
+                        "BorrowedItem.id = Place.borrowedItemID\n" +
+                        "WHERE Item.itemNo = ? and timeReturned IS NULL;";
 
             /* EXECUTION OF QUERY */
-            int inputBarcode = Integer.parseInt(tfItemNumber.getText());
-            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
-            preparedStatement.setInt(1, inputBarcode);
+                //int inputItemNo = Integer.parseInt(tfItemNumber.getText());
 
-            ResultSet result = preparedStatement.executeQuery();
+                String inputItemNo = tfItemNumber.getText();
+                PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+                preparedStatement.setString(1, inputItemNo);
 
-            while ((result.next())) {
 
-                Employee employee = new Employee();
-                Item item = new Item();
-                BorrowedItem borrowedItem = new BorrowedItem();
+                ResultSet result = preparedStatement.executeQuery();
 
-                employee.nameProperty().set(result.getString("employeeName"));
-                employee.telephoneProperty().set(result.getInt("phoneNumber"));
-                item.itemNameProperty().set(result.getString("itemName"));
-                borrowedItem.placeProperty().set(result.getString("place"));
-                borrowedItem.timeTakenProperty().set(result.getString("timeTaken"));
-                //searchItemData.addAll(employee, item, borrowedItem);
+                while ((result.next())) {
+
+                    String employeeName = result.getString("employeeName");
+                    String phoneNumber = result.getString("phoneNumber");
+                    String itemCategory = result.getString("category");
+                    String itemName = result.getString("itemName");
+                    String place = result.getString("place");
+                    String timeTaken = result.getString("timeTaken");
+                    SearchObj searchObj = new SearchObj(employeeName, phoneNumber, itemCategory,  itemName, place, timeTaken);
+
+                    searchItemData.setAll(searchObj);
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Exception in searchByItemNo() from SearchItemController class: " + e.getMessage());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Exception in searchByItemNumber() from SearchItemController class: " + e.getMessage());
-        }
 
-        /* SETTING UP COLUMNS FOR TABLE VIEW */
-        employeeNameColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("employeeName"));
-        telephoneNoColumn.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("phoneNumber"));
-        itemNameColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("itemName"));
-        placeColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItem, String>("place"));
-        timeTakenColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItem, ObjectProperty<DateTimeFormatter>>("timeTaken"));
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+            employeeNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("employeeName"));
+            telephoneNoColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("phoneNo"));
+            itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemCategory"));
+            itemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
+            placeColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("place"));
+            timeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
-        //tableView.getItems().addAll(searchItemData);
-    }
+            tableView.getItems().addAll(searchItemData);
+            searchItemData.clear();  //i did this because it would duplicate the last element if the item was returned
+
+        }
 
     public void searchByItemBarcode() {
 
@@ -166,9 +178,9 @@ public class SearchItemController {
                     "WHERE BorrowedItem.itemBarcode = ? and timeReturned IS NULL;";
 
             /* EXECUTION OF QUERY */
-            int inputBarcode = Integer.parseInt(tfItemNumber.getText());
+            String inputBarcode = tfItemNumber.getText();
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
-            preparedStatement.setInt(1, inputBarcode);
+            preparedStatement.setString(1, inputBarcode);
 
             ResultSet result = preparedStatement.executeQuery();
 

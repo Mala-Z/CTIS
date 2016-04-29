@@ -45,7 +45,7 @@ public class CreateItemController {
     private void btnSubmit() {
         try {
             if (tfItemBarcode.getLength() > 0 && tfItemNo.getLength() > 0 && tfItemName.getLength() > 0 && categoryCombo.getSelectionModel().getSelectedIndex() > 0) {
-                if (!businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) {
+                if (!businessLogic.checkItemBarcode(tfItemBarcode.getText())) {
                     businessLogic.insertItem(Integer.parseInt(tfItemBarcode.getText()), tfItemNo.getText(), tfItemName.getText(),
                             categoryCombo.getValue().toString());
                     updateAlertMessage("Registration successful");

@@ -108,7 +108,7 @@ public class TakeItemController {
     @FXML
     private void checkItemBarcode() {
         try {
-            if (businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) {
+            if (businessLogic.checkItemBarcode(tfItemBarcode.getText())) {
                 if (!businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
                     populateTableView();
                     //tableView.requestFocus();
@@ -116,7 +116,7 @@ public class TakeItemController {
                     MainViewController.updateAlertMessage("Item has been already taken by another employee");
                     tfItemBarcode.setText(null);
                 }
-            } else if (!businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) {
+            } else if (!businessLogic.checkItemBarcode(tfItemBarcode.getText())) {
                 MainViewController.updateAlertMessage("Please scan the barcode again");
                 tfItemBarcode.setText(null);
             }
