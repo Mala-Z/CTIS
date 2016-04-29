@@ -7,14 +7,15 @@ import javafx.beans.property.StringProperty;
 
 public class Employee {
 
-    private final IntegerProperty employeeBarcode;
-    private final StringProperty employeeNo;
-    private final StringProperty employeeName;
-    private final IntegerProperty phoneNumber;
+    private IntegerProperty employeeBarcode;
+    private StringProperty employeeNo;
+    private StringProperty employeeName;
+    private IntegerProperty phoneNumber;
 
     //DEFAULT CONSTRUCTOR
     public Employee() {
             this(0, null, null, 0);
+
     }
 
     //CONSTRUCTOR
@@ -27,17 +28,33 @@ public class Employee {
     }
 
     //GET METHODS
-    public final int getBarcode() {
+    public int getBarcode() {
         return employeeBarcode.get();
     }
 
-    public final String getEmployeeNo() {
+    public String getEmployeeNo() {
         return employeeNo.get();
     }
 
-    public final String getName() { return employeeName.get(); }
+    public String getName() { return employeeName.get(); }
 
-    public final int getTelephoneNo() { return phoneNumber.get(); }
+    public int getTelephoneNo() { return phoneNumber.get(); }
+
+    public void setEmployeeBarcode(int employeeBarcode) {
+        this.employeeBarcode.set(employeeBarcode);
+    }
+
+    public void setEmployeeNo(String employeeNo) {
+        this.employeeNo.set(employeeNo);
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName.set(employeeName);
+    }
+
+    public void setPhoneNumber(int phoneNumber) {
+        this.phoneNumber.set(phoneNumber);
+    }
 
     public IntegerProperty employeeBarcodeProperty() {
         return employeeBarcode;

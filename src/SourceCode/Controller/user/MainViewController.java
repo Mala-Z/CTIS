@@ -2,6 +2,7 @@ package SourceCode.Controller.user;
 
 import SourceCode.Controller.RunView;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 
 
 /**
@@ -56,5 +57,12 @@ public class MainViewController {
         }catch (Exception e){
             System.out.println("Exception in goAdminView() from MainViewController class:" + e.getMessage());
         }
+    }
+
+    /* METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER */
+    public static void updateAlertMessage(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

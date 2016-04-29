@@ -5,7 +5,7 @@ import javafx.beans.property.*;
 import java.time.format.DateTimeFormatter;
 
 public class BorrowedItem {
-    private final IntegerProperty id;
+    private final IntegerProperty id; //must stay final
     private final IntegerProperty employeeBarcode;
     private final IntegerProperty itemBarcode;
     private final StringProperty place;
@@ -51,5 +51,29 @@ public class BorrowedItem {
 
     public ObjectProperty timeReturnedProperty() {
         return timeReturned;
+    }
+
+    public void setId(int id) {
+        this.id.set(id);
+    }
+
+    public void setEmployeeBarcode(int employeeBarcode) {
+        this.employeeBarcode.set(employeeBarcode);
+    }
+
+    public void setItemBarcode(int itemBarcode) {
+        this.itemBarcode.set(itemBarcode);
+    }
+
+    public void setPlace(String place) {
+        this.place.set(place);
+    }
+
+    public void setTimeTaken(DateTimeFormatter timeTaken) {
+        this.timeTaken.set(timeTaken);
+    }
+
+    public void setTimeReturned(DateTimeFormatter timeReturned) {
+        this.timeReturned.set(timeReturned);
     }
 }

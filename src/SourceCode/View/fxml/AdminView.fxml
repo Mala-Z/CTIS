@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
@@ -20,10 +21,62 @@
          <children>
             <TabPane layoutX="4.0" layoutY="2.0" prefHeight="348.0" prefWidth="783.0" style="-fx-background-color: white;" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="Employees" />
-                <Tab text="     Items     " />
-                  <Tab text="Borrowed items" />
-                  <Tab text="Used Items" />
+                <Tab fx:id="employeeTab" text="Employees">
+                     <content>
+                        <TableView fx:id="employeeTableView" prefHeight="200.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn fx:id="employeeBarcodeColumn" prefWidth="195.0" text="Barcode" />
+                            <TableColumn fx:id="employeeNumberColumn" prefWidth="195.0" text="Number" />
+                              <TableColumn fx:id="employeeNameColumn" prefWidth="195.0" text="Name" />
+                              <TableColumn fx:id="employeePhoneColumn" prefWidth="198.0" text="Phone number" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </content></Tab>
+                <Tab fx:id="itemTab" text="     Items     ">
+                     <content>
+                        <TableView fx:id="itemTableView" prefHeight="200.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn fx:id="itemBarcodeColumn" prefWidth="195.0" text="Barcode" />
+                            <TableColumn fx:id="itemNumberColumn" prefWidth="195.0" text="Number" />
+                              <TableColumn fx:id="itemNameColumn" prefWidth="195.0" text="Name" />
+                              <TableColumn fx:id="itemCategoryColumn" prefWidth="216.0" text="Category" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </content></Tab>
+                  <Tab fx:id="borrowedItemTab" text="Borrowed items">
+                     <content>
+                        <TableView fx:id="borrowedItemTableView" prefHeight="200.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn fx:id="borrowedItemEmployeeNameColumn" prefWidth="195.0" text="Employee" />
+                            <TableColumn fx:id="borrowedItemNameColumn" prefWidth="195.0" text="Item" />
+                              <TableColumn fx:id="borrowedItemTimeTakenColumn" prefWidth="195.0" text="Time taken" />
+                              <TableColumn fx:id="borrowedItemTimeReturnedColumn" prefWidth="194.0" text="Time returned" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </content></Tab>
+                  <Tab fx:id="usedProductTab" text="Used Products">
+                     <content>
+                        <TableView fx:id="usedProductTableView" prefHeight="200.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn fx:id="usedProductEmployeeNameColumn" prefWidth="195.0" text="Employee" />
+                            <TableColumn fx:id="usedProductItemNameColumn" prefWidth="195.0" text="Item" />
+                              <TableColumn fx:id="usedProductTimeTakenColumn" prefWidth="195.0" text="Time taken" />
+                              <TableColumn fx:id="usedProductQuantityColumn" prefWidth="213.0" text="Quantity taken" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </content></Tab>
               </tabs>
             </TabPane>
             <Button fx:id="btnCreateEmployee" layoutX="24.0" layoutY="358.0" mnemonicParsing="false" onAction="#btnCreateEmployee" style="-fx-background-color: #8CD0BB;" text="Create Employee" textFill="WHITE">

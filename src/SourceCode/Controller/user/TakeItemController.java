@@ -4,26 +4,22 @@ import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
-import SourceCode.Model.BorrowedItem;
-import SourceCode.Model.Employee;
-import SourceCode.Model.Item;
+import SourceCode.Model.userTableViewObjects.TakeObj;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 
 public class TakeItemController {
     BusinessLogic businessLogic = new BusinessLogic();
-    //Factory factory = Factory.getInstance();
     ConnectDB connectDB = Factory.connectDB;
 
-    ObservableList<String> placeList = FXCollections.observableArrayList("Address", "Car");
+    ObservableList<String> placeList = FXCollections.observableArrayList("On Person", "Address", "Car");
     private ObservableList takeItemData = FXCollections.observableArrayList();
 
     @FXML
@@ -52,6 +48,7 @@ public class TakeItemController {
     @FXML
     private void initialize() {
         placeCombo.setItems(placeList);
+        placeCombo.getSelectionModel().selectFirst();
     }
 
 
@@ -62,11 +59,11 @@ public class TakeItemController {
                 java.util.Date today = new java.util.Date();
                 Timestamp timeTaken = new Timestamp(today.getTime());
                 businessLogic.takeItem(Integer.parseInt(tfEmployeeBarcode.getText()), Integer.parseInt(tfItemBarcode.getText()), timeTaken, placeCombo.getValue().toString());
-                updateAlertMessage("Registration successful");
+                MainViewController.updateAlertMessage("Registration successful");
                 runView.showMainView();
 
             } else {
-                updateAlertMessage("Missing barcode for employee or item");
+                MainViewController.updateAlertMessage("Missing barcode for employee or item");
             }
 
         } catch (Exception e) {
@@ -98,7 +95,7 @@ public class TakeItemController {
             if (businessLogic.checkEmployeeBarcode(Integer.parseInt(tfEmployeeBarcode.getText()))) {
                 tfItemBarcode.requestFocus();
             } else {
-                updateAlertMessage("Please scan the barcode again");
+                MainViewController.updateAlertMessage("Please scan the barcode again");
                 tfEmployeeBarcode.setText(null);
             }
         } catch (Exception e) {
@@ -114,11 +111,11 @@ public class TakeItemController {
                     populateTableView();
                     //tableView.requestFocus();
                 } else if (businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
-                    updateAlertMessage("Item has been already taken by another employee");
+                    MainViewController.updateAlertMessage("Item has been already taken by another employee");
                     tfItemBarcode.setText(null);
                 }
             } else if (!businessLogic.checkItemBarcode(Integer.parseInt(tfItemBarcode.getText()))) {
-                updateAlertMessage("Please scan the barcode again");
+                MainViewController.updateAlertMessage("Please scan the barcode again");
                 tfItemBarcode.setText(null);
             }
         } catch (Exception e) {
@@ -141,29 +138,30 @@ public class TakeItemController {
             ResultSet result = preparedStatement.executeQuery();
 
             while ((result.next())) {
-                Item item = new Item();
-                item.itemNoProperty().set(result.getString("itemNo"));
-                item.itemNameProperty().set(result.getString("itemName"));
-                takeItemData.add(item);
+
+                String itemNo = result.getString("itemNo");
+                String itemName = result.getString("itemName");
+                String place = placeCombo.getSelectionModel().getSelectedItem().toString(); // here we parse selected category into string
+                TakeObj takeObj = new TakeObj(itemNo, itemName, place);
+
+//                Item item = new Item();
+//                item.itemNoProperty().set(result.getString("itemNo"));
+//                item.itemNameProperty().set(result.getString("itemName"));
+//                takeItemData.add(item);
+                takeItemData.setAll(takeObj);
             }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Exception in populateTableView() from TakeItemController class: " + e.getMessage());
         }
 
-        /* SETTING UP COLUMNS FOR TABLE VIEW */
-        itemNumberColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("itemNo"));
-        itemNameColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("itemName"));
-        placeColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItem, String>("place"));
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+        itemNumberColumn.setCellValueFactory(new PropertyValueFactory<TakeObj, String>("itemNumber"));
+        itemNameColumn.setCellValueFactory(new PropertyValueFactory<TakeObj, String>("itemName"));
+        placeColumn.setCellValueFactory(new PropertyValueFactory<TakeObj, String>("place"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
-        tableView.getItems().setAll(takeItemData);
+        tableView.getItems().addAll(takeItemData);
     }
 
-    /* METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER */
-    public void updateAlertMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 }
