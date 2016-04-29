@@ -1,5 +1,6 @@
 package SourceCode.Controller;
 
+import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +20,8 @@ public class RunView extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Racoon");
         showMainView();
+
+        //ConnectDB connectDB = Factory.getInstance();
 
         factory.getInstance();
 

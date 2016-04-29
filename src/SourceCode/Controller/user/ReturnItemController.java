@@ -1,6 +1,7 @@
 package SourceCode.Controller.user;
 
 import SourceCode.BusinessLogic.BusinessLogic;
+import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
 import SourceCode.Model.BorrowedItem;
@@ -19,8 +20,8 @@ import java.sql.Timestamp;
 
 public class ReturnItemController {
     BusinessLogic businessLogic = new BusinessLogic();
-    Factory factory =  Factory.getInstance();
-
+//    Factory factory =  Factory.getInstance();
+    ConnectDB connectDB = Factory.connectDB;
     private ObservableList returnItemData = FXCollections.observableArrayList();
 
     @FXML
@@ -113,7 +114,7 @@ public class ReturnItemController {
 
             /* EXECUTION OF QUERY */
             int inputBarcode = Integer.parseInt(tfItemBarcode.getText());
-            PreparedStatement preparedStatement = factory.preparedStatement(sql);
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setInt(1, inputBarcode);
 
             ResultSet result = preparedStatement.executeQuery();
@@ -129,7 +130,9 @@ public class ReturnItemController {
                 borrowedItem.timeTakenProperty().set(result.getString("timeTaken"));
 
 
-                returnItemData.addAll(employee,item,borrowedItem);
+
+                returnItemData.setAll(employee,item,borrowedItem);
+
                 /*System.out.println("emp:" + employee);
                 System.out.println("item:" + item);
                 System.out.println("borro:" + borrowedItem);*/
@@ -147,7 +150,9 @@ public class ReturnItemController {
         timeTakenColumn.setCellValueFactory(new PropertyValueFactory<>("timeTaken"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
+
         tableView.getItems().addAll(returnItemData);
+
     }
 
 //    public void initComponents() {
