@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 
 public class ReturnItemController {
@@ -40,6 +41,7 @@ public class ReturnItemController {
     @FXML
     private TableColumn timeTakenColumn;
 
+    private ArrayList<Integer> barcodeList = new ArrayList<>();
 
     private RunView runView;
 
@@ -73,6 +75,7 @@ public class ReturnItemController {
     @FXML
     private void btnBack(){
         try{
+            barcodeList.clear();
             runView.showMainView();
         }catch (Exception e){
             System.out.println("Exception in btnBack() from ReturnItemController class:" + e.getMessage());
@@ -84,8 +87,19 @@ public class ReturnItemController {
         try {
             if (businessLogic.checkItemBarcode(tfItemBarcode.getText())) { //if barcode exists
                 if (businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) { //if item was taken
-                    populateTableView();
-                    //tableView.requestFocus();
+                    // check if we have barcodes scanned twice
+                    if (!barcodeList.contains(Integer.valueOf(tfItemBarcode.getText()))) {
+
+                        populateTableView();
+
+                        //add barcodes to list and after check for barcodes scanned twice
+                        barcodeList.add(Integer.parseInt(tfItemBarcode.getText()));
+
+                        tfItemBarcode.clear();
+                    }else if (barcodeList.contains(Integer.valueOf(tfItemBarcode.getText()))) {
+                        MainViewController.updateAlertMessage("You have already scanned this item");
+                    }
+
                 } else if (!businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) { //item not taken
                     updateAlertMessage("Item was not taken by any employee");
                     tfItemBarcode.setText(null);
@@ -101,31 +115,30 @@ public class ReturnItemController {
 
     private void populateTableView() {
 
-        try {
+            try {
             /* SQL QUERY */
-            String sql = " SELECT employeeName, itemName, place, timeTaken, category FROM BorrowedItem\n" +
-                    "INNER JOIN Employee ON\n" +
-                    "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
-                    "INNER JOIN Item ON\n" +
-                    "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
-                    "INNER JOIN Category ON\n" +
-                    "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
-                    "INNER JOIN Place ON\n" +
-                    "BorrowedItem.id = Place.borrowedItemID\n" +
-                    "WHERE BorrowedItem.itemBarcode = ? and timeReturned IS NULL;";
+                String sql = " SELECT employeeName, itemName, place, timeTaken, category FROM BorrowedItem\n" +
+                        "INNER JOIN Employee ON\n" +
+                        "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
+                        "INNER JOIN Item ON\n" +
+                        "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
+                        "INNER JOIN Category ON\n" +
+                        "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
+                        "INNER JOIN Place ON\n" +
+                        "BorrowedItem.id = Place.borrowedItemID\n" +
+                        "WHERE BorrowedItem.itemBarcode = ? and timeReturned IS NULL;";
 
 
 
             /* EXECUTION OF QUERY */
-            int inputBarcode = Integer.parseInt(tfItemBarcode.getText());
-            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+                int inputBarcode = Integer.parseInt(tfItemBarcode.getText());
+                PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
 
-            preparedStatement.setInt(1, inputBarcode);
+                preparedStatement.setInt(1, inputBarcode);
 
-            ResultSet result = preparedStatement.executeQuery();
+                ResultSet result = preparedStatement.executeQuery();
 
-            while ((result.next()))
-            {
+                while ((result.next())) {
 //                Employee employee = new Employee(0, null , result.getString("employeeName"), 0);
 //                Item item = new Item(0, null, result.getString("itemName"), null);
 //                BorrowedItem borrowedItem = new BorrowedItem(0, 0, 0, result.getString("place"), result.getString("timeTaken"), null);
@@ -135,27 +148,26 @@ public class ReturnItemController {
                     String itemName = result.getString("itemName");
                     String place = result.getString("place");
                     String timeTaken = result.getString("timeTaken");
-                    ReturnObj returnObj = new ReturnObj(employeeName, itemCategory,  itemName, place, timeTaken);
+                    ReturnObj returnObj = new ReturnObj(employeeName, itemCategory, itemName, place, timeTaken);
 
                     returnItemData.setAll(returnObj);
                 }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Exception in populateTableView() from ReturnItemController class: " + e.getMessage());
-        }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Exception in populateTableView() from ReturnItemController class: " + e.getMessage());
+            }
 
         /* SETTING VALUES FROM OBJECT INTO COLUMNS */
-        employeeNameColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("employeeName"));
-        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("itemCategory"));
-        itemNameColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("itemName"));
-        placeColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("place"));
-        timeTakenColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("timeTaken"));
+            employeeNameColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("employeeName"));
+            itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("itemCategory"));
+            itemNameColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("itemName"));
+            placeColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("place"));
+            timeTakenColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("timeTaken"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
 
-        tableView.getItems().addAll(returnItemData);
-
+            tableView.getItems().addAll(returnItemData);
     }
     /* METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER */
     public void updateAlertMessage(String message) {

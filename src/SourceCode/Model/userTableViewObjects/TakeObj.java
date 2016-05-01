@@ -5,12 +5,14 @@ public class TakeObj {
     private String itemCategory;
     private String itemName;
     private String place;
+    private String placeReference;
 
-    public TakeObj(String itemNumber, String itemCategory, String itemName, String place) {
+    public TakeObj(String itemNumber, String itemCategory, String itemName, String place, String placeReference) {
         this.itemNumber = itemNumber;
         this.itemCategory = itemCategory;
         this.itemName = itemName;
         this.place = place;
+        this.placeReference = placeReference;
     }
 
     public String getItemNumber() {
@@ -43,5 +45,13 @@ public class TakeObj {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    public String getPlaceReference() {
+        return placeReference;
+    }
+
+    public void setPlaceReference(String placeReference) {
+        this.placeReference = placeReference;
     }
 }

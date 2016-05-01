@@ -1,11 +1,15 @@
 package SourceCode.BusinessLogic;
 
-import SourceCode.Model.dbObj.Employee;
-import SourceCode.Model.dbObj.Item;
+import SourceCode.Controller.user.TakeItemController;
+import SourceCode.Model.dbTablesObjects.Employee;
+import SourceCode.Model.dbTablesObjects.Item;
+import SourceCode.Model.otherPurposeObjects.WriteTakeToDB;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class BusinessLogic {
 
@@ -133,27 +137,55 @@ public class BusinessLogic {
     }
 
     /* METHOD FOR INSERTING INTO BORROWED ITEM TABLE */
-    public void takeItem(int employeeBarcode, int itemBarcode, Timestamp timeTaken, String place) {
+    public void takeItem(ArrayList<WriteTakeToDB> arrayList) {
         String sql = "INSERT INTO BorrowedItem VALUES (null, ?, ?, ?, null);";
-        String sql2 = "INSERT INTO Place VALUES (null, ?, (SELECT id FROM BorrowedItem WHERE itemBarcode = ? AND timeReturned IS NULL));";
-        try {
-            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
-            PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
-            preparedStatement.setInt(1, employeeBarcode);
-            preparedStatement.setInt(2, itemBarcode);
-            preparedStatement.setTimestamp(3, timeTaken);
-            preparedStatement2.setString(1, place);
-            preparedStatement2.setInt(2, itemBarcode);
-            preparedStatement.executeUpdate();
-            preparedStatement2.executeUpdate();
-            //preparedStatement.close();
-            //preparedStatement2.close();
+        String sql2 = "INSERT INTO Place VALUES (null, ?, ?, (SELECT id FROM BorrowedItem WHERE itemBarcode = ? AND timeReturned IS NULL));";
+        Iterator<WriteTakeToDB> it = arrayList.iterator();
+        while (it.hasNext()) {
+            try {
+                WriteTakeToDB writeTakeToDB = it.next();
+                PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+                PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
+                preparedStatement.setInt(1, Integer.valueOf(writeTakeToDB.getEmployeeBarcode()));
+                preparedStatement.setString(2, writeTakeToDB.getItemBarcode());
+                preparedStatement.setString(3, writeTakeToDB.getTimeTaken());
+                preparedStatement2.setString(1, writeTakeToDB.getPlace());
+                preparedStatement2.setString(2, writeTakeToDB.getPlaceReference());
+                preparedStatement2.setString(3, writeTakeToDB.getItemBarcode());
+                preparedStatement.executeUpdate();
+                preparedStatement2.executeUpdate();
+                //preparedStatement.close();
+                //preparedStatement2.close();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error in takeItem() from BusinessLogic class: " + e.getMessage());
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Error in takeItem() from BusinessLogic class: " + e.getMessage());
+            }
         }
     }
+
+//    public void takeItem(String employeeBarcode, String itemBarcode, Timestamp timeTaken, String place, String placeReference) {
+//        String sql = "INSERT INTO BorrowedItem VALUES (null, ?, ?, ?, null);";
+//        String sql2 = "INSERT INTO Place VALUES (null, ?, ?, (SELECT id FROM BorrowedItem WHERE itemBarcode = ? AND timeReturned IS NULL));";
+//        try {
+//            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+//            PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
+//            preparedStatement.setString(1, employeeBarcode);
+//            preparedStatement.setString(2, itemBarcode);
+//            preparedStatement.setTimestamp(3, timeTaken);
+//            preparedStatement2.setString(1, place);
+//            preparedStatement2.setString(2, placeReference);
+//            preparedStatement2.setString(3, itemBarcode);
+//            preparedStatement.executeUpdate();
+//            preparedStatement2.executeUpdate();
+//            //preparedStatement.close();
+//            //preparedStatement2.close();
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            System.out.println("Error in takeItem() from BusinessLogic class: " + e.getMessage());
+//        }
+//    }
 
     /* METHOD FOR RETURNING THE TAKEN ITEM TO THE DATABASE */
     public void returnItem(int itemBarcode) {
@@ -322,13 +354,60 @@ public class BusinessLogic {
 
 
                 observableList.add(category);
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Error in getCategory() from BusinessLogic class: "  + e.getMessage());
         }
         return observableList;
+    }
+
+    public ObservableList<String> getPlace() {
+        ObservableList<String> observableList = FXCollections.observableArrayList();
+
+        try {
+            String sql = "SELECT place FROM Place";
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+
+
+                String place = (resultSet.getString(1));
+
+
+                observableList.add(place);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in getPlace() from BusinessLogic class: "  + e.getMessage());
+        }
+        return observableList;
+    }
+    public String getEmployee(String employeeBarcode) {
+        String name = "";
+        //ArrayList<String> arrayList = new ArrayList<>();
+
+        try {
+            String sql = "SELECT employeeName FROM Employee WHERE employeeBarcode = ?";
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+
+            preparedStatement.setString(1, employeeBarcode);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+
+                name = resultSet.getString(1);
+                //arrayList.add(employeeName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in getEmployee() from BusinessLogic class: "  + e.getMessage());
+        }
+        return name;
     }
 
     /* METHOD FOR DELETING A ROW FROM BORROWED ITEM TABLE IN THE DATABASE */
@@ -343,4 +422,5 @@ public class BusinessLogic {
             System.out.println("Error in deleteUsedItem() from BusinessLogic class: " + e.getMessage());
         }
     }
+
 }

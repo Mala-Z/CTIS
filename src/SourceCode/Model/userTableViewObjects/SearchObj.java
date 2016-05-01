@@ -6,16 +6,8 @@ public class SearchObj {
     private String itemCategory;
     private String itemName;
     private String place;
+    private String placeReference;
     private String timeTaken;
-
-    public SearchObj(String employeeName, String phoneNo, String itemCategory, String itemName, String place, String timeTaken) {
-        this.employeeName = employeeName;
-        this.phoneNo = phoneNo;
-        this.itemCategory = itemCategory;
-        this.itemName = itemName;
-        this.place = place;
-        this.timeTaken = timeTaken;
-    }
 
     public String getEmployeeName() {
         return employeeName;
@@ -57,11 +49,30 @@ public class SearchObj {
         this.place = place;
     }
 
+    public String getPlaceReference() {
+        return placeReference;
+    }
+
+    public void setPlaceReference(String placeReference) {
+        this.placeReference = placeReference;
+    }
+
     public String getTimeTaken() {
         return timeTaken;
     }
 
     public void setTimeTaken(String timeTaken) {
         this.timeTaken = timeTaken;
+    }
+
+    public SearchObj(String employeeName, String phoneNo, String itemCategory, String itemName, String place, String placeReference, String timeTaken) {
+        this.employeeName = employeeName;
+        this.phoneNo = phoneNo;
+        this.itemCategory = itemCategory;
+        this.itemName = itemName;
+        this.place = place;
+        this.placeReference = placeReference;
+        this.timeTaken = timeTaken;
+
     }
 }

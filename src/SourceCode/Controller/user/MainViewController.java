@@ -65,4 +65,9 @@ public class MainViewController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    public static void updateWarningMessage(String message){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }

@@ -33,7 +33,7 @@
                <columns>
                   <TableColumn fx:id="employeeNameColumn" prefWidth="75.0" text="Name" />
                   <TableColumn fx:id="itemCategoryColumn" prefWidth="75.0" text="Item category" />
-                  <TableColumn fx:id="itemNameColumn" prefWidth="75.0" text="Item reference" />
+                  <TableColumn fx:id="itemNameColumn" prefWidth="75.0" text="Item info" />
                   <TableColumn fx:id="placeColumn" prefWidth="75.0" text="Place" />
                   <TableColumn fx:id="timeTakenColumn" prefWidth="75.0" text="Time taken" />
                </columns>

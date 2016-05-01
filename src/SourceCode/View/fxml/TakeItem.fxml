@@ -29,9 +29,9 @@
          <children>
             <HBox>
                <children>
-                  <TextField fx:id="tfEmployeeBarcode" onAction="#checkEmployeeBarcode" pickOnBounds="false" promptText="Employee barcode..." stylesheets="@../CSS/takeCSS.css" />
-                  <Region prefHeight="27.0" prefWidth="32.0" />
-                  <ComboBox fx:id="placeCombo" onAction="#initialize" opacity="0.76" prefHeight="27.0" prefWidth="234.0" promptText="Select placement of the item">
+                  <TextField fx:id="tfEmployeeBarcode" maxHeight="27.0" maxWidth="167.0" minHeight="27.0" minWidth="167.0" onAction="#checkEmployeeBarcode" pickOnBounds="false" prefHeight="27.0" prefWidth="167.0" promptText="Employee barcode..." stylesheets="@../CSS/takeCSS.css" />
+                  <Region prefHeight="27.0" prefWidth="30.0" />
+                  <ComboBox fx:id="placeCombo" onAction="#comboBoxAction" opacity="0.76" prefHeight="27.0" prefWidth="208.0" promptText="Select placement the item">
                      <effect>
                         <InnerShadow color="#a5ddca" />
                      </effect>
@@ -42,15 +42,17 @@
             <HBox>
                <children>
                   <TextField fx:id="tfItemBarcode" onAction="#checkItemBarcode" pickOnBounds="false" promptText="Item barcode..." stylesheets="@../CSS/takeCSS.css" />
-                  <Region prefHeight="27.0" prefWidth="32.0" />
+                  <Region prefHeight="27.0" prefWidth="30.0" />
+                  <TextField fx:id="tfPlaceReference" prefHeight="27.0" prefWidth="208.0" promptText="Placement info..." />
                </children>
             </HBox>
             <TableView fx:id="tableView" prefHeight="260.0" prefWidth="400.0">
               <columns>
                 <TableColumn fx:id="itemNumberColumn" minWidth="-Infinity" prefWidth="152.0" text="Item number" />
                   <TableColumn fx:id="itemCategoryColumn" prefWidth="75.0" text="Category" />
-                  <TableColumn fx:id="itemNameColumn" prefWidth="243.0" text="Item reference" />
+                  <TableColumn fx:id="itemNameColumn" prefWidth="243.0" text="Item info" />
                   <TableColumn fx:id="placeColumn" prefWidth="75.0" text="Place" />
+                  <TableColumn fx:id="placeReferenceColumn" prefWidth="75.0" text="Placed on" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
