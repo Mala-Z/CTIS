@@ -4,7 +4,7 @@ import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
-import SourceCode.Model.otherPurposeObjects.WriteTakeToDB;
+import SourceCode.Model.insertIntoDBObjects.WriteTakeToDB;
 import SourceCode.Model.userTableViewObjects.TakeObj;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -83,8 +83,13 @@ public class TakeItemController {
     @FXML
     private void btnSubmit() {
         try {
-                businessLogic.takeItem(takeItemList);
-                MainViewController.updateAlertMessage("Registration successful");
+            businessLogic.takeItem(takeItemList);
+            MainViewController.updateAlertMessage("Registration successful!");
+//            tfEmployeeBarcode.clear();
+//            tfEmployeeBarcode.setEditable(true);
+//            tfEmployeeBarcode.setFont(new Font("Arial", 13));
+//            tfEmployeeBarcode.setStyle("-fx-background-color: white");
+            runView.showTakeItem();//this reloads the view(we get errors because we keep the old items if we dont do this)
 
         } catch (Exception e) {
             System.out.println("Exception in btnSubmit() from TakeItemController class:" + e.getMessage());
@@ -129,6 +134,7 @@ public class TakeItemController {
                 tfEmployeeBarcode.setText(name);
                 tfEmployeeBarcode.setEditable(false);
                 tfEmployeeBarcode.setFont(new Font("Arial Black", 13));
+                tfEmployeeBarcode.setStyle("-fx-background-color: lightgrey;");
 
 
                 tfItemBarcode.requestFocus();
@@ -146,7 +152,7 @@ public class TakeItemController {
 
         try {
             if (businessLogic.checkItemBarcode(tfItemBarcode.getText())) {
-                if (!businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
+                if (!businessLogic.searchItem(tfItemBarcode.getText())) {
                     if (!barcodeList.contains(Integer.valueOf(tfItemBarcode.getText()))){//check for duplicates
 
                         populateTableView();
@@ -162,7 +168,7 @@ public class TakeItemController {
 
                         WriteTakeToDB writeTakeToDB = new WriteTakeToDB(employeeBarcodeString, itemBarcodeString, timeTaken, place, placeReference);
 
-                        takeItemList.add(writeTakeToDB);// add data to a list
+                        takeItemList.add(writeTakeToDB);// add data to list
                         //System.out.println(takeItemList.toString());
 
                         //add barcodes to list and after check for barcodes scanned twice
@@ -175,7 +181,7 @@ public class TakeItemController {
                         MainViewController.updateAlertMessage("You have already scanned this item");
                         tfItemBarcode.clear();
                     }
-                } else if (businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
+                } else if (businessLogic.searchItem(tfItemBarcode.getText())) {
                     MainViewController.updateAlertMessage("Item has been already taken by another employee");
                     tfItemBarcode.setText(null);
                 }
@@ -197,7 +203,7 @@ public class TakeItemController {
 
             try {
             /* SQL QUERY */
-                String sql = " SELECT itemNo, itemName, category FROM Item \n" +
+                String sql = "SELECT itemNo, itemName, category FROM Item \n" +
                         "INNER JOIN Category ON \n" +
                         "Item.itemBarcode = Category.itemBarcode\n" +
                         "WHERE Item.itemBarcode = ?";

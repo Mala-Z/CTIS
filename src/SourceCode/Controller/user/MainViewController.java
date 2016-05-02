@@ -3,6 +3,7 @@ package SourceCode.Controller.user;
 import SourceCode.Controller.RunView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 
 /**
@@ -49,6 +50,15 @@ public class MainViewController {
         }
 
     }
+    @FXML
+    private void goConsumables(){
+        try {
+            runView.showConsumables();
+        }catch (Exception e){
+            System.out.println("Exception in goConsumables() from MainViewController class:" + e.getMessage());
+        }
+
+    }
 
     @FXML
     private void goAdminView(){
@@ -64,6 +74,14 @@ public class MainViewController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    public static void confirmationMessage(String message){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText(message);
+        ButtonType okButton = new ButtonType("OK");
+        alert.getButtonTypes().setAll(okButton);
+        alert.showAndWait();
+
     }
     public static void updateWarningMessage(String message){
         Alert alert = new Alert(Alert.AlertType.WARNING);

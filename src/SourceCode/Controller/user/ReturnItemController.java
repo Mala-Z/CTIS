@@ -4,6 +4,7 @@ import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
+import SourceCode.Model.insertIntoDBObjects.WriteReturnToDB;
 import SourceCode.Model.userTableViewObjects.ReturnObj;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ReturnItemController {
@@ -41,32 +43,21 @@ public class ReturnItemController {
     @FXML
     private TableColumn timeTakenColumn;
 
-    private ArrayList<Integer> barcodeList = new ArrayList<>();
+    private ArrayList<String> barcodeList = new ArrayList<>();//check for duplicates
+    private ArrayList<WriteReturnToDB> returnItemList = new ArrayList<>();//[insert DB] add writReturnToDB objects to this list
+    private List<String> firstEmployeeBarcode = new ArrayList<>();//[barcode employee] for getting the barcode and not the names from the employee textfield
+
 
     private RunView runView;
 
 
     @FXML
     private void btnSubmit() {
-        int textFieldInput = Integer.parseInt(tfItemBarcode.getText());
         try {
-            if (tfItemBarcode.getLength() > 0) {
-                if (businessLogic.searchItem(textFieldInput)) {
+            businessLogic.returnItem(returnItemList);
+            MainViewController.updateAlertMessage("Returned successfully!");
+            runView.showReturnItemView();//this reloads the view(we get errors because we keep the old items if we dont do this)
 
-                   java.util.Date today = new java.util.Date();
-                    Timestamp timeReturned = new Timestamp(today.getTime());
-                    businessLogic.returnItem(textFieldInput);
-                    businessLogic.updateBorrowedItemTable("BorrowedItem", timeReturned, textFieldInput);
-
-                    updateAlertMessage("Item returned");
-                    runView.showMainView();
-                } else if (!businessLogic.searchItem(textFieldInput)) {
-                    updateAlertMessage("Item has not been taken by employee");
-                    tfItemBarcode.setText(null);
-                }
-            } else {
-                updateAlertMessage("Missing item barcode");
-            }
         } catch (Exception e) {
             System.out.println("Exception in btnSubmit() from ReturnItemController class:" + e.getMessage());
         }
@@ -86,26 +77,38 @@ public class ReturnItemController {
     private void checkItemBarcode() {
         try {
             if (businessLogic.checkItemBarcode(tfItemBarcode.getText())) { //if barcode exists
-                if (businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) { //if item was taken
+                if (businessLogic.searchItem(tfItemBarcode.getText())) { //if item was taken
                     // check if we have barcodes scanned twice
-                    if (!barcodeList.contains(Integer.valueOf(tfItemBarcode.getText()))) {
+                    if (!barcodeList.contains(tfItemBarcode.getText())) {
 
                         populateTableView();
 
+                        //attributes for writeTakeToDB object, so we can insert the data in db
+                        String itemBarcodeString = tfItemBarcode.getText();
+                        java.util.Date date = new java.util.Date();
+                        Timestamp timeStamp = new Timestamp(date.getTime());
+                        String timeTaken = timeStamp.toString();
+
+                        WriteReturnToDB writeReturnToDB = new WriteReturnToDB(itemBarcodeString, timeTaken);
+
+                        returnItemList.add(writeReturnToDB);
+                        System.out.println(returnItemList.toString());
+
+
                         //add barcodes to list and after check for barcodes scanned twice
-                        barcodeList.add(Integer.parseInt(tfItemBarcode.getText()));
+                        barcodeList.add(tfItemBarcode.getText());
 
                         tfItemBarcode.clear();
-                    }else if (barcodeList.contains(Integer.valueOf(tfItemBarcode.getText()))) {
+                    }else if (barcodeList.contains(tfItemBarcode.getText())) {
                         MainViewController.updateAlertMessage("You have already scanned this item");
                     }
 
-                } else if (!businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) { //item not taken
-                    updateAlertMessage("Item was not taken by any employee");
+                } else if (!businessLogic.searchItem(tfItemBarcode.getText())) { //item not taken
+                    MainViewController.updateAlertMessage("Item was not taken by any employee");
                     tfItemBarcode.setText(null);
                 }
             } else if (!businessLogic.checkItemBarcode(tfItemBarcode.getText()))  {
-                updateAlertMessage("Please scan the barcode again");
+                MainViewController.updateAlertMessage("Please scan the barcode again");
                 tfItemBarcode.setText(null);
             }
         } catch (Exception e) {
@@ -169,10 +172,5 @@ public class ReturnItemController {
 
             tableView.getItems().addAll(returnItemData);
     }
-    /* METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER */
-    public void updateAlertMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
 }

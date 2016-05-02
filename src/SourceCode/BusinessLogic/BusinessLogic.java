@@ -1,9 +1,10 @@
 package SourceCode.BusinessLogic;
 
-import SourceCode.Controller.user.TakeItemController;
 import SourceCode.Model.dbTablesObjects.Employee;
 import SourceCode.Model.dbTablesObjects.Item;
-import SourceCode.Model.otherPurposeObjects.WriteTakeToDB;
+import SourceCode.Model.insertIntoDBObjects.WriteConsumablesToDB;
+import SourceCode.Model.insertIntoDBObjects.WriteReturnToDB;
+import SourceCode.Model.insertIntoDBObjects.WriteTakeToDB;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -188,26 +189,68 @@ public class BusinessLogic {
 //    }
 
     /* METHOD FOR RETURNING THE TAKEN ITEM TO THE DATABASE */
-    public void returnItem(int itemBarcode) {
-        try {
-            String query = "SELECT itemName, timeTaken, employeeName FROM BorrowedItem INNER JOIN Item ON BorrowedItem.itemBarcode = Item.itemBarcode INNER JOIN Employee ON BorrowedItem.employeeBarcode = Employee.employeeBarcode WHERE BorrowedItem.itemBarcode = ? AND BorrowedItem.timeReturned IS NULL;";
+//    public void returnItem(int itemBarcode) {
+//        try {
+//            String query = "SELECT itemName, timeTaken, employeeName FROM BorrowedItem INNER JOIN Item ON " +
+//                    "BorrowedItem.itemBarcode = Item.itemBarcode INNER JOIN Employee ON " +
+//                    "BorrowedItem.employeeBarcode = Employee.employeeBarcode WHERE " +
+//                    "BorrowedItem.itemBarcode = ? AND BorrowedItem.timeReturned IS NULL;";
+//
+//            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
+//            preparedStatement.setInt(1, itemBarcode);
+//            preparedStatement.executeQuery();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            System.out.println("Error in returnItem() from BusinessLogic class: " + e.getMessage());
+//        }
+//    }
 
-            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
-            preparedStatement.setInt(1, itemBarcode);
-            preparedStatement.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error in returnItem() from BusinessLogic class: " + e.getMessage());
+    public void takeConsumables(ArrayList<WriteConsumablesToDB> arrayList) {
+        String sql = "INSERT INTO UsedProduct VALUES (null, ?, ?, ?, ?)";
+
+        Iterator<WriteConsumablesToDB> it = arrayList.iterator();
+        while (it.hasNext()) {
+            try {
+                WriteConsumablesToDB writeConsumablesToDB = it.next();
+
+                PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+                preparedStatement.setString(1, writeConsumablesToDB.getEmployeeBarcode());
+                preparedStatement.setString(2, writeConsumablesToDB.getItemBarcode());
+                preparedStatement.setString(3, writeConsumablesToDB.getQuantity());
+                preparedStatement.setString(4, writeConsumablesToDB.getTimeTaken());
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Error in takeConsumables() from BusinessLogic class: " + e.getMessage());
+            }
+        }
+    }
+    public void returnItem(ArrayList<WriteReturnToDB> arrayList) {
+        String sql = "UPDATE BorrowedItem SET timeReturned = ? WHERE itemBarcode = ? AND timeReturned IS null;";
+
+        Iterator<WriteReturnToDB> it = arrayList.iterator();
+        while (it.hasNext()) {
+            try {
+                WriteReturnToDB writeReturnToDB = it.next();
+
+                PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+                preparedStatement.setString(1, writeReturnToDB.getTimeReturned());
+                preparedStatement.setString(2, writeReturnToDB.getItembarcode());
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Error in returnItem() from BusinessLogic class: " + e.getMessage());
+            }
         }
     }
 
     /* METHOD FOR CHECKING IF THE ITEM IS ALREADY REGISTERED TAKEN */
-    public boolean searchItem(int itemBarcode) {
+    public boolean searchItem(String itemBarcode) {
         try {
             String query = "SELECT itemBarcode FROM BorrowedItem WHERE itemBarcode =? AND timeReturned is null;";
 
             PreparedStatement preparedStatement = connectDB.preparedStatement(query);
-            preparedStatement.setInt(1, itemBarcode);
+            preparedStatement.setString(1, itemBarcode);
 
             ResultSet results = preparedStatement.executeQuery();
 

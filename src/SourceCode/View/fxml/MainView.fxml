@@ -59,9 +59,9 @@
                   </ImageView>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="80.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="btTakeItem" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#goTakeItem" prefHeight="56.0" prefWidth="197.0" style="-fx-background-color: #8CD0BB;" text="Take Item" textFill="WHITE">
+                  <Button fx:id="btTakeItem" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#goTakeItem" prefHeight="56.0" prefWidth="197.0" style="-fx-background-color: #8CD0BB;" text="Take" textFill="WHITE">
                      <font>
                         <Font name="Arial Black" size="25.0" />
                      </font>
@@ -74,9 +74,9 @@
                   </Button>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="80.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="btReturnItem" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#goReturnItem" prefHeight="56.0" prefWidth="197.0" style="-fx-background-color: #8CD0BB;" text="Return Item" textFill="WHITE">
+                  <Button fx:id="btReturnItem" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#goReturnItem" prefHeight="56.0" prefWidth="197.0" style="-fx-background-color: #8CD0BB;" text="Return" textFill="WHITE">
                      <effect>
                         <DropShadow color="#383939" offsetX="2.0" offsetY="5.0" />
                      </effect>
@@ -89,7 +89,7 @@
                   </Button>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="80.0" prefWidth="200.0">
                <children>
                   <Button fx:id="btSearch" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#goSearch" prefHeight="56.0" prefWidth="197.0" style="-fx-background-color: #8CD0BB;" text="Search" textFill="WHITE">
                      <effect>
@@ -101,6 +101,21 @@
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="80.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="btConsumables" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#goConsumables" prefHeight="56.0" prefWidth="197.0" style="-fx-background-color: #8CD0BB;" text="Consumables" textFill="WHITE">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <effect>
+                        <DropShadow color="#383939" offsetX="2.0" offsetY="5.0" />
+                     </effect>
+                     <font>
+                        <Font name="Arial Black" size="22.0" />
+                     </font>
                   </Button>
                </children>
             </HBox>

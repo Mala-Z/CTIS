@@ -89,6 +89,19 @@ public class RunView extends Application {
         }
     }
 
+    public static void showConsumables(){
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/Consumables.fxml")));
+            BorderPane consumables = loader.load();
+            mainLayout.setCenter(consumables);
+            primaryStage.setHeight(490);
+            primaryStage.setWidth(800);
+        }catch (Exception e) {
+            System.out.println("Exception in showConsumables() from RunView class:" + e.getMessage());
+        }
+    }
+
     /** AdminView **/
     public static void showAdminView(){
         try{

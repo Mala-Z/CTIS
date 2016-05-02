@@ -1,4 +1,4 @@
-package SourceCode.Model.otherPurposeObjects;
+package SourceCode.Model.insertIntoDBObjects;
 
 public class WriteTakeToDB {
     private String employeeBarcode;
