@@ -265,6 +265,30 @@ public class BusinessLogic {
         }
         return false;
     }
+    /* METHOD FOR CHECKING IF THE ITEM IS ALREADY REGISTERED TAKEN */
+    public boolean searchItemByNumber(String itemNumber) {
+        try {
+            String query = "SELECT itemNo FROM Item" +
+                    " INNER JOIN BorrowedItem ON" +
+                    " Item.itemBarcode = BorrowedItem.itemBarcode" +
+                    " WHERE itemNo =? AND timeReturned is null;";
+
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
+            preparedStatement.setString(1, itemNumber);
+
+            ResultSet results = preparedStatement.executeQuery();
+
+            if (results.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in searchItemByNumber() from BusinessLogic class: " + e.getMessage());
+        }
+        return false;
+    }
 
     /* METHOD FOR CHECKING THE EMPLOYEE BARCODE STORED INTO THE DATABASE */
     public boolean checkEmployeeBarcode(int employeeBarcode) {

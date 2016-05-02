@@ -89,16 +89,22 @@ public class SearchItemController {
     @FXML
     private void checkTextField() {
         try {
-
-            if (businessLogic.checkItemBarcode(tfItemNumber.getText()) || businessLogic.checkItemNo(tfItemNumber.getText())) {
-                searchByItemBarcode();
-                searchByItemNumber();
+            if (businessLogic.searchItem(tfItemNumber.getText())||businessLogic.searchItemByNumber(tfItemNumber.getText())) {
 
 
-            }
-            else {
-                MainViewController.updateAlertMessage("Please check the barcode or the item number");
-                tfItemNumber.setText(null);
+                if (businessLogic.checkItemBarcode(tfItemNumber.getText()) || businessLogic.checkItemNo(tfItemNumber.getText())) {
+                    searchByItemBarcode();
+                    searchByItemNumber();
+                    tfItemNumber.clear();
+
+
+                } else {
+                    MainViewController.updateAlertMessage("Please check the barcode or the item number");
+                    tfItemNumber.clear();
+                }
+            }else {
+                MainViewController.updateAlertMessage("Item not taken");
+                tfItemNumber.clear();
             }
         } catch (Exception e) {
             System.out.println("Exception in checkTextField()/itemNumber() from SearchItemController class:" + e.getMessage());
