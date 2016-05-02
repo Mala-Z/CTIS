@@ -23,12 +23,6 @@ public class TakeItemController {
     ConnectDB connectDB = Factory.connectDB;
 
 
-    private ObservableList takeItemData = FXCollections.observableArrayList();
-    private ObservableList<String> placeList = FXCollections.observableArrayList("On Person", "Address", "Car");
-    private ArrayList<String> itemBarcodeList = new ArrayList<>();
-    private ArrayList<String> comboBoxList = new ArrayList<>();
-    private ArrayList<String> tfPlaceList = new ArrayList<>();
-
     @FXML
     private TextField tfEmployeeBarcode;
     @FXML
@@ -56,14 +50,17 @@ public class TakeItemController {
     private TableColumn placeColumn;
     @FXML
     private TableColumn placeReferenceColumn;
-
-    private ArrayList<Integer> barcodeList = new ArrayList<>();
-
     private RunView runView;
 
-    private ArrayList<WriteTakeToDB> takeItemList = new ArrayList<>();
-    private List<String> firstEmployeeBarcode = new ArrayList<>();
+    private ObservableList takeItemData = FXCollections.observableArrayList(); //[tableview]
 
+    private ObservableList<String> placeList = FXCollections.observableArrayList("On Person", "Address", "Car");//[combobox]
+
+    private ArrayList<Integer> barcodeList = new ArrayList<>();//[unique item] to check for duplicates so there cant be items taken twice
+
+    private ArrayList<WriteTakeToDB> takeItemList = new ArrayList<>();//[insert DB] add writTakeToDB objects to this list
+
+    private List<String> firstEmployeeBarcode = new ArrayList<>();//[barcode employee] for getting the barcode and not the names from the employee textfield
 
 
 
@@ -75,55 +72,30 @@ public class TakeItemController {
 
         placeCombo.getSelectionModel().selectFirst();
 
-        //tfPlaceList.add(tfPlaceReference.getText());
-
     }
 
     @FXML
     private void comboBoxAction(){
-        placeCombo.getSelectionModel().getSelectedItem();
-        //comboBoxList.add(placeCombo.getSelectionModel().getSelectedItem().toString());
+        placeCombo.getSelectionModel().getSelectedItem();//so we don't get stuck with selectFirst() value
     }
 
 
     @FXML
     private void btnSubmit() {
         try {
-
                 businessLogic.takeItem(takeItemList);
                 MainViewController.updateAlertMessage("Registration successful");
-
-
 
         } catch (Exception e) {
             System.out.println("Exception in btnSubmit() from TakeItemController class:" + e.getMessage());
         }
     }
 
-//    @FXML
-//    private void btnSubmit() {
-//        try {
-//            if (tfEmployeeBarcode.getLength() > 0 && tfItemBarcode.getLength() > 0) {
-//                java.util.Date today = new java.util.Date();
-//                Timestamp timeTaken = new Timestamp(today.getTime());
-//                businessLogic.takeItem(tfEmployeeBarcode.getText(), tfItemBarcode.getText(), timeTaken, placeCombo.getValue().toString(), tfPlaceReference.getText());
-//                //businessLogic.takeItem(takeItemData.get(0).toString(), takeItemData.get(0).toString(), timeTaken, takeItemData.get(0).toString(), takeItemData.get(0).toString());
-//                MainViewController.updateAlertMessage("Registration successful");
-//                runView.showMainView();
-//
-//            } else {
-//                MainViewController.updateAlertMessage("Missing barcode for employee or item");
-//            }
-//
-//        } catch (Exception e) {
-//            System.out.println("Exception in btnSubmit() from TakeItemController class:" + e.getMessage());
-//        }
-//    }
-
     @FXML
     private void btnBack() {
         try {
-            barcodeList.clear();
+            //barcodeList.clear();//so we start fresh
+
             runView.showMainView();
         } catch (Exception e) {
             System.out.println("Exception in btnBack() from TakeItemController class: " + e.getMessage());
@@ -133,6 +105,13 @@ public class TakeItemController {
     @FXML
     private void btnDelete() {
         try {
+
+            int row = tableView.getSelectionModel().getFocusedIndex();
+            tableView.getItems().remove(row); //removes row from tableview
+            takeItemList.remove(row);// removes row from list, that inserts into db
+            barcodeList.remove(row); //removes index of stored barcodes(so we can re-add it later if we want to the tableview)
+            //System.out.println(row);
+
 
         } catch (Exception e) {
             System.out.println("Exception in btnDelete() from TakeItemController class: " + e.getMessage());
@@ -144,13 +123,12 @@ public class TakeItemController {
 
         try {
             if (businessLogic.checkEmployeeBarcode(Integer.parseInt(tfEmployeeBarcode.getText()))) {
-                firstEmployeeBarcode.add(tfEmployeeBarcode.getText());
-                String name = businessLogic.getEmployee(tfEmployeeBarcode.getText());
+                firstEmployeeBarcode.add(tfEmployeeBarcode.getText());//add textfield input to a list
+
+                String name = businessLogic.getEmployee(tfEmployeeBarcode.getText());//insert barcode, return name
                 tfEmployeeBarcode.setText(name);
                 tfEmployeeBarcode.setEditable(false);
                 tfEmployeeBarcode.setFont(new Font("Arial Black", 13));
-
-
 
 
                 tfItemBarcode.requestFocus();
@@ -170,10 +148,10 @@ public class TakeItemController {
             if (businessLogic.checkItemBarcode(tfItemBarcode.getText())) {
                 if (!businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
                     if (!barcodeList.contains(Integer.valueOf(tfItemBarcode.getText()))){//check for duplicates
-                        //itemBarcodeList.add(tfItemBarcode.getText());
 
                         populateTableView();
 
+                        //attributes for writeTakeToDB object, so we can insert the data in db
                         String employeeBarcodeString = firstEmployeeBarcode.get(0);
                         String itemBarcodeString = tfItemBarcode.getText();
                         java.util.Date date = new java.util.Date();
@@ -184,8 +162,8 @@ public class TakeItemController {
 
                         WriteTakeToDB writeTakeToDB = new WriteTakeToDB(employeeBarcodeString, itemBarcodeString, timeTaken, place, placeReference);
 
-                        takeItemList.add(writeTakeToDB);
-                        System.out.println(takeItemList.toString());
+                        takeItemList.add(writeTakeToDB);// add data to a list
+                        //System.out.println(takeItemList.toString());
 
                         //add barcodes to list and after check for barcodes scanned twice
                         barcodeList.add(Integer.parseInt(tfItemBarcode.getText()));
@@ -195,6 +173,7 @@ public class TakeItemController {
 
                     }else  if (barcodeList.contains(Integer.valueOf(tfItemBarcode.getText()))){
                         MainViewController.updateAlertMessage("You have already scanned this item");
+                        tfItemBarcode.clear();
                     }
                 } else if (businessLogic.searchItem(Integer.parseInt(tfItemBarcode.getText()))) {
                     MainViewController.updateAlertMessage("Item has been already taken by another employee");
@@ -211,13 +190,11 @@ public class TakeItemController {
 
     /* METHOD FOR POPULATING THE TABLE VIEW */
     public void populateTableView() {
+        System.out.println(barcodeList);
         //System.out.println(itemBarcodeList + " " + comboBoxList + " " + tfPlaceList);
         // check if we have barcodes scanned twice
-        if (barcodeList.contains(Integer.valueOf(tfItemBarcode.getText()))){
-            MainViewController.updateAlertMessage("You have already scanned this item");
-        }
 
-        else {
+
             try {
             /* SQL QUERY */
                 String sql = " SELECT itemNo, itemName, category FROM Item \n" +
@@ -259,6 +236,6 @@ public class TakeItemController {
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
             tableView.getItems().addAll(takeItemData);
         }
-    }
+
 
 }
