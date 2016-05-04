@@ -4,6 +4,7 @@ import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
+import SourceCode.Controller.main.MainViewController;
 import SourceCode.Model.insertIntoDBObjects.WriteTakeToDB;
 import SourceCode.Model.userTableViewObjects.TakeObj;
 import javafx.collections.FXCollections;
@@ -56,7 +57,7 @@ public class TakeItemController {
 
     private ObservableList<String> placeList = FXCollections.observableArrayList("On Person", "Address", "Car");//[combobox]
 
-    private ArrayList<Integer> barcodeList = new ArrayList<>();//[unique item] to check for duplicates so there cant be items taken twice
+    private ArrayList<String> barcodeList = new ArrayList<>();//[unique item] to check for duplicates so there cant be items taken twice
 
     private ArrayList<WriteTakeToDB> takeItemList = new ArrayList<>();//[insert DB] add writTakeToDB objects to this list
 
@@ -67,6 +68,9 @@ public class TakeItemController {
 
     @FXML
     private void initialize() {
+        tfItemBarcode.setDisable(true);
+        placeCombo.setDisable(true);
+        tfPlaceReference.setDisable(true);
 
         placeCombo.getItems().addAll(placeList);
 
@@ -83,15 +87,26 @@ public class TakeItemController {
     @FXML
     private void btnSubmit() {
         try {
-            businessLogic.takeItem(takeItemList);
-            MainViewController.updateAlertMessage("Registration successful!");
+            if (tfEmployeeBarcode.getLength() > 0){// check itemBarcode
+                if (barcodeList.size() != 0){ //see if there are objects in the itemBarcodeList so we can go take successfully
+                        businessLogic.takeItem(takeItemList);
+                        MainViewController.updateAlertMessage("Registration successful!");
 //            tfEmployeeBarcode.clear();
 //            tfEmployeeBarcode.setEditable(true);
 //            tfEmployeeBarcode.setFont(new Font("Arial", 13));
 //            tfEmployeeBarcode.setStyle("-fx-background-color: white");
-            runView.showTakeItem();//this reloads the view(we get errors because we keep the old items if we dont do this)
+                        runView.showTakeItem();//this reloads the view(we get errors because we keep the old items if we dont do this)
+
+                } else {
+                    MainViewController.updateWarningMessage("Please insert item");
+                }
+            }
+            else{
+                MainViewController.updateWarningMessage("Please insert employee barcode");
+            }
 
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in btnSubmit() from TakeItemController class:" + e.getMessage());
         }
     }
@@ -103,6 +118,7 @@ public class TakeItemController {
 
             runView.showMainView();
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in btnBack() from TakeItemController class: " + e.getMessage());
         }
     }
@@ -119,6 +135,7 @@ public class TakeItemController {
 
 
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in btnDelete() from TakeItemController class: " + e.getMessage());
         }
     }
@@ -127,7 +144,7 @@ public class TakeItemController {
     private void checkEmployeeBarcode() {
 
         try {
-            if (businessLogic.checkEmployeeBarcode(Integer.parseInt(tfEmployeeBarcode.getText()))) {
+            if (businessLogic.checkEmployeeBarcode(tfEmployeeBarcode.getText())) {
                 firstEmployeeBarcode.add(tfEmployeeBarcode.getText());//add textfield input to a list
 
                 String name = businessLogic.getEmployee(tfEmployeeBarcode.getText());//insert barcode, return name
@@ -136,13 +153,16 @@ public class TakeItemController {
                 tfEmployeeBarcode.setFont(new Font("Arial Black", 13));
                 tfEmployeeBarcode.setStyle("-fx-background-color: lightgrey;");
 
-
+                tfItemBarcode.setDisable(false);
+                placeCombo.setDisable(false);
+                tfPlaceReference.setDisable(false);
                 tfItemBarcode.requestFocus();
             } else {
                 MainViewController.updateAlertMessage("Please scan the barcode again");
                 tfEmployeeBarcode.setText(null);
             }
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in checkEmployeeBarcode() from TakeItemController class: " + e.getMessage());
         }
     }
@@ -151,45 +171,46 @@ public class TakeItemController {
     private void checkItemBarcode() {
 
         try {
-            if (businessLogic.checkItemBarcode(tfItemBarcode.getText())) {
-                if (!businessLogic.searchItem(tfItemBarcode.getText())) {
-                    if (!barcodeList.contains(Integer.valueOf(tfItemBarcode.getText()))){//check for duplicates
+                if (businessLogic.checkItemBarcode(tfItemBarcode.getText())) {
+                    if (!businessLogic.searchItem(tfItemBarcode.getText())) {
+                        if (!barcodeList.contains(tfItemBarcode.getText())) {//check for duplicates
 
-                        populateTableView();
+                            populateTableView();
 
-                        //attributes for writeTakeToDB object, so we can insert the data in db
-                        String employeeBarcodeString = firstEmployeeBarcode.get(0);
-                        String itemBarcodeString = tfItemBarcode.getText();
-                        java.util.Date date = new java.util.Date();
-                        Timestamp timeStamp = new Timestamp(date.getTime());
-                        String timeTaken = timeStamp.toString();
-                        String place = placeCombo.getSelectionModel().getSelectedItem().toString();
-                        String placeReference = tfPlaceReference.getText();
+                            //attributes for writeTakeToDB object, so we can insert the data in db
+                            String employeeBarcodeString = firstEmployeeBarcode.get(0);
+                            String itemBarcodeString = tfItemBarcode.getText();
+                            java.util.Date date = new java.util.Date();
+                            Timestamp timeStamp = new Timestamp(date.getTime());
+                            String timeTaken = timeStamp.toString();
+                            String place = placeCombo.getSelectionModel().getSelectedItem().toString();
+                            String placeReference = tfPlaceReference.getText();
 
-                        WriteTakeToDB writeTakeToDB = new WriteTakeToDB(employeeBarcodeString, itemBarcodeString, timeTaken, place, placeReference);
+                            WriteTakeToDB writeTakeToDB = new WriteTakeToDB(employeeBarcodeString, itemBarcodeString, timeTaken, place, placeReference);
 
-                        takeItemList.add(writeTakeToDB);// add data to list
-                        //System.out.println(takeItemList.toString());
+                            takeItemList.add(writeTakeToDB);// add data to list
+                            //System.out.println(takeItemList.toString());
 
-                        //add barcodes to list and after check for barcodes scanned twice
-                        barcodeList.add(Integer.parseInt(tfItemBarcode.getText()));
+                            //add barcodes to list and after check for barcodes scanned twice
+                            barcodeList.add(tfItemBarcode.getText());
 
-                        tfItemBarcode.clear();
-                        tfPlaceReference.clear();
+                            tfItemBarcode.clear();
+                            tfPlaceReference.clear();
 
-                    }else  if (barcodeList.contains(Integer.valueOf(tfItemBarcode.getText()))){
-                        MainViewController.updateAlertMessage("You have already scanned this item");
-                        tfItemBarcode.clear();
+                        } else if (barcodeList.contains(tfItemBarcode.getText())) {
+                            MainViewController.updateAlertMessage("You have already scanned this item");
+                            tfItemBarcode.clear();
+                        }
+                    } else if (businessLogic.searchItem(tfItemBarcode.getText())) {
+                        MainViewController.updateAlertMessage("Item has been already taken by another employee");
+                        tfItemBarcode.setText(null);
                     }
-                } else if (businessLogic.searchItem(tfItemBarcode.getText())) {
-                    MainViewController.updateAlertMessage("Item has been already taken by another employee");
+                } else if (!businessLogic.checkItemBarcode(tfItemBarcode.getText())) {
+                    MainViewController.updateAlertMessage("Please scan the barcode again");
                     tfItemBarcode.setText(null);
                 }
-            } else if (!businessLogic.checkItemBarcode(tfItemBarcode.getText())) {
-                MainViewController.updateAlertMessage("Please scan the barcode again");
-                tfItemBarcode.setText(null);
-            }
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in checkItemBarcode() from TakeItemController class: " + e.getMessage());
         }
     }
@@ -228,6 +249,7 @@ public class TakeItemController {
                     takeItemData.setAll(takeObj);
                 }
             } catch (Exception e) {
+                MainViewController.updateWarningMessage("Error");
                 e.printStackTrace();
                 System.out.println("Exception in populateTableView() from TakeItemController class: " + e.getMessage());
             }

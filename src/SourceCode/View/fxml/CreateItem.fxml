@@ -43,9 +43,9 @@
                   <Font name="Arial Black" size="24.0" />
                </font>
             </Label>
-            <TextField fx:id="tfItemBarcode" layoutX="117.0" layoutY="104.0" promptText="barcode.." />
-            <TextField fx:id="tfItemNo" layoutX="117.0" layoutY="164.0" promptText="number.." />
-            <TextField fx:id="tfItemName" layoutX="117.0" layoutY="219.0" promptText="name/address.." />
+            <TextField fx:id="tfItemBarcode" layoutX="117.0" layoutY="104.0" onAction="#checkItemBarcode" promptText="barcode.." />
+            <TextField fx:id="tfItemNo" layoutX="117.0" layoutY="164.0" onAction="#checkItemNumber" promptText="number.." />
+            <TextField fx:id="tfItemName" layoutX="117.0" layoutY="219.0" onAction="#checkItemName" promptText="name/address.." />
             <Button fx:id="btnCancel" layoutX="117.0" layoutY="329.0" mnemonicParsing="false" onAction="#btnCancel" style="-fx-background-color: #8CD0BB;" text="Cancel" textFill="WHITE">
                <font>
                   <Font name="Arial Black" size="13.0" />

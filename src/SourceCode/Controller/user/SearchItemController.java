@@ -4,6 +4,7 @@ import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
+import SourceCode.Controller.main.MainViewController;
 import SourceCode.Model.userTableViewObjects.SearchObj;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -55,6 +56,7 @@ public class SearchItemController {
 
     @FXML
     private void initialize(){
+
         comboBox.getItems().addAll(categoryList);
     }
 
@@ -72,6 +74,7 @@ public class SearchItemController {
             if(comboBox.getItems()!= null){
             }
         }catch (Exception e){
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in btnSearch() from SearchItemController class:" + e.getMessage());
         }
     }
@@ -81,6 +84,7 @@ public class SearchItemController {
         try{
             runView.showMainView();
         }catch (Exception e){
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in btnBack() from SearchItemController class:" + e.getMessage());
         }
     }
@@ -89,24 +93,26 @@ public class SearchItemController {
     @FXML
     private void checkTextField() {
         try {
-            if (businessLogic.searchItem(tfItemNumber.getText())||businessLogic.searchItemByNumber(tfItemNumber.getText())) {
+            if (businessLogic.checkItemBarcode(tfItemNumber.getText()) || businessLogic.checkItemNo(tfItemNumber.getText())) {
 
+                //checks if it has been taken
+                if (businessLogic.searchItem(tfItemNumber.getText())||businessLogic.searchItemByNumber(tfItemNumber.getText())) {
 
-                if (businessLogic.checkItemBarcode(tfItemNumber.getText()) || businessLogic.checkItemNo(tfItemNumber.getText())) {
                     searchByItemBarcode();
                     searchByItemNumber();
                     tfItemNumber.clear();
 
 
                 } else {
-                    MainViewController.updateAlertMessage("Please check the barcode or the item number");
+                    MainViewController.updateAlertMessage("Item not taken");
                     tfItemNumber.clear();
                 }
             }else {
-                MainViewController.updateAlertMessage("Item not taken");
+                MainViewController.updateAlertMessage("Please check the barcode or the item number");
                 tfItemNumber.clear();
             }
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in checkTextField()/itemNumber() from SearchItemController class:" + e.getMessage());
         }
     }
@@ -117,6 +123,7 @@ public class SearchItemController {
                 searchByComboBox();
 
         } catch (Exception ex) {
+            MainViewController.updateWarningMessage("Error");
             System.out.println("combobox exception in comboBoxCategory()");
         }
     }
@@ -164,6 +171,7 @@ public class SearchItemController {
 
                 }
             } catch (Exception e) {
+                MainViewController.updateWarningMessage("Error");
                 e.printStackTrace();
                 System.out.println("Exception in searchByItemNo() from SearchItemController class: " + e.getMessage());
             }
@@ -222,6 +230,7 @@ public class SearchItemController {
 
             }
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             e.printStackTrace();
             System.out.println("Exception in searchByItemBarcode() from SearchItemController class: " + e.getMessage());
         }
@@ -280,6 +289,7 @@ public class SearchItemController {
 
                 }
             } catch (Exception e) {
+                MainViewController.updateWarningMessage("Error");
                 e.printStackTrace();
                 System.out.println("Exception in searchByComboBox() from SearchItemController class: " + e.getMessage());
             }

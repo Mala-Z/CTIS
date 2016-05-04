@@ -1,7 +1,6 @@
 package SourceCode.BusinessLogic;
 
-import SourceCode.Controller.user.MainViewController;
-import javafx.scene.control.Alert;
+import SourceCode.Controller.main.MainViewController;
 
 import java.sql.*;
 

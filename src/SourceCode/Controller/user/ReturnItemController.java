@@ -4,6 +4,7 @@ import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
+import SourceCode.Controller.main.MainViewController;
 import SourceCode.Model.insertIntoDBObjects.WriteReturnToDB;
 import SourceCode.Model.userTableViewObjects.ReturnObj;
 import javafx.collections.FXCollections;
@@ -54,11 +55,16 @@ public class ReturnItemController {
     @FXML
     private void btnSubmit() {
         try {
-            businessLogic.returnItem(returnItemList);
-            MainViewController.updateAlertMessage("Returned successfully!");
-            runView.showReturnItemView();//this reloads the view(we get errors because we keep the old items if we dont do this)
+            if (barcodeList.size() != 0){
+                businessLogic.returnItem(returnItemList);
+                MainViewController.updateAlertMessage("Returned successfully!");
+                runView.showReturnItemView();//this reloads the view(we get errors because we keep the old items if we dont do this)
+            }else {
+                MainViewController.updateWarningMessage("Please insert item");
+            }
 
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in btnSubmit() from ReturnItemController class:" + e.getMessage());
         }
     }
@@ -69,6 +75,7 @@ public class ReturnItemController {
             barcodeList.clear();
             runView.showMainView();
         }catch (Exception e){
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in btnBack() from ReturnItemController class:" + e.getMessage());
         }
     }
@@ -112,6 +119,7 @@ public class ReturnItemController {
                 tfItemBarcode.setText(null);
             }
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in checkItemBarcode() from ReturnItemController class: " + e.getMessage());
         }
     }
@@ -158,6 +166,7 @@ public class ReturnItemController {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                MainViewController.updateWarningMessage("Error");
                 System.out.println("Exception in populateTableView() from ReturnItemController class: " + e.getMessage());
             }
 

@@ -2,13 +2,19 @@ package SourceCode.Controller.admin;
 
 import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.Controller.RunView;
+import SourceCode.Controller.main.MainViewController;
+import SourceCode.Model.adminTableViewObjects.ItemObj;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import javax.print.DocFlavor;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class CreateItemController {
     BusinessLogic businessLogic = new BusinessLogic();
@@ -25,7 +31,7 @@ public class CreateItemController {
     private TextField tfItemBarcode;
 
     @FXML
-    private TextField tfItemNo;
+    public TextField tfItemNo;
 
     @FXML
     private TextField tfItemName;
@@ -37,44 +43,65 @@ public class CreateItemController {
 
     @FXML
     private void initialize() {
+        btnSubmit.defaultButtonProperty().bind(btnSubmit.focusedProperty());//to allow enter key to fire the button
+
         categoryCombo.setItems(categoryList);
+        }
+    @FXML private void checkItemBarcode(){
+        if (tfItemBarcode.getLength()>0){
+            if (!businessLogic.checkItemBarcode(tfItemBarcode.getText())){
+                tfItemNo.requestFocus();
+            }
+            else {
+                MainViewController.updateWarningMessage("Item barcode already in database");
+            }
+        }
+    }
+    @FXML private void checkItemNumber(){
+        if (tfItemNo.getLength()>0){
+            if (!businessLogic.checkItemNo(tfItemNo.getText())){
+                tfItemName.requestFocus();
+            }
+            else {
+                MainViewController.updateWarningMessage("Item number already in database");
+            }
+        }
+    }
+    @FXML
+    private void checkItemName(){
+        if (tfItemName.getLength()>0){
+            btnSubmit.requestFocus();
+        }
     }
 
 
     @FXML
     private void btnSubmit() {
         try {
-            if (tfItemBarcode.getLength() > 0 && tfItemNo.getLength() > 0 && tfItemName.getLength() > 0 && categoryCombo.getSelectionModel().getSelectedIndex() > 0) {
-                if (!businessLogic.checkItemBarcode(tfItemBarcode.getText())) {
+            if (tfItemBarcode.getLength() > 0 && tfItemNo.getLength() > 0 && tfItemName.getLength() > 0 && categoryCombo.getSelectionModel().getSelectedIndex() > -1) {
                     businessLogic.insertItem(Integer.parseInt(tfItemBarcode.getText()), tfItemNo.getText(), tfItemName.getText(),
                             categoryCombo.getValue().toString());
-                    updateAlertMessage("Registration successful");
-                    Stage stage = (Stage) btnCancel.getScene().getWindow();
-                    stage.close();
-                    runView.showAdminView();
-                }
+
+                    tfItemBarcode.clear();
+                    tfItemNo.clear();
+                    tfItemName.clear();
+                    tfItemBarcode.requestFocus();
+                    MainViewController.updateAlertMessage("Registration successful");
+
             } else {
-                updateAlertMessage("Please insert values in all fields to be able to save an item");
+                MainViewController.updateAlertMessage("Please insert values in all fields to be able to save an item");
             }
 
         } catch(Exception e) {
-        System.out.println("Exception: " + e);
+        System.out.println("Exception in btnSubmit() CreateItemController: " + e);
         }
     }
 
     @FXML
     private void btnCancel() throws IOException {
-        // get a handle to the stage
-        Stage stage = (Stage) btnCancel.getScene().getWindow();
-        // do what you have to do
-        stage.close();
-    }
 
-    //METHOD FOR THE ALERT MESSAGES SHOWN TO THE USER
-    public void updateAlertMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(message);
-        alert.showAndWait();
+        Stage stage = (Stage) btnCancel.getScene().getWindow();
+        stage.close();
     }
 
 }

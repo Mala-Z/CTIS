@@ -165,46 +165,6 @@ public class BusinessLogic {
         }
     }
 
-//    public void takeItem(String employeeBarcode, String itemBarcode, Timestamp timeTaken, String place, String placeReference) {
-//        String sql = "INSERT INTO BorrowedItem VALUES (null, ?, ?, ?, null);";
-//        String sql2 = "INSERT INTO Place VALUES (null, ?, ?, (SELECT id FROM BorrowedItem WHERE itemBarcode = ? AND timeReturned IS NULL));";
-//        try {
-//            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
-//            PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
-//            preparedStatement.setString(1, employeeBarcode);
-//            preparedStatement.setString(2, itemBarcode);
-//            preparedStatement.setTimestamp(3, timeTaken);
-//            preparedStatement2.setString(1, place);
-//            preparedStatement2.setString(2, placeReference);
-//            preparedStatement2.setString(3, itemBarcode);
-//            preparedStatement.executeUpdate();
-//            preparedStatement2.executeUpdate();
-//            //preparedStatement.close();
-//            //preparedStatement2.close();
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            System.out.println("Error in takeItem() from BusinessLogic class: " + e.getMessage());
-//        }
-//    }
-
-    /* METHOD FOR RETURNING THE TAKEN ITEM TO THE DATABASE */
-//    public void returnItem(int itemBarcode) {
-//        try {
-//            String query = "SELECT itemName, timeTaken, employeeName FROM BorrowedItem INNER JOIN Item ON " +
-//                    "BorrowedItem.itemBarcode = Item.itemBarcode INNER JOIN Employee ON " +
-//                    "BorrowedItem.employeeBarcode = Employee.employeeBarcode WHERE " +
-//                    "BorrowedItem.itemBarcode = ? AND BorrowedItem.timeReturned IS NULL;";
-//
-//            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
-//            preparedStatement.setInt(1, itemBarcode);
-//            preparedStatement.executeQuery();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            System.out.println("Error in returnItem() from BusinessLogic class: " + e.getMessage());
-//        }
-//    }
-
     public void takeConsumables(ArrayList<WriteConsumablesToDB> arrayList) {
         String sql = "INSERT INTO UsedProduct VALUES (null, ?, ?, ?, ?)";
 
@@ -291,14 +251,14 @@ public class BusinessLogic {
     }
 
     /* METHOD FOR CHECKING THE EMPLOYEE BARCODE STORED INTO THE DATABASE */
-    public boolean checkEmployeeBarcode(int employeeBarcode) {
+    public boolean checkEmployeeBarcode(String employeeBarcode) {
 
         try {
             String query = "SELECT employeeBarcode FROM Employee WHERE employeeBarcode=?";
 
             PreparedStatement preparedStatement = connectDB.preparedStatement(query);
 
-            preparedStatement.setInt(1, employeeBarcode);
+            preparedStatement.setString(1, employeeBarcode);
             ResultSet results = preparedStatement.executeQuery();
 
             if (results.next()) {
@@ -313,6 +273,51 @@ public class BusinessLogic {
         }
         return false;
     }
+    public boolean checkEmployeeNumber(String employeeNumber) {
+
+        try {
+            String query = "SELECT employeeNo FROM Employee WHERE employeeNo=?";
+
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
+
+            preparedStatement.setString(1, employeeNumber);
+            ResultSet results = preparedStatement.executeQuery();
+
+            if (results.next()) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in checkEmployeeName() from BusinessLogic class: " + e.getMessage());
+        }
+        return false;
+    }
+    public boolean checkEmployeeName(String employeeName) {
+
+        try {
+            String query = "SELECT employeeName FROM Employee WHERE employeeName=?";
+
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
+
+            preparedStatement.setString(1, employeeName);
+            ResultSet results = preparedStatement.executeQuery();
+
+            if (results.next()) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in checkEmployeeName() from BusinessLogic class: " + e.getMessage());
+        }
+        return false;
+    }
+
 
     /* METHOD FOR CHECKING THE ITEM BARCODE STORED INTO THE DATABASE */
     public boolean checkItemBarcode(String itemBarcode) {
@@ -353,6 +358,26 @@ public class BusinessLogic {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Error in checkItemNo() from BusinessLogic class: " + e.getMessage());
+        }
+        return false;
+    }
+    public boolean checkItemCategory(String itemCategory) {
+
+        try {
+            String query = "SELECT category FROM Category WHERE category = ?";
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
+            preparedStatement.setString(1, itemCategory);
+
+            ResultSet results = preparedStatement.executeQuery();
+
+            if (results.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in checkItemCategory() from BusinessLogic class: " + e.getMessage());
         }
         return false;
     }

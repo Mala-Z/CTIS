@@ -4,6 +4,7 @@ import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
+import SourceCode.Controller.main.MainViewController;
 import SourceCode.Model.insertIntoDBObjects.WriteConsumablesToDB;
 import SourceCode.Model.userTableViewObjects.ConsumablesObj;
 import SourceCode.Model.userTableViewObjects.ReturnObj;
@@ -57,13 +58,24 @@ public class ConsumablesController {
 
 
     @FXML
+    private void initialize(){
+        tfItemBarcode.setDisable(true);
+        tfQuantity.setDisable(true);
+    }
+
+    @FXML
     private void btnSubmit() {
         try {
-            businessLogic.takeConsumables(consumablesList);
-            MainViewController.updateAlertMessage("Registered successfully!");
-            runView.showConsumables();//this reloads the view(we get errors because we keep the old items if we dont do this)
+            if (barcodeList.size() != 0){
+                businessLogic.takeConsumables(consumablesList);
+                MainViewController.updateAlertMessage("Registered successfully!");
+                runView.showConsumables();//this reloads the view(we get errors because we keep the old items if we dont do this)
+            }else {
+                MainViewController.updateWarningMessage("Please insert product");
+            }
 
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in btnSubmit() from ReturnItemController class:" + e.getMessage());
         }
     }
@@ -74,6 +86,7 @@ public class ConsumablesController {
             barcodeList.clear();
             runView.showMainView();
         }catch (Exception e){
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in btnBack() from ReturnItemController class:" + e.getMessage());
         }
     }
@@ -89,6 +102,7 @@ public class ConsumablesController {
 
 
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in btnDelete() from TakeItemController class: " + e.getMessage());
         }
     }
@@ -97,7 +111,7 @@ public class ConsumablesController {
     private void checkEmployeeBarcode() {
 
         try {
-            if (businessLogic.checkEmployeeBarcode(Integer.parseInt(tfEmployeeBarcode.getText()))) {
+            if (businessLogic.checkEmployeeBarcode(tfEmployeeBarcode.getText())) {
                 firstEmployeeBarcode.add(tfEmployeeBarcode.getText());//add textfield input to a list
 
                 String name = businessLogic.getEmployee(tfEmployeeBarcode.getText());//insert barcode, return name
@@ -106,13 +120,15 @@ public class ConsumablesController {
                 tfEmployeeBarcode.setFont(new Font("Arial Black", 13));
                 tfEmployeeBarcode.setStyle("-fx-background-color: lightgrey;");
 
-
+                tfItemBarcode.setDisable(false);
+                tfQuantity.setDisable(false);
                 tfItemBarcode.requestFocus();
             } else {
                 MainViewController.updateAlertMessage("Please scan the barcode again");
                 tfEmployeeBarcode.setText(null);
             }
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in checkEmployeeBarcode() from ConsumablesController class: " + e.getMessage());
         }
     }
@@ -136,6 +152,7 @@ public class ConsumablesController {
                 tfItemBarcode.setText(null);
             }
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in checkItemBarcode() from ConsumablesController class: " + e.getMessage());
         }
     }
@@ -166,6 +183,7 @@ public class ConsumablesController {
             tfQuantity.clear();
 
             }catch (Exception e){
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in checkQuantity() from ConsumablesController class: " + e.getMessage());
         }
 
@@ -200,6 +218,7 @@ public class ConsumablesController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in populateTableView() from ConsumablesController class: " + e.getMessage());
         }
 

@@ -1,4 +1,4 @@
-package SourceCode.Controller.user;
+package SourceCode.Controller.main;
 
 import SourceCode.Controller.RunView;
 import javafx.fxml.FXML;

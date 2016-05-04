@@ -2,6 +2,8 @@ package SourceCode.Controller;
 
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.admin.AdminController;
+import SourceCode.Controller.admin.CreateEmployeeController;
+import SourceCode.Controller.admin.CreateItemController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -137,11 +139,39 @@ public class RunView extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/CreateItem.fxml")));
             BorderPane borderPane = (BorderPane) loader.load();
+
             Stage stage = new Stage();
+
             stage.setScene(new Scene(borderPane));
             stage.show();
         } catch (Exception e){
             System.out.println("Exception in showCreateItem() from RunView class:" + e.getMessage());
+        }
+    }
+    /** UpdateEmployee **/
+    public static void showUpdateEmployee(){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/UpdateEmployee.fxml")));
+            BorderPane borderPane = (BorderPane) loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(borderPane));
+            stage.show();
+        } catch (Exception e){
+            System.out.println("Exception in showUpdateEmployee() from RunView class:" + e.getMessage());
+        }
+    }
+    /** UpdateItem **/
+    public static void showUpdateItem(){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/UpdateItem.fxml")));
+            BorderPane borderPane = (BorderPane) loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(borderPane));
+            stage.show();
+        } catch (Exception e){
+            System.out.println("Exception in showUpdateItem() from RunView class:" + e.getMessage());
         }
     }
 
