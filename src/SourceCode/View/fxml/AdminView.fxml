@@ -24,7 +24,7 @@
               <tabs>
                 <Tab fx:id="employeeTab" text="Employees">
                      <content>
-                        <TableView fx:id="employeeTableView" prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="employeeTableView" onMouseClicked="#employeeTableViewAction" prefHeight="200.0" prefWidth="200.0">
                           <columns>
                             <TableColumn fx:id="employeeBarcodeColumn" prefWidth="195.0" text="Barcode" />
                             <TableColumn fx:id="employeeNumberColumn" prefWidth="195.0" text="Number" />
@@ -38,7 +38,7 @@
                      </content></Tab>
                 <Tab fx:id="itemTab" text="     Items     ">
                      <content>
-                        <TableView fx:id="itemTableView" prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="itemTableView" onMouseClicked="#itemTableViewAction" prefHeight="200.0" prefWidth="200.0">
                           <columns>
                             <TableColumn fx:id="itemBarcodeColumn" prefWidth="195.0" text="Barcode" />
                             <TableColumn fx:id="itemNumberColumn" prefWidth="195.0" text="Number" />
@@ -107,7 +107,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="btnDelete" layoutX="172.0" layoutY="405.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="73.0" style="-fx-background-color: #8CD0BB;" text="Delete" textFill="WHITE">
+            <Button fx:id="btnDelete" layoutX="172.0" layoutY="405.0" mnemonicParsing="false" onAction="#btnDeleteAction" prefHeight="30.0" prefWidth="73.0" style="-fx-background-color: #8CD0BB;" text="Delete" textFill="WHITE">
                <font>
                   <Font name="Arial Black" size="13.0" />
                </font>

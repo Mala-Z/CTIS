@@ -9,6 +9,8 @@ import SourceCode.Model.adminTableViewObjects.BorrowedItemObj;
 import SourceCode.Model.adminTableViewObjects.EmployeeObj;
 import SourceCode.Model.adminTableViewObjects.ItemObj;
 import SourceCode.Model.adminTableViewObjects.UsedProductObj;
+import SourceCode.Model.dbTablesObjects.Employee;
+import SourceCode.Model.dbTablesObjects.Item;
 import SourceCode.Model.userTableViewObjects.SearchObj;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,7 +21,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -99,6 +105,7 @@ public class AdminController {
     TableColumn usedProductTimeTakenColumn;
     @FXML
     TableColumn usedProductQuantityColumn;
+    String string;
 
     //UpdateEmployeeController updateEmployeeController = new UpdateEmployeeController();
     public ArrayList<EmployeeObj> employeeObjArrayList = new ArrayList<>();
@@ -114,6 +121,12 @@ public class AdminController {
         }
         return adminController;
     }
+
+    public String toString()
+    {
+        return string;
+    }
+
 
     @FXML
     private void btnCreateEmployee() throws IOException {
@@ -134,80 +147,88 @@ public class AdminController {
     private void btnRefreshAction() throws IOException {
         runView.showAdminView();
     }
+    @FXML
+    private void btnDeleteAction() throws IOException{
+        if (employeeTab.isSelected()) {
+            EmployeeObj employeeObj = (EmployeeObj) employeeTableView.getSelectionModel().getSelectedItem();
+            businessLogic.deleteEmployee(employeeObj.getEmployeeBarcode());
+
+            int row = employeeTableView.getSelectionModel().getFocusedIndex();
+            employeeTableView.getItems().remove(row); //removes row from tableview
+
+            MainViewController.updateAlertMessage("Employee deleted");
+        }else if (itemTab.isSelected()){
+
+            ItemObj itemObj = (ItemObj) itemTableView.getSelectionModel().getSelectedItem();
+            businessLogic.deleteItem(itemObj.getItemBarcode());
+
+            int row = itemTableView.getSelectionModel().getFocusedIndex();
+            itemTableView.getItems().remove(row); //removes row from tableview
+
+            MainViewController.updateAlertMessage("Item deleted");
+        }else {
+            MainViewController.updateWarningMessage("There has been an error while trying to delete");
+            System.out.println("Error in btnDeleteAction() in AdminController");
+        }
+    }
 
     @FXML
     private void initialize(){
-//        if (employeeTableView.getSelectionModel().getSelectedItem()!=null){
-//            EmployeeObj employeeObj = (EmployeeObj) employeeTableView.getSelectionModel().getSelectedItem();
-////
-//            employeeObjArrayList.add("1");
-//            employeeObjArrayList.add("1");
-//            System.out.println(employeeObjArrayList);
-//
-//            runView.showUpdateEmployee();
-//        }
+
         populateEmployee();
         populateItem();
         populateBorrowedItem();
         populateUsedProduct();
-    }
-
-    public ArrayList<String> getEmployeeObjBarcode() {
-        ArrayList<String> list = new ArrayList<String>();
-
-        //String string = employeeTableView.getSelectionModel().getSelectedItem().toString();
-        list.add("a");
-        return list;
 
     }
-//    @FXML
-//    public void employeeTableViewAction() throws FileNotFoundException{
-//        if (employeeTableView.getSelectionModel().getSelectedItem()!=null){
-//            EmployeeObj employeeObj = (EmployeeObj) employeeTableView.getSelectionModel().getSelectedItem();
-//            employeeObjArrayList.add(employeeObj);
-//        }
-//    }
 
+    //stores selected row to file
+    @FXML
+    public void employeeTableViewAction() throws UnsupportedEncodingException, FileNotFoundException, NullPointerException, InvocationTargetException{
+            String employeeBarcode = null;
+            ArrayList<EmployeeObj> list = new ArrayList<>();
+            EmployeeObj employeeObj = (EmployeeObj) employeeTableView.getSelectionModel().getSelectedItem();
+            list.add(employeeObj);
+            employeeBarcode = list.get(0).getEmployeeBarcode();
+            PrintWriter writer = new PrintWriter("/Users/Cristian/Desktop/CTIS/src/Resources/employeeBarcode.txt", "UTF-8");
+            writer.println(employeeBarcode);
+            writer.close();
+
+    }
+    //stores selected row to file
+    @FXML
+    public void itemTableViewAction() throws UnsupportedEncodingException, FileNotFoundException, NullPointerException,java.lang.reflect.InvocationTargetException, RuntimeException{
+        String itemBarcode = null;
+        ArrayList<ItemObj> list = new ArrayList<>();
+        ItemObj itemObj = (ItemObj) itemTableView.getSelectionModel().getSelectedItem();
+        list.add(itemObj);
+        itemBarcode = list.get(0).getItemBarcode();
+        PrintWriter writer = new PrintWriter("/Users/Cristian/Desktop/CTIS/src/Resources/itemBarcode.txt", "UTF-8");
+        writer.println(itemBarcode);
+        writer.close();
+
+    }
 
     @FXML
     private void btnUpdateAction() throws IOException {
-        if (employeeTableView.getSelectionModel().getSelectedItem()!=null){
-            EmployeeObj employeeObj = (EmployeeObj) employeeTableView.getSelectionModel().getSelectedItem();
-//            updateEmployeeController
-//            updateEmployeeController.tfEmployeeBarcode.appendText("a");
-//            employeeObjArrayList.add("1");
-//            employeeObjArrayList.add("1");
-//            System.out.println(employeeObjArrayList);
+        if (employeeTab.isSelected()){
+            if (employeeTableView.getSelectionModel().getSelectedItem() != null){
 
-            runView.showUpdateEmployee();
+                runView.showUpdateEmployee();
 
-
-        }else {
+            }
+        }
+        else if (itemTab.isSelected()){
+            if (itemTableView.getSelectionModel().getSelectedItem() != null){
+                runView.showUpdateItem();
+            }
+        }
+        else {
             MainViewController.updateAlertMessage("Please select a row to update");
         }
 
-//        EmployeeObj employeeObj = (EmployeeObj) employeeTableView.getSelectionModel().getSelectedItem();
-////        employeeObjArrayList.add(employeeObj);
-////        System.out.println(employeeObjArrayList.get(0).getEmployeeBarcode());
-//
-//        String employeeBarcode = employeeObj.getEmployeeBarcode();
-//        String employeeNumber = employeeObj.getEmployeeNo();
-//        String employeeName = employeeObj.getEmployeeName();
-//        String employeePhone = employeeObj.getPhoneNumber();
-//        System.out.println(employeeName);
-//        updateEmployeeController.tfEmployeeName = new TextField(employeeName);
-////        updateEmployeeController.tfEmployeeBarcode.appendText(employeeBarcode);
-////        updateEmployeeController.tfPhoneNumber.appendText(employeeNumber);
-//        updateEmployeeController.tfEmployeeName.setText(employeeName);
-//        updateEmployeeController.tfPhoneNumber.setText(employeePhone);
-//        EmployeeObj employeeObj = (EmployeeObj) employeeTableView.getSelectionModel().getSelectedItem();
-//        adminController.employeeTableView.getSelectionModel().getSelectedCells().add(employeeObj);
-//        adminController.employeeTableView.getSelectionModel().getSelectedCells().toString();
-//        System.out.println("sout in btnUpdate action: "+adminController.employeeTableView.getSelectionModel().getSelectedCells().toString());
-        //runView.showUpdateItem();
     }
-    //we say initialize so the fxml can recognize the method,
-    //we don't assign the method in fxml, it takes it automatically
+
 
     @FXML
     //EMPLOYEE TAB
@@ -944,11 +965,6 @@ public class AdminController {
         //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
 
     }
-
-
-
-
-
 }
 
 

@@ -4,6 +4,7 @@ import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.Controller.RunView;
 import SourceCode.Controller.main.MainViewController;
 import SourceCode.Model.adminTableViewObjects.ItemObj;
+import SourceCode.Model.categories.Category;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,7 +20,7 @@ import java.util.ResourceBundle;
 public class CreateItemController {
     BusinessLogic businessLogic = new BusinessLogic();
 
-    ObservableList<String> categoryList = FXCollections.observableArrayList("Apartment cleaning", "Clothes", "Green areas", "Key", "Snow");
+    ObservableList<String> categoryList = FXCollections.observableArrayList(Category.getCategories());
 
     @FXML
     private Button btnSubmit;
@@ -86,7 +87,6 @@ public class CreateItemController {
                     tfItemNo.clear();
                     tfItemName.clear();
                     tfItemBarcode.requestFocus();
-                    MainViewController.updateAlertMessage("Registration successful");
 
             } else {
                 MainViewController.updateAlertMessage("Please insert values in all fields to be able to save an item");

@@ -79,7 +79,7 @@ public class CreateEmployeeController {
         try {
             if (tfEmployeeBarcode.getLength() > 0 && tfEmployeeNo.getLength() > 0 && tfEmployeeName.getLength() > 0 && tfPhoneNumber.getLength() > 0) {
                 businessLogic.insertEmployee(Integer.parseInt(tfEmployeeBarcode.getText()), tfEmployeeNo.getText(), tfEmployeeName.getText(), Integer.parseInt(tfPhoneNumber.getText()));
-                MainViewController.updateAlertMessage("Registration successful");
+
                 tfEmployeeBarcode.requestFocus();//so we can create a new employee
                 tfEmployeeBarcode.clear();
                 tfEmployeeNo.clear();

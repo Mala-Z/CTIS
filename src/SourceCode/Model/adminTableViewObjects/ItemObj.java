@@ -6,6 +6,9 @@ public class ItemObj {
     private String itemName;
     private String category;
 
+    public ItemObj() {
+    }
+
     public ItemObj(String itemBarcode, String itemNo, String itemName, String category) {
         this.itemBarcode = itemBarcode;
         this.itemNo = itemNo;

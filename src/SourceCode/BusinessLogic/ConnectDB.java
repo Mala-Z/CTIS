@@ -4,9 +4,6 @@ import SourceCode.Controller.main.MainViewController;
 
 import java.sql.*;
 
-/**
- * Created by Paula on 25/04/16.
- */
 public class ConnectDB {
     public static Connection conn;
 

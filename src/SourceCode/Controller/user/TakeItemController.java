@@ -147,7 +147,7 @@ public class TakeItemController {
             if (businessLogic.checkEmployeeBarcode(tfEmployeeBarcode.getText())) {
                 firstEmployeeBarcode.add(tfEmployeeBarcode.getText());//add textfield input to a list
 
-                String name = businessLogic.getEmployee(tfEmployeeBarcode.getText());//insert barcode, return name
+                String name = businessLogic.getEmployeeName(tfEmployeeBarcode.getText());//insert barcode, return name
                 tfEmployeeBarcode.setText(name);
                 tfEmployeeBarcode.setEditable(false);
                 tfEmployeeBarcode.setFont(new Font("Arial Black", 13));

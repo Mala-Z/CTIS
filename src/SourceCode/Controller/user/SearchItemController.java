@@ -5,6 +5,7 @@ import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
 import SourceCode.Controller.main.MainViewController;
+import SourceCode.Model.categories.Category;
 import SourceCode.Model.userTableViewObjects.SearchObj;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,7 +22,7 @@ public class SearchItemController {
     ConnectDB connectDB = Factory.connectDB;
 
     private ObservableList searchItemData = FXCollections.observableArrayList();
-    private ObservableList<String> categoryList = FXCollections.observableArrayList("Clothes", "Key", "Snow");
+    private ObservableList<String> categoryList = FXCollections.observableArrayList(Category.getCategories());
 
     @FXML
     Button btnSearch;
