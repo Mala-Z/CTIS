@@ -2,13 +2,17 @@ package SourceCode.Model.adminTableViewObjects;
 
 public class BorrowedItemObj {
 
-        private String employeeName;
-        private String itemName;
-        private String timeTaken;
-        private String timeReturned;
+    private String employeeName;
+    private String itemCategory;
+    private String itemNumber;
+    private String itemName;
+    private String timeTaken;
+    private String timeReturned;
 
-    public BorrowedItemObj(String employeeName, String itemName, String timeTaken, String timeReturned) {
+    public BorrowedItemObj(String employeeName, String itemCategory, String itemNumber, String itemName, String timeTaken, String timeReturned) {
         this.employeeName = employeeName;
+        this.itemCategory = itemCategory;
+        this.itemNumber = itemNumber;
         this.itemName = itemName;
         this.timeTaken = timeTaken;
         this.timeReturned = timeReturned;
@@ -20,6 +24,22 @@ public class BorrowedItemObj {
 
     public void setEmployeeName(String employeeName) {
         this.employeeName = employeeName;
+    }
+
+    public String getItemCategory() {
+        return itemCategory;
+    }
+
+    public void setItemCategory(String itemCategory) {
+        this.itemCategory = itemCategory;
+    }
+
+    public String getItemNumber() {
+        return itemNumber;
+    }
+
+    public void setItemNumber(String itemNumber) {
+        this.itemNumber = itemNumber;
     }
 
     public String getItemName() {

@@ -1,10 +1,9 @@
 package SourceCode.BusinessLogic;
 
+import SourceCode.Controller.main.MainViewController;
+
 import java.sql.*;
 
-/**
- * Created by Paula on 25/04/16.
- */
 public class ConnectDB {
     public static Connection conn;
 
@@ -23,6 +22,7 @@ public class ConnectDB {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             System.out.println("conn obj created " + conn + " message: ");
         } catch (SQLException e) {
+            MainViewController.updateWarningMessage("The application couldn't connect to the database");
             System.out.println("DB error" + e.getMessage());
         }
     }

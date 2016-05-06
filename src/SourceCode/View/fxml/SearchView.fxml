@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: gray;" stylesheets="@../CSS/searchCSS.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SourceCode.Controller.user.SearchItemController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="415.0" prefWidth="770.0" style="-fx-background-color: gray;" stylesheets="@../CSS/searchCSS.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SourceCode.Controller.user.SearchItemController">
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
@@ -32,16 +32,16 @@
             </HBox>
             <HBox>
                <children>
-                  <Label prefHeight="27.0" prefWidth="124.0" text="         Search by" textFill="WHITE">
+                  <Label prefHeight="27.0" prefWidth="93.0" text="Search by" textFill="WHITE">
                      <font>
-                        <Font name="Arial Black" size="13.0" />
+                        <Font name="Arial Black" size="15.0" />
                      </font></Label>
-                  <TextField fx:id="tfItemNumber" onAction="#checkItemBarcode" pickOnBounds="false" prefHeight="27.0" prefWidth="160.0" promptText="Item barcode/number.." stylesheets="@../CSS/searchCSS.css" />
-                  <Label prefHeight="27.0" prefWidth="70.0" text="    or by" textFill="WHITE">
+                  <TextField fx:id="tfItemNumber" onAction="#checkTextField" pickOnBounds="false" prefHeight="27.0" prefWidth="160.0" promptText="Item barcode/number.." stylesheets="@../CSS/searchCSS.css" />
+                  <Label prefHeight="27.0" prefWidth="62.0" text="  or by" textFill="WHITE">
                      <font>
-                        <Font name="Arial Black" size="13.0" />
+                        <Font name="Arial Black" size="15.0" />
                      </font></Label>
-                  <ComboBox fx:id="comboBox" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="27.0" prefWidth="180.0" promptText="Category" />
+                  <ComboBox fx:id="comboBox" maxHeight="-Infinity" minHeight="-Infinity" onAction="#comboBoxCategory" prefHeight="27.0" prefWidth="180.0" promptText="Category" />
                </children>
             </HBox>
             <TableView fx:id="tableView" prefHeight="260.0" prefWidth="600.0">
@@ -50,9 +50,11 @@
                </columnResizePolicy>
                <columns>
                   <TableColumn fx:id="employeeNameColumn" prefWidth="75.0" text="Name" />
-                  <TableColumn fx:id="telephoneNoColumn" prefWidth="75.0" text="Phone No." />
-                  <TableColumn fx:id="itemNameColumn" prefWidth="75.0" text="Item" />
-                  <TableColumn fx:id="placeColumn" prefWidth="75.0" text="Place" />
+                  <TableColumn fx:id="telephoneNoColumn" maxWidth="2400.0" minWidth="20.0" prefWidth="70.0" text="Phone No." />
+                  <TableColumn fx:id="itemCategoryColumn" maxWidth="2200.0" minWidth="15.0" prefWidth="70.0" text="Category" />
+                  <TableColumn fx:id="itemNameColumn" maxWidth="3500.0" prefWidth="75.0" text="Item info" />
+                  <TableColumn fx:id="placeColumn" maxWidth="2700.0" prefWidth="75.0" text="Place" />
+                  <TableColumn fx:id="placeReferenceColumn" prefWidth="75.0" text="Placed on" />
                   <TableColumn fx:id="timeTakenColumn" prefWidth="75.0" text="Time taken" />
                </columns>
             </TableView>
@@ -75,13 +77,13 @@
    <top>
       <HBox BorderPane.alignment="CENTER">
          <children>
-            <Region prefHeight="54.0" prefWidth="204.0" />
+            <Region prefHeight="70.0" prefWidth="327.0" />
             <Label alignment="CENTER" prefHeight="54.0" prefWidth="233.0" style="-fx-text-fill: #8CD0BB;" text="Search" textAlignment="CENTER">
                <font>
                   <Font name="Arial Black" size="36.0" />
                </font>
             </Label>
-            <Region prefHeight="54.0" prefWidth="123.0" />
+            <Region prefHeight="70.0" prefWidth="289.0" />
             <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../Image/Rac3.png" />

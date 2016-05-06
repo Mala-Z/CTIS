@@ -1,4 +1,4 @@
-package SourceCode.Model;
+package SourceCode.Model.dbTablesObjects;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -7,9 +7,6 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import java.time.format.DateTimeFormatter;
 
-/**
- * Created by Paula on 26/03/16.
- */
 public class UsedProduct {
     private final IntegerProperty id;
     private final IntegerProperty employeeBarcode;

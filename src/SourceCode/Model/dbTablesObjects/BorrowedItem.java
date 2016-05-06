@@ -1,4 +1,4 @@
-package SourceCode.Model;
+package SourceCode.Model.dbTablesObjects;
 
 import javafx.beans.property.*;
 

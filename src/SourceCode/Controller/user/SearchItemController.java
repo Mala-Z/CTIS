@@ -4,19 +4,17 @@ import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
-import SourceCode.Model.BorrowedItem;
-import SourceCode.Model.Employee;
-import SourceCode.Model.Item;
+import SourceCode.Controller.main.MainViewController;
+import SourceCode.Model.categories.Category;
 import SourceCode.Model.userTableViewObjects.SearchObj;
-import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.time.format.DateTimeFormatter;
 
 
 public class SearchItemController {
@@ -24,21 +22,28 @@ public class SearchItemController {
     ConnectDB connectDB = Factory.connectDB;
 
     private ObservableList searchItemData = FXCollections.observableArrayList();
+    private ObservableList<String> categoryList = FXCollections.observableArrayList(Category.getCategories());
 
     @FXML
     Button btnSearch;
     @FXML
     Button btnBack;
+    // Table Columns
     @FXML
     TableColumn employeeNameColumn;
     @FXML
     TableColumn telephoneNoColumn;
     @FXML
+    TableColumn itemCategoryColumn;
+    @FXML
     TableColumn itemNameColumn;
     @FXML
     TableColumn placeColumn;
     @FXML
+    TableColumn placeReferenceColumn;
+    @FXML
     TableColumn timeTakenColumn;
+
     @FXML
     Label employeeBarcodeLabel;
     @FXML
@@ -49,6 +54,12 @@ public class SearchItemController {
     TableView tableView;
 
     private RunView runView;
+
+    @FXML
+    private void initialize(){
+
+        comboBox.getItems().addAll(categoryList);
+    }
 
     @FXML
     public void btnSearch(){
@@ -64,6 +75,7 @@ public class SearchItemController {
             if(comboBox.getItems()!= null){
             }
         }catch (Exception e){
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in btnSearch() from SearchItemController class:" + e.getMessage());
         }
     }
@@ -73,86 +85,124 @@ public class SearchItemController {
         try{
             runView.showMainView();
         }catch (Exception e){
+            MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in btnBack() from SearchItemController class:" + e.getMessage());
         }
     }
 
+
     @FXML
-    private void checkItemBarcode() {
+    private void checkTextField() {
         try {
-            if (businessLogic.checkItemBarcode(Integer.parseInt(tfItemNumber.getText()))) {
+            if (businessLogic.checkItemBarcode(tfItemNumber.getText()) || businessLogic.checkItemNo(tfItemNumber.getText())) {
 
-                searchByItemBarcode();
+                //checks if it has been taken
+                if (businessLogic.searchItem(tfItemNumber.getText())||businessLogic.searchItemByNumber(tfItemNumber.getText())) {
 
-            } else {
-                MainViewController.updateAlertMessage("Please scan the barcode again");
-                tfItemNumber.setText(null);
+                    searchByItemBarcode();
+                    searchByItemNumber();
+                    tfItemNumber.clear();
+
+
+                } else {
+                    MainViewController.updateAlertMessage("Item not taken");
+                    tfItemNumber.clear();
+                }
+            }else {
+                MainViewController.updateAlertMessage("Please check the barcode or the item number");
+                tfItemNumber.clear();
             }
         } catch (Exception e) {
-            System.out.println("Exception in checkItemBarcode() from SearchItemController class:" + e.getMessage());
+            MainViewController.updateWarningMessage("Error");
+            System.out.println("Exception in checkTextField()/itemNumber() from SearchItemController class:" + e.getMessage());
         }
     }
+
+    @FXML
+    private void comboBoxCategory(){
+        try {
+                searchByComboBox();
+
+        } catch (Exception ex) {
+            MainViewController.updateWarningMessage("Error");
+            System.out.println("combobox exception in comboBoxCategory()");
+        }
+    }
+
 
     public void searchByItemNumber() {
 
-        try {
+            try {
             /* SQL QUERY */
-            String sql = "SELECT employeeName, phoneNumber, itemName, place, timeTaken FROM BorrowedItem\n" +
-                    "INNER JOIN Employee ON\n" +
-                    "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
-                    "INNER JOIN PhoneNumber ON\n" +
-                    "BorrowedItem.employeeBarcode = PhoneNumber.employeeBarcode\n" +
-                    "INNER JOIN Item ON\n" +
-                    "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
-                    "INNER JOIN Place ON\n" +
-                    "BorrowedItem.id = Place.borrowedItemID\n" +
-                    "WHERE itemNo = ? and timeReturned IS NULL;";
+                String sql = "SELECT employeeName, phoneNumber, itemName, place, placeReference, timeTaken, category FROM BorrowedItem\n" +
+                        "INNER JOIN Employee ON\n" +
+                        "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
+                        "INNER JOIN PhoneNumber ON\n" +
+                        "BorrowedItem.employeeBarcode = PhoneNumber.employeeBarcode\n" +
+                        "INNER JOIN Category ON\n" +
+                        "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
+                        "INNER JOIN Item ON\n" +
+                        "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
+                        "INNER JOIN Place ON\n" +
+                        "BorrowedItem.id = Place.borrowedItemID\n" +
+                        "WHERE Item.itemNo = ? and timeReturned IS NULL;";
 
             /* EXECUTION OF QUERY */
-            int inputBarcode = Integer.parseInt(tfItemNumber.getText());
-            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
-            preparedStatement.setInt(1, inputBarcode);
+                //int inputItemNo = Integer.parseInt(tfItemNumber.getText());
 
-            ResultSet result = preparedStatement.executeQuery();
+                String inputItemNo = tfItemNumber.getText();
+                PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+                preparedStatement.setString(1, inputItemNo);
 
-            while ((result.next())) {
 
-                Employee employee = new Employee();
-                Item item = new Item();
-                BorrowedItem borrowedItem = new BorrowedItem();
+                ResultSet result = preparedStatement.executeQuery();
 
-                employee.nameProperty().set(result.getString("employeeName"));
-                employee.telephoneProperty().set(result.getInt("phoneNumber"));
-                item.itemNameProperty().set(result.getString("itemName"));
-                borrowedItem.placeProperty().set(result.getString("place"));
-                borrowedItem.timeTakenProperty().set(result.getString("timeTaken"));
-                //searchItemData.addAll(employee, item, borrowedItem);
+                while ((result.next())) {
+
+                    String employeeName = result.getString("employeeName");
+                    String phoneNumber = result.getString("phoneNumber");
+                    String itemCategory = result.getString("category");
+                    String itemName = result.getString("itemName");
+                    String place = result.getString("place");
+                    String placeReference = result.getString("placeReference");
+                    String timeTaken = result.getString("timeTaken");
+                    SearchObj searchObj = new SearchObj(employeeName, phoneNumber, itemCategory,  itemName, place, placeReference, timeTaken);
+
+                    searchItemData.setAll(searchObj);
+
+                }
+            } catch (Exception e) {
+                MainViewController.updateWarningMessage("Error");
+                e.printStackTrace();
+                System.out.println("Exception in searchByItemNo() from SearchItemController class: " + e.getMessage());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Exception in searchByItemNumber() from SearchItemController class: " + e.getMessage());
-        }
 
-        /* SETTING UP COLUMNS FOR TABLE VIEW */
-        employeeNameColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("employeeName"));
-        telephoneNoColumn.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("phoneNumber"));
-        itemNameColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("itemName"));
-        placeColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItem, String>("place"));
-        timeTakenColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItem, ObjectProperty<DateTimeFormatter>>("timeTaken"));
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+            employeeNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("employeeName"));
+            telephoneNoColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("phoneNo"));
+            itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemCategory"));
+            itemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
+            placeColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("place"));
+            placeReferenceColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("placeReference"));
+            timeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
-        //tableView.getItems().addAll(searchItemData);
-    }
+            tableView.getItems().addAll(searchItemData);
+            searchItemData.clear();  //i did this because it would duplicate the last element if the item was returned
+
+        }
 
     public void searchByItemBarcode() {
 
         try {
             /* SQL QUERY */
-            String sql = "SELECT employeeName, phoneNumber, itemName, place, timeTaken FROM BorrowedItem\n" +
+            String sql = "SELECT employeeName, phoneNumber, itemName, place, placeReference, timeTaken, category FROM BorrowedItem\n" +
                     "INNER JOIN Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN PhoneNumber ON\n" +
                     "BorrowedItem.employeeBarcode = PhoneNumber.employeeBarcode\n" +
+                    "INNER JOIN Category ON\n" +
+                    "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
                     "INNER JOIN Place ON\n" +
@@ -160,9 +210,9 @@ public class SearchItemController {
                     "WHERE BorrowedItem.itemBarcode = ? and timeReturned IS NULL;";
 
             /* EXECUTION OF QUERY */
-            int inputBarcode = Integer.parseInt(tfItemNumber.getText());
+            String inputBarcode = tfItemNumber.getText();
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
-            preparedStatement.setInt(1, inputBarcode);
+            preparedStatement.setString(1, inputBarcode);
 
             ResultSet result = preparedStatement.executeQuery();
 
@@ -170,15 +220,18 @@ public class SearchItemController {
 
                 String employeeName = result.getString("employeeName");
                 String phoneNumber = result.getString("phoneNumber");
+                String itemCategory = result.getString("category");
                 String itemName = result.getString("itemName");
                 String place = result.getString("place");
+                String placeReference = result.getString("placeReference");
                 String timeTaken = result.getString("timeTaken");
-                SearchObj searchObj = new SearchObj(employeeName, phoneNumber, itemName, place, timeTaken);
+                SearchObj searchObj = new SearchObj(employeeName, phoneNumber, itemCategory,  itemName, place, placeReference, timeTaken);
 
                 searchItemData.setAll(searchObj);
 
             }
         } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
             e.printStackTrace();
             System.out.println("Exception in searchByItemBarcode() from SearchItemController class: " + e.getMessage());
         }
@@ -186,8 +239,10 @@ public class SearchItemController {
         /* SETTING VALUES FROM OBJECT INTO COLUMNS */
         employeeNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("employeeName"));
         telephoneNoColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("phoneNo"));
+        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemCategory"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
         placeColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("place"));
+        placeReferenceColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("placeReference"));
         timeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
@@ -195,5 +250,65 @@ public class SearchItemController {
         searchItemData.clear();  //i did this because it would duplicate the last element if the item was returned
 
     }
+    public void searchByComboBox() {
+
+
+            try {
+            /* SQL QUERY */
+                String sql = "SELECT employeeName, phoneNumber, itemName, place, placeReference, timeTaken, category FROM BorrowedItem\n" +
+                        "INNER JOIN Employee ON\n" +
+                        "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
+                        "INNER JOIN PhoneNumber ON\n" +
+                        "BorrowedItem.employeeBarcode = PhoneNumber.employeeBarcode\n" +
+                        "INNER JOIN Category ON\n" +
+                        "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
+                        "INNER JOIN Item ON\n" +
+                        "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
+                        "INNER JOIN Place ON\n" +
+                        "BorrowedItem.id = Place.borrowedItemID\n" +
+                        "WHERE Category.category = ? and timeReturned IS NULL;";
+
+            /* EXECUTION OF QUERY */
+                String inputCategory = comboBox.getSelectionModel().getSelectedItem().toString();
+                PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+                preparedStatement.setString(1, inputCategory);
+
+                ResultSet result = preparedStatement.executeQuery();
+
+                while ((result.next())) {
+
+                    String employeeName = result.getString("employeeName");
+                    String phoneNumber = result.getString("phoneNumber");
+                    String itemCategory = result.getString("category");
+                    String itemName = result.getString("itemName");
+                    String place = result.getString("place");
+                    String placeReference = result.getString("placeReference");
+                    String timeTaken = result.getString("timeTaken");
+                    SearchObj searchObj = new SearchObj(employeeName, phoneNumber, itemCategory, itemName, place, placeReference, timeTaken);
+
+                    searchItemData.addAll(searchObj);
+
+                }
+            } catch (Exception e) {
+                MainViewController.updateWarningMessage("Error");
+                e.printStackTrace();
+                System.out.println("Exception in searchByComboBox() from SearchItemController class: " + e.getMessage());
+            }
+
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+            employeeNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("employeeName"));
+            telephoneNoColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("phoneNo"));
+            itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemCategory"));
+            itemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
+            placeColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("place"));
+            placeReferenceColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("placeReference"));
+            timeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
+
+        /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
+            tableView.getItems().setAll(searchItemData);
+            searchItemData.clear();  //i did this because it would duplicate the last element if the item was returned
+
+
+        }
 
 }

@@ -6,6 +6,10 @@ public class EmployeeObj {
     private String employeeName;
     private String phoneNumber;
 
+    public EmployeeObj() {
+
+    }
+
     public EmployeeObj(String employeeBarcode, String employeeNo, String employeeName, String phoneNumber) {
         this.employeeBarcode = employeeBarcode;
         this.employeeNo = employeeNo;
@@ -43,5 +47,10 @@ public class EmployeeObj {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public String toString() {
+        return getEmployeeBarcode();
     }
 }
