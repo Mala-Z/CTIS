@@ -12,7 +12,6 @@ import java.io.IOException;
 public class CreateEmployeeController {
     BusinessLogic businessLogic = new BusinessLogic();
 
-
     @FXML
     private Button btnSubmit;
     @FXML
@@ -67,7 +66,7 @@ public class CreateEmployeeController {
         }
     }
     @FXML
-    private void checkEmployeePhone(){
+    private void checkEmployeePhone() throws Exception{
         if (tfPhoneNumber.getLength()>0){
             btnSubmit.requestFocus();
             btnSubmit();//if we press ENTER we call btnSubmit method so we dont have to click the button
@@ -75,10 +74,10 @@ public class CreateEmployeeController {
     }
 
     @FXML
-    private void btnSubmit() {
+    private void btnSubmit() throws Exception{
         try {
             if (tfEmployeeBarcode.getLength() > 0 && tfEmployeeNo.getLength() > 0 && tfEmployeeName.getLength() > 0 && tfPhoneNumber.getLength() > 0) {
-                businessLogic.insertEmployee(Integer.parseInt(tfEmployeeBarcode.getText()), tfEmployeeNo.getText(), tfEmployeeName.getText(), Integer.parseInt(tfPhoneNumber.getText()));
+                businessLogic.insertEmployee(Integer.parseInt(tfEmployeeBarcode.getText()), tfEmployeeNo.getText(), tfEmployeeName.getText(), tfPhoneNumber.getText());
 
                 tfEmployeeBarcode.requestFocus();//so we can create a new employee
                 tfEmployeeBarcode.clear();
@@ -90,7 +89,7 @@ public class CreateEmployeeController {
             }
 
         } catch(Exception e) {
-            System.out.println("Exception: " + e);
+            System.out.println("Exception in btnsubmit, CreateEmployee: " + e);
         }
     }
 

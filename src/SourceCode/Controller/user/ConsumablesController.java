@@ -100,6 +100,8 @@ public class ConsumablesController {
             barcodeList.remove(row); //removes index of stored barcodes(so we can re-add it later if we want to the tableview)
             //System.out.println(row);
 
+            MainViewController.updateAlertMessage("Product deleted");
+
 
         } catch (Exception e) {
             MainViewController.updateWarningMessage("Error");
@@ -118,7 +120,9 @@ public class ConsumablesController {
                 tfEmployeeBarcode.setText(name);
                 tfEmployeeBarcode.setEditable(false);
                 tfEmployeeBarcode.setFont(new Font("Arial Black", 13));
-                tfEmployeeBarcode.setStyle("-fx-background-color: lightgrey;");
+                tfEmployeeBarcode.setStyle("-fx-background-color:  #8CD0BB; -fx-text-fill: white");
+
+
 
                 tfItemBarcode.setDisable(false);
                 tfQuantity.setDisable(false);
@@ -139,6 +143,11 @@ public class ConsumablesController {
         try {
             if (businessLogic.checkItemBarcode(tfItemBarcode.getText())) {
                     if (!barcodeList.contains(tfItemBarcode.getText())){//check for duplicates
+
+                        tfEmployeeBarcode.setEditable(true);
+                        tfItemBarcode.setFont(new Font("Arial Black", 13));
+                        tfItemBarcode.setStyle("-fx-background-color:  #8CD0BB; -fx-text-fill: white");
+                        //tfItemBarcode.setStyle("-fx-text-fill: white");
 
                         tfQuantity.requestFocus();
                         System.out.println(barcodeList);
@@ -177,6 +186,8 @@ public class ConsumablesController {
             //System.out.println(takeItemList.toString());
 
             //add barcodes to list and after check for barcodes scanned twice
+            tfItemBarcode.setFont(new Font("System", 13));
+            tfItemBarcode.setStyle("-fx-background-color:  white;");
             barcodeList.add(tfItemBarcode.getText());
             tfItemBarcode.requestFocus();
             tfItemBarcode.clear();

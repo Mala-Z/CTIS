@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public abstract class Category {
     public static ArrayList<String> getCategories(){
         ArrayList<String> categoryList = new ArrayList<>();
-        categoryList.add("Apartment cleaning");
+        categoryList.add("Cleaning product");
         categoryList.add("Clothes");
-        categoryList.add("Green areas");
+        categoryList.add("Green area");
         categoryList.add("Key");
         categoryList.add("Snow");
 
