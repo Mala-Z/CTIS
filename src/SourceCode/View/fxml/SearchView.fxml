@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
@@ -88,6 +89,9 @@
                <image>
                   <Image url="@../../../Image/Rac3.png" />
                </image>
+               <HBox.margin>
+                  <Insets top="-6.0" />
+               </HBox.margin>
             </ImageView>
          </children>
       </HBox>

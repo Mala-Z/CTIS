@@ -24,7 +24,7 @@ public class BusinessLogic {
 
 
     /* METHOD FOR INSERTING EMPLOYEE INTO THE DATABASE */
-    public void insertEmployee(int employeeBarcode, String employeeNo, String employeeName, int telephoneNo) throws MySQLIntegrityConstraintViolationException{
+    public void insertEmployee(int employeeBarcode, String employeeNo, String employeeName, String telephoneNo) throws MySQLIntegrityConstraintViolationException{
         String sql = "INSERT INTO Employee VALUES (?, ?, ?)";
         String sql2 = "INSERT INTO PhoneNumber (id, phoneNumber, employeeBarcode) VALUES (null, ?, (SELECT employeeBarcode FROM Employee WHERE employeeBarcode =?));";
         try {
@@ -33,7 +33,7 @@ public class BusinessLogic {
             preparedStatement.setInt(1, employeeBarcode);
             preparedStatement.setString(2, employeeNo);
             preparedStatement.setString(3, employeeName);
-            preparedStatement2.setInt(1, telephoneNo);
+            preparedStatement2.setString(1, telephoneNo);
             preparedStatement2.setInt(2, employeeBarcode);
             preparedStatement.executeUpdate();
             preparedStatement2.executeUpdate();
@@ -70,7 +70,7 @@ public class BusinessLogic {
     /* METHOD FOR UPDATING THE EMPLOYEE TABLE */
     public void updateEmployeeTable(String employeeBarcode, String employeeNo, String employeeName, String phoneNumber, String oldBarcode) {
         String sql = "UPDATE Employee, PhoneNumber\n" +
-                "SET Employee.employeeBarcode = ?, Employee.employeeNo = ?, Employee.employeeName = ?, PhoneNumber.phoneNumber = ?\n" +
+                "SET Employee.employeeBarcode = ?, Employee.employeeNo = ?, Employee.employeeName = ?, PhoneNumber.phoneNumber = ?, PhoneNumber.employeeBarcode = ?\n" +
                 "WHERE Employee.employeeBarcode = PhoneNumber.employeeBarcode\n" +
                 "AND Employee.employeeBarcode = ?;";
 
@@ -83,8 +83,9 @@ public class BusinessLogic {
 
             //preparedStatement.setString(4, oldBarcode);
             preparedStatement.setString(4, phoneNumber);
+            preparedStatement.setString(5, employeeBarcode);
 
-            preparedStatement.setString(5, oldBarcode);
+            preparedStatement.setString(6, oldBarcode);
             preparedStatement.executeUpdate();
 
 
@@ -142,11 +143,17 @@ public class BusinessLogic {
 
     /* METHOD FOR DELETING AN EMPLOYEE FROM THE DATABASE */
     public void deleteEmployee(String employeeBarcode) {
+
         String sql = "DELETE FROM Employee WHERE employeeBarcode=?";
+        String sql2 = "DELETE FROM PhoneNumber WHERE employeeBarcode=?";
         try {
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setString(1, employeeBarcode);
+            PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
+            preparedStatement2.setString(1, employeeBarcode);
+
             preparedStatement.executeUpdate();
+            preparedStatement2.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             MainViewController.updateWarningMessage("Error while trying to delete employee");
@@ -157,10 +164,17 @@ public class BusinessLogic {
     /* METHOD FOR DELETING AN ITEM FROM THE DATABASE */
     public void deleteItem(String itemBarcode) {
         String sql = "DELETE FROM Item WHERE itemBarcode=?";
+        String sql2 = "DELETE FROM Category WHERE itemBarcode=?";
+
         try {
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setString(1, itemBarcode);
+            PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
+            preparedStatement2.setString(1, itemBarcode);
+
             preparedStatement.executeUpdate();
+            preparedStatement2.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
             MainViewController.updateWarningMessage("Error while trying to delete employee");
@@ -409,6 +423,27 @@ public class BusinessLogic {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Error in checkItemCategory() from BusinessLogic class: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean checkItemName(String name) {
+
+        try {
+            String query = "SELECT itemName FROM Item WHERE itemName = ?";
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
+            preparedStatement.setString(1, name);
+
+            ResultSet results = preparedStatement.executeQuery();
+
+            if (results.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in checkItemName() from BusinessLogic class: " + e.getMessage());
         }
         return false;
     }

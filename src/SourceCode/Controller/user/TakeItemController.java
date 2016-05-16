@@ -151,7 +151,7 @@ public class TakeItemController {
                 tfEmployeeBarcode.setText(name);
                 tfEmployeeBarcode.setEditable(false);
                 tfEmployeeBarcode.setFont(new Font("Arial Black", 13));
-                tfEmployeeBarcode.setStyle("-fx-background-color: lightgrey;");
+                tfEmployeeBarcode.setStyle("-fx-background-color:  #8CD0BB; -fx-text-fill: white");
 
                 tfItemBarcode.setDisable(false);
                 placeCombo.setDisable(false);

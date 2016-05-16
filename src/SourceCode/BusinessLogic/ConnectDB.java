@@ -1,24 +1,32 @@
 package SourceCode.BusinessLogic;
 
 import SourceCode.Controller.main.MainViewController;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import java.sql.*;
 
 public class ConnectDB {
     public static Connection conn;
 
     /* CONSTRUCTOR */
-    public ConnectDB() {
+    public ConnectDB() throws Exception{
         connectToDatabase();
     }
 
     /* DATABASE CONNECTION */
-    private static void connectToDatabase() {
+    private static void connectToDatabase() throws Exception{
         System.out.println("***********Welcome to Racoon**************");
         try {
-            String DB_URL = "jdbc:mysql://db4free.net:3306/ctis_racoon";
-            String USER = "ctis_admin";
-            String PASS = "Ra%c00n%CTIS";
+//            String DB_URL = "jdbc:mysql://ctis-racoon.c7zmk0iubeje.eu-central-1.rds.amazonaws.com:3306/ctisracoon";
+            String DB_URL = "jdbc:mysql://ctis-racoon.c7zmk0iubeje.eu-central-1.rds.amazonaws.com:3306/ctisracoon"+
+                    "?verifyServerCertificate=false"+
+                    "&useSSL=true"+
+                    "&requireSSL=true";
+            String USER = "aime3444";
+            String PASS = "CTISracoon84";
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             System.out.println("conn obj created " + conn + " message: ");
         } catch (SQLException e) {

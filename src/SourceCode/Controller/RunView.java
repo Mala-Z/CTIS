@@ -8,9 +8,15 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
+import java.awt.*;
+import java.awt.Image;
 import java.io.IOException;
+
+import static com.sun.org.apache.bcel.internal.util.SecuritySupport.getResourceAsStream;
 
 public class RunView extends Application {
     private static Stage primaryStage;
@@ -23,11 +29,13 @@ public class RunView extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws IOException, Exception {
+
 
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Racoon");
         showMainView();
+
 
         factory.getInstance();
 
@@ -42,7 +50,7 @@ public class RunView extends Application {
             Scene scene= new Scene(mainLayout);
             primaryStage.setScene(scene);
             primaryStage.show();
-            primaryStage.setHeight(480);
+            primaryStage.setHeight(470);
             primaryStage.setWidth(610);
         }catch (Exception e){
             System.out.println("Exception in showMainView() from RunView class:" + e.getMessage());
@@ -55,7 +63,7 @@ public class RunView extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(RunView.class.getResource("/SourceCode/View/fxml/TakeItem.fxml"));
             BorderPane takeItem = loader.load();
-            primaryStage.setHeight(490);
+            primaryStage.setHeight(470);
             primaryStage.setWidth(800);
             mainLayout.setCenter(takeItem);
         }catch (Exception e){
@@ -70,7 +78,7 @@ public class RunView extends Application {
             loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/ReturnView.fxml")));
             BorderPane returnItem = loader.load();
             mainLayout.setCenter(returnItem);
-            primaryStage.setHeight(490);
+            primaryStage.setHeight(470);
             primaryStage.setWidth(800);
         }catch(Exception e){
             System.out.println("Exception in showReturnItemView() from RunView class:" + e.getMessage());
@@ -84,7 +92,7 @@ public class RunView extends Application {
             loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/SearchView.fxml")));
             BorderPane search = loader.load();
             mainLayout.setCenter(search);
-            primaryStage.setHeight(490);
+            primaryStage.setHeight(470);
             primaryStage.setWidth(800);
         }catch (Exception e) {
             System.out.println("Exception in showSearch() from RunView class:" + e.getMessage());
@@ -97,7 +105,7 @@ public class RunView extends Application {
             loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/Consumables.fxml")));
             BorderPane consumables = loader.load();
             mainLayout.setCenter(consumables);
-            primaryStage.setHeight(490);
+            primaryStage.setHeight(470);
             primaryStage.setWidth(800);
         }catch (Exception e) {
             System.out.println("Exception in showConsumables() from RunView class:" + e.getMessage());
@@ -110,8 +118,8 @@ public class RunView extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/AdminView.fxml")));
             BorderPane admin = loader.load();
+            primaryStage.setHeight(470);
             primaryStage.setWidth(800);
-            primaryStage.setHeight(500);
             mainLayout.setCenter(admin);
             //adminController.populateTableView();
         }catch (Exception e){

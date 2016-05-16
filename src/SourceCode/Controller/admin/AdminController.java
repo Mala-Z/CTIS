@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -33,7 +34,6 @@ import java.util.ArrayList;
 import static SourceCode.Controller.RunView.adminController;
 
 public class AdminController {
-    private RunView runView;
     BusinessLogic businessLogic = new BusinessLogic();
     ConnectDB connectDB = Factory.connectDB;
     private ObservableList employeeTabData = FXCollections.observableArrayList();
@@ -106,9 +106,9 @@ public class AdminController {
     @FXML
     TableColumn usedProductQuantityColumn;
     String string;
-
     //UpdateEmployeeController updateEmployeeController = new UpdateEmployeeController();
     public ArrayList<EmployeeObj> employeeObjArrayList = new ArrayList<>();
+    private RunView runView;
 
     public AdminController(){
 
@@ -149,27 +149,52 @@ public class AdminController {
     }
     @FXML
     private void btnDeleteAction() throws IOException{
-        if (employeeTab.isSelected()) {
-            EmployeeObj employeeObj = (EmployeeObj) employeeTableView.getSelectionModel().getSelectedItem();
-            businessLogic.deleteEmployee(employeeObj.getEmployeeBarcode());
+        if (employeeTableView.getSelectionModel().getSelectedItem()!=null || itemTableView.getSelectionModel().getSelectedItem()!=null) {
 
-            int row = employeeTableView.getSelectionModel().getFocusedIndex();
-            employeeTableView.getItems().remove(row); //removes row from tableview
+            if (employeeTab.isSelected()) {
+                EmployeeObj employeeObj = (EmployeeObj) employeeTableView.getSelectionModel().getSelectedItem();
+                businessLogic.deleteEmployee(employeeObj.getEmployeeBarcode());
 
-            MainViewController.updateAlertMessage("Employee deleted");
-        }else if (itemTab.isSelected()){
+                int row = employeeTableView.getSelectionModel().getFocusedIndex();
+                employeeTableView.getItems().remove(row); //removes row from tableview
 
-            ItemObj itemObj = (ItemObj) itemTableView.getSelectionModel().getSelectedItem();
-            businessLogic.deleteItem(itemObj.getItemBarcode());
+                MainViewController.updateAlertMessage("Employee deleted");
+            } else if (itemTab.isSelected()) {
 
-            int row = itemTableView.getSelectionModel().getFocusedIndex();
-            itemTableView.getItems().remove(row); //removes row from tableview
+                ItemObj itemObj = (ItemObj) itemTableView.getSelectionModel().getSelectedItem();
+                businessLogic.deleteItem(itemObj.getItemBarcode());
 
-            MainViewController.updateAlertMessage("Item deleted");
+                int row = itemTableView.getSelectionModel().getFocusedIndex();
+                itemTableView.getItems().remove(row); //removes row from tableview
+
+                MainViewController.updateAlertMessage("Item deleted");
+            } else {
+                MainViewController.updateWarningMessage("There has been an error while trying to delete");
+                System.out.println("Error in btnDeleteAction() in AdminController");
+            }
         }else {
-            MainViewController.updateWarningMessage("There has been an error while trying to delete");
-            System.out.println("Error in btnDeleteAction() in AdminController");
+            MainViewController.updateAlertMessage("Please select row to delete");
         }
+    }
+
+    @FXML
+    private void btnUpdateAction() throws IOException {
+        if (employeeTableView.getSelectionModel().getSelectedItem()!=null || itemTableView.getSelectionModel().getSelectedItem()!=null) {
+            if (employeeTab.isSelected()) {
+                if (employeeTableView.getSelectionModel().getSelectedItem() != null) {
+                    runView.showUpdateEmployee();
+                }
+            } else if (itemTab.isSelected()) {
+                if (itemTableView.getSelectionModel().getSelectedItem() != null) {
+                    runView.showUpdateItem();
+                }
+            } else {
+                MainViewController.updateAlertMessage("Please select a row to update");
+            }
+        }else {
+            MainViewController.updateAlertMessage("Please select row to update");
+        }
+
     }
 
     @FXML
@@ -181,10 +206,10 @@ public class AdminController {
         populateUsedProduct();
 
     }
-
     //stores selected row to file
     @FXML
     public void employeeTableViewAction() throws UnsupportedEncodingException, FileNotFoundException, NullPointerException, InvocationTargetException{
+        try {
             String employeeBarcode = null;
             ArrayList<EmployeeObj> list = new ArrayList<>();
             EmployeeObj employeeObj = (EmployeeObj) employeeTableView.getSelectionModel().getSelectedItem();
@@ -193,8 +218,12 @@ public class AdminController {
             PrintWriter writer = new PrintWriter("/Users/Cristian/Desktop/CTIS/src/Resources/employeeBarcode.txt", "UTF-8");
             writer.println(employeeBarcode);
             writer.close();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
 
     }
+
     //stores selected row to file
     @FXML
     public void itemTableViewAction() throws UnsupportedEncodingException, FileNotFoundException, NullPointerException,java.lang.reflect.InvocationTargetException, RuntimeException{
@@ -209,26 +238,6 @@ public class AdminController {
 
     }
 
-    @FXML
-    private void btnUpdateAction() throws IOException {
-        if (employeeTab.isSelected()){
-            if (employeeTableView.getSelectionModel().getSelectedItem() != null){
-
-                runView.showUpdateEmployee();
-
-            }
-        }
-        else if (itemTab.isSelected()){
-            if (itemTableView.getSelectionModel().getSelectedItem() != null){
-                runView.showUpdateItem();
-            }
-        }
-        else {
-            MainViewController.updateAlertMessage("Please select a row to update");
-        }
-
-    }
-
 
     @FXML
     //EMPLOYEE TAB
@@ -240,7 +249,7 @@ public class AdminController {
             String sql = "SELECT Employee.employeeBarcode, Employee.employeeNo, Employee.employeeName, PhoneNumber.phoneNumber FROM Employee\n" +
                     "INNER JOIN PhoneNumber ON\n" +
                     "Employee.employeeBarcode = PhoneNumber.employeeBarcode\n" +
-                    "ORDER BY employeeName;";
+                    "ORDER BY employeeNo;";
 
             /* EXECUTION OF QUERY */
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
@@ -253,6 +262,7 @@ public class AdminController {
                 String employeeNo = result.getString("employeeNo");
                 String employeeName = result.getString("employeeName");
                 String phoneNumber = result.getString("phoneNumber");
+
                 EmployeeObj employeeObj = new EmployeeObj(employeeBarcode, employeeNo, employeeName, phoneNumber);
 
                 employeeTabData.addAll(employeeObj);
@@ -409,20 +419,24 @@ public class AdminController {
 
     @FXML
     private void searchTfAction(){
+        String input = tfSearch.getText();
         try {
             if (itemTab.isSelected()) {
-                if (businessLogic.checkItemBarcode(tfSearch.getText()) || businessLogic.checkItemNo(tfSearch.getText())) {
+                if (businessLogic.checkItemBarcode(input) || businessLogic.checkItemNo(input)
+                        || businessLogic.checkItemCategory(input) || businessLogic.checkItemName(input)) {
                     searchData.clear();
                     itemTableView.getItems().clear();
                     searchByItemBarcodeInItem();
                     searchByItemNumberInItem();
+                    searchByItemCategoryInItem();
+                    searchByItemNameInItem();
                 } else {
                     MainViewController.updateAlertMessage("Please check the value again");
                 }
             }
             if (employeeTab.isSelected()) {
-                if (businessLogic.checkEmployeeBarcode(tfSearch.getText()) || businessLogic.checkEmployeeNumber(tfSearch.getText()) ||
-                         businessLogic.checkEmployeeName(tfSearch.getText())) {
+                if (businessLogic.checkEmployeeBarcode(input) || businessLogic.checkEmployeeNumber(input) ||
+                         businessLogic.checkEmployeeName(input)) {
                     employeeTableView.getItems().clear();
                     searchData.clear();
                     searchByEmployeeBarcodeInEmployee();
@@ -434,29 +448,30 @@ public class AdminController {
                 }
             }
             if (borrowedItemTab.isSelected()){
-                if (businessLogic.checkEmployeeName(tfSearch.getText()) || businessLogic.checkItemCategory(tfSearch.getText())
-                        || businessLogic.checkItemNo(tfSearch.getText())) {
+                if (businessLogic.checkEmployeeName(input) || businessLogic.checkItemCategory(input)
+                        || businessLogic.checkItemNo(input) || businessLogic.checkItemName(input)) {
                     searchData.clear();
                     borrowedItemTableView.getItems().clear();
                     searchByEmployeeNameInBorrowed();
                     searchByCategoryInBorrowed();
                     searchByItemNumberInBorrowed();
+                    searchByItemNameInBorrowed();
                 }else {
                     MainViewController.updateAlertMessage("Please check the value again");
                 }
 
             }
             if (usedProductTab.isSelected()){
-                if (businessLogic.checkEmployeeName(tfSearch.getText()) || businessLogic.checkItemNo(tfSearch.getText())){
+                if (businessLogic.checkEmployeeName(input) || businessLogic.checkItemNo(input) || businessLogic.checkItemName(input)){
                     searchData.clear();
                     usedProductTableView.getItems().clear();
                     searchByEmployeeNameInUsed();
                     searchByItemNumberInUsed();
+                    searchByItemNameInUsed();
                 }else {
                     MainViewController.updateWarningMessage("Please check the value again");
                 }
             }
-
         } catch (Exception e) {
             MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in searchTfAction() from AdminController class:" + e.getMessage());
@@ -521,6 +536,100 @@ public class AdminController {
                     "INNER JOIN Category ON\n" +
                     "Item.itemBarcode = Category.itemBarcode\n" +
                     "WHERE Item.itemNo = ?;";
+
+            /* EXECUTION OF QUERY */
+            String inputBarcode = tfSearch.getText();
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            preparedStatement.setString(1, inputBarcode);
+
+            ResultSet result = preparedStatement.executeQuery();
+
+            while ((result.next())) {
+
+                String itemBarcode = result.getString("itemBarcode");
+                String itemNumber = result.getString("itemNo");
+                String itemName = result.getString("itemName");
+                String itemCategory = result.getString("category");
+                ItemObj itemObj = new ItemObj(itemBarcode, itemNumber, itemName, itemCategory);
+
+                searchData.addAll(itemObj);
+
+            }
+        } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
+            e.printStackTrace();
+            System.out.println("Exception in searchByItemNumberInItem() from AdminController class: " + e.getMessage());
+        }
+
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+        itemBarcodeColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemBarcode"));
+        itemNumberColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemNo"));
+        itemNameColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemName"));
+        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("category"));
+
+        /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
+        itemTableView.getItems().setAll(searchData);
+        //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
+
+    }
+
+    @FXML
+    private void searchByItemCategoryInItem() {
+
+        try {
+
+            /* SQL QUERY */
+            String sql = "SELECT Item.itemBarcode, Item.itemNo, itemName, category FROM Item\n" +
+                    "INNER JOIN Category ON\n" +
+                    "Item.itemBarcode = Category.itemBarcode\n" +
+                    "WHERE Category.category = ?;";
+
+            /* EXECUTION OF QUERY */
+            String inputBarcode = tfSearch.getText();
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            preparedStatement.setString(1, inputBarcode);
+
+            ResultSet result = preparedStatement.executeQuery();
+
+            while ((result.next())) {
+
+                String itemBarcode = result.getString("itemBarcode");
+                String itemNumber = result.getString("itemNo");
+                String itemName = result.getString("itemName");
+                String itemCategory = result.getString("category");
+                ItemObj itemObj = new ItemObj(itemBarcode, itemNumber, itemName, itemCategory);
+
+                searchData.addAll(itemObj);
+
+            }
+        } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
+            e.printStackTrace();
+            System.out.println("Exception in searchByItemNumberInItem() from AdminController class: " + e.getMessage());
+        }
+
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+        itemBarcodeColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemBarcode"));
+        itemNumberColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemNo"));
+        itemNameColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemName"));
+        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("category"));
+
+        /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
+        itemTableView.getItems().setAll(searchData);
+        //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
+
+    }
+
+    @FXML
+    private void searchByItemNameInItem() {
+
+        try {
+
+            /* SQL QUERY */
+            String sql = "SELECT Item.itemBarcode, Item.itemNo, itemName, category FROM Item\n" +
+                    "INNER JOIN Category ON\n" +
+                    "Item.itemBarcode = Category.itemBarcode\n" +
+                    "WHERE Item.itemName = ?;";
 
             /* EXECUTION OF QUERY */
             String inputBarcode = tfSearch.getText();
@@ -865,6 +974,61 @@ public class AdminController {
     }
 
     @FXML
+    private void searchByItemNameInBorrowed() {
+
+        try {
+
+            /* SQL QUERY */
+            String sql = "SELECT employeeName, category, itemNo, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
+                    "INNER JOIN Category ON\n" +
+                    "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
+                    "INNER JOIN  Employee ON\n" +
+                    "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
+                    "INNER JOIN Item ON\n" +
+                    "BorrowedItem.itembarcode = Item.itemBarcode\n" +
+                    "WHERE Item.itemName = ?;";
+
+            /* EXECUTION OF QUERY */
+            String inputBarcode = tfSearch.getText();
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            preparedStatement.setString(1, inputBarcode);
+
+            ResultSet result = preparedStatement.executeQuery();
+
+            while ((result.next())) {
+
+                String employeeName = result.getString("employeeName");
+                String itemCategory = result.getString("category");
+                String itemNumber = result.getString("itemNo");
+                String itemName = result.getString("itemName");
+                String timeTaken = result.getString("timeTaken");
+                String timeReturned = result.getString("timeReturned");
+                BorrowedItemObj borrowedItemObj = new BorrowedItemObj(employeeName, itemCategory, itemNumber, itemName, timeTaken, timeReturned);
+
+                searchData.addAll(borrowedItemObj);
+
+            }
+        } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
+            e.printStackTrace();
+            System.out.println("Exception in searchByItemNameInBorrowed() from AdminController class: " + e.getMessage());
+        }
+
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+        borrowedItemEmployeeNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("employeeName"));
+        borrowedItemCategoryColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemCategory"));
+        borrowedItemNumberColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemNumber"));
+        borrowedItemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
+        borrowedItemTimeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
+        borrowedItemTimeReturnedColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeReturned"));
+
+        /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
+        borrowedItemTableView.getItems().setAll(searchData);
+        //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
+
+    }
+
+    @FXML
     private void searchByEmployeeNameInUsed() {
 
         try {
@@ -927,6 +1091,57 @@ public class AdminController {
                     "INNER JOIN Item ON\n" +
                     "UsedProduct.itemBarcode = Item.itemBarcode\n" +
                     "WHERE Item.itemNo = ?;";
+
+            /* EXECUTION OF QUERY */
+            String inputBarcode = tfSearch.getText();
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            preparedStatement.setString(1, inputBarcode);
+
+            ResultSet result = preparedStatement.executeQuery();
+
+            while ((result.next())) {
+
+                String employeeName = result.getString("employeeName");
+                String itemNumber = result.getString("itemNo");
+                String itemName = result.getString("itemName");
+                String timeTaken = result.getString("timeTaken");
+                String quantityTaken = result.getString("quantityTaken");
+                UsedProductObj usedProductObj = new UsedProductObj(employeeName, itemNumber, itemName,  timeTaken, quantityTaken);
+
+                searchData.addAll(usedProductObj);
+
+            }
+        } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
+            e.printStackTrace();
+            System.out.println("Exception in searchByItemNumberInUsed() from AdminController class: " + e.getMessage());
+        }
+
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+        usedProductEmployeeNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("employeeName"));
+        usedProductItemNumberColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemNumber"));
+        usedProductItemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
+        usedProductTimeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
+        usedProductQuantityColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("quantityTaken"));
+
+        /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
+        usedProductTableView.getItems().setAll(searchData);
+        //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
+
+    }
+
+    @FXML
+    private void searchByItemNameInUsed() {
+
+        try {
+
+            /* SQL QUERY */
+            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken FROM UsedProduct\n" +
+                    "INNER JOIN  Employee ON\n" +
+                    "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
+                    "INNER JOIN Item ON\n" +
+                    "UsedProduct.itemBarcode = Item.itemBarcode\n" +
+                    "WHERE Item.itemName = ?;";
 
             /* EXECUTION OF QUERY */
             String inputBarcode = tfSearch.getText();
