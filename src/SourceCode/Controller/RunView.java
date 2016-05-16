@@ -118,7 +118,8 @@ public class RunView extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/AdminView.fxml")));
             BorderPane admin = loader.load();
-            primaryStage.setHeight(470);
+            //primaryStage.setHeight(470);
+            primaryStage.setHeight(545);
             primaryStage.setWidth(800);
             mainLayout.setCenter(admin);
             //adminController.populateTableView();
