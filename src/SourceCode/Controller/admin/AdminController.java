@@ -139,7 +139,7 @@ public class AdminController {
     }
 
     @FXML
-    private void btnLogOut() throws IOException {
+    private void btnLogout() throws IOException {
         runView.showMainView();
     }
 

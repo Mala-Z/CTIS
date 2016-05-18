@@ -23,7 +23,7 @@
          <children>
             <HBox alignment="CENTER_RIGHT" prefHeight="74.0" prefWidth="600.0">
                <children>
-                  <Button fx:id="btnAdmin" mnemonicParsing="false" onAction="#goAdminView" style="-fx-background-color: #8CD0BB;" text="Admin" textFill="WHITE">
+                  <Button fx:id="btnAdmin" mnemonicParsing="false" onAction="#goAdminLogin" style="-fx-background-color: #8CD0BB;" text="Admin" textFill="WHITE">
                      <HBox.margin>
                         <Insets right="485.0" top="-32.0" />
                      </HBox.margin>

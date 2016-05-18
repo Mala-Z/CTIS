@@ -61,6 +61,15 @@ public class MainViewController {
     }
 
     @FXML
+    private void goAdminLogin(){
+        try {
+            runView.showAdminLogin();
+        }catch (Exception e){
+            System.out.println("Exception in goAdminLogin() from MainViewController class:" + e.getMessage());
+        }
+    }
+
+    @FXML
     private void goAdminView(){
         try {
             runView.showAdminView();

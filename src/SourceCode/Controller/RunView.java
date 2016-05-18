@@ -30,12 +30,9 @@ public class RunView extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException, Exception {
-
-
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Racoon");
         showMainView();
-
 
         factory.getInstance();
 
@@ -119,7 +116,7 @@ public class RunView extends Application {
             loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/AdminView.fxml")));
             BorderPane admin = loader.load();
             //primaryStage.setHeight(470);
-            primaryStage.setHeight(545);
+            primaryStage.setHeight(555);
             primaryStage.setWidth(800);
             mainLayout.setCenter(admin);
             //adminController.populateTableView();
@@ -181,6 +178,18 @@ public class RunView extends Application {
             stage.show();
         } catch (Exception e){
             System.out.println("Exception in showUpdateItem() from RunView class:" + e.getMessage());
+        }
+    }
+    public static void showAdminLogin(){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/AdminLogin.fxml")));
+            BorderPane borderPane = (BorderPane) loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(borderPane));
+            stage.show();
+        } catch (Exception e){
+            System.out.println("Exception in showAdminLogin() from RunView class:" + e.getMessage());
         }
     }
 

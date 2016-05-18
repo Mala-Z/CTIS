@@ -8,6 +8,7 @@ import SourceCode.Model.dbTablesObjects.Item;
 import SourceCode.Model.insertIntoDBObjects.WriteConsumablesToDB;
 import SourceCode.Model.insertIntoDBObjects.WriteReturnToDB;
 import SourceCode.Model.insertIntoDBObjects.WriteTakeToDB;
+import com.mysql.jdbc.ResultSetImpl;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -493,6 +494,47 @@ public class BusinessLogic {
             System.out.println("Error in getLogin() from BusinessLogic class: " + e.getMessage());
         }
         return out;
+    }
+
+    public boolean checkUsername(String username){
+        try {
+            String sql = "SELECT username FROM Admin WHERE username = ?";
+
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()){
+                return true;
+            }else {
+                return false;
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            System.out.println("Error in checkUsername in BusinessLogic");
+        }
+        return false;
+    }
+    public boolean checkpassword(String password){
+        try {
+            String sql = "SELECT password FROM Admin WHERE password = ?";
+
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+
+            preparedStatement.setString(1, password);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()){
+                return true;
+            }else {
+                return false;
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            System.out.println("Error in checkPassword in BusinessLogic");
+        }
+        return false;
     }
 
     /* METHOD FOR RETURNING THE CATEGORY */
