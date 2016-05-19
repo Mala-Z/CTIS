@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="adminBorder" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="529.0" prefWidth="786.0" style="-fx-background-color: gray;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SourceCode.Controller.admin.AdminController">
+<BorderPane fx:id="adminBorder" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="529.0" prefWidth="786.0" style="-fx-background-color: gray;" stylesheets="@../CSS/adminView.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SourceCode.Controller.admin.AdminController">
    <top>
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="465.0" prefWidth="787.0" style="-fx-background-color: grey;" BorderPane.alignment="CENTER">
          <children>

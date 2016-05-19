@@ -47,7 +47,7 @@ public class BusinessLogic {
     }
 
     /* METHOD FOR INSERTING ITEM INTO THE DATABASE */
-    public void insertItem(int itemBarcode, String itemNo, String itemName, String category) {
+    public void addItem(int itemBarcode, String itemNo, String itemName, String category) {
         String sql = "INSERT INTO Item (itemBarcode, itemNo, itemName) VALUES (?, ?, ?); ";
         String sql2 = "INSERT INTO Category (id, category, itemBarcode) VALUES (null, ?, (SELECT itemBarcode FROM Item WHERE itemBarcode = ?));";
         try {
@@ -64,12 +64,12 @@ public class BusinessLogic {
         } catch (SQLException e) {
             MainViewController.updateWarningMessage("Possible duplicates");
             e.printStackTrace();
-            System.out.println("Error in insertItem() from BusinessLogic class: " + e.getMessage());
+            System.out.println("Error in addItem() from BusinessLogic class: " + e.getMessage());
         }
     }
 
     /* METHOD FOR UPDATING THE EMPLOYEE TABLE */
-    public void updateEmployeeTable(String employeeBarcode, String employeeNo, String employeeName, String phoneNumber, String oldBarcode) {
+    public void updateEmployee(String employeeBarcode, String employeeNo, String employeeName, String phoneNumber, String oldBarcode) {
         String sql = "UPDATE Employee, PhoneNumber\n" +
                 "SET Employee.employeeBarcode = ?, Employee.employeeNo = ?, Employee.employeeName = ?, PhoneNumber.phoneNumber = ?, PhoneNumber.employeeBarcode = ?\n" +
                 "WHERE Employee.employeeBarcode = PhoneNumber.employeeBarcode\n" +
@@ -93,13 +93,13 @@ public class BusinessLogic {
             MainViewController.updateAlertMessage("Registration successful");
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in updateEmployeeTable() from BusinessLogic class: " + e.getMessage());
+            System.out.println("Error in updateEmployee() from BusinessLogic class: " + e.getMessage());
             MainViewController.updateWarningMessage("Possible duplicates!");
         }
     }
 
     /* METHOD FOR UPDATING THE ITEM TABLE */
-    public void updateItemTable(String itemBarcode, String itemNo, String itemName, String itemCategory, String oldBarcode) {
+    public void updateItem(String itemBarcode, String itemNo, String itemName, String itemCategory, String oldBarcode) {
         String sql = "UPDATE Item, Category\n" +
                 "SET Item.itemBarcode = ?, Item.itemNo = ?, Item.itemName = ?, Category.category = ?\n" +
                 "WHERE Item.itemBarcode = Category.itemBarcode\n" +
@@ -121,26 +121,26 @@ public class BusinessLogic {
             MainViewController.updateAlertMessage("Registration successful");
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in updateItemTable() from BusinessLogic class: " + e.getMessage());
+            System.out.println("Error in updateItem() from BusinessLogic class: " + e.getMessage());
             MainViewController.updateWarningMessage("Possible duplicates!");
         }
     }
 
-    /* METHOD FOR UPDATING THE BORROWED ITEM TABLE */
-    public Item updateBorrowedItemTable(String table, Timestamp timeReturned, int itemBarcode) {
-        String sql = "UPDATE " + table + " SET timeReturned =? WHERE itemBarcode =? AND timeReturned IS null;";
-        try {
-            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
-
-            preparedStatement.setTimestamp(1, timeReturned);
-            preparedStatement.setInt(2, itemBarcode);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error in updateBorrowedItemTable() from BusinessLogic class: " + e.getMessage());
-        }
-        return item;
-    }
+//    /* METHOD FOR UPDATING THE BORROWED ITEM TABLE */
+//    public Item updateBorrowedItemTable(String table, Timestamp timeReturned, int itemBarcode) {
+//        String sql = "UPDATE " + table + " SET timeReturned =? WHERE itemBarcode =? AND timeReturned IS null;";
+//        try {
+//            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+//
+//            preparedStatement.setTimestamp(1, timeReturned);
+//            preparedStatement.setInt(2, itemBarcode);
+//            preparedStatement.executeUpdate();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            System.out.println("Error in updateBorrowedItemTable() from BusinessLogic class: " + e.getMessage());
+//        }
+//        return item;
+//    }
 
     /* METHOD FOR DELETING AN EMPLOYEE FROM THE DATABASE */
     public void deleteEmployee(String employeeBarcode) {
@@ -472,30 +472,6 @@ public class BusinessLogic {
         return false;
     }
 
-    /* RETURN THE LOGIN CREDENTIALS */
-    public String getLogin(String name, String pass) {
-        String out = "";
-        try {
-            String nameAndPass = "SELECT * FROM Admin where username = ? AND password= ?";
-
-            PreparedStatement preparedStatement = connectDB.preparedStatement(nameAndPass);
-
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, pass);
-            ResultSet results = preparedStatement.executeQuery();
-
-            if (results.next()) {
-                out = results.getString(1) + "\n" + results.getString(2);
-            } else {
-                out = " no data ";
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error in getLogin() from BusinessLogic class: " + e.getMessage());
-        }
-        return out;
-    }
-
     public boolean checkUsername(String username){
         try {
             String sql = "SELECT username FROM Admin WHERE username = ?";
@@ -516,7 +492,7 @@ public class BusinessLogic {
         }
         return false;
     }
-    public boolean checkpassword(String password){
+    public boolean checkPassword(String password){
         try {
             String sql = "SELECT password FROM Admin WHERE password = ?";
 

@@ -6,10 +6,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 
-/**
- * Created by St_Muerte on 3/24/16.
- */
-
 public class MainViewController {
     private RunView runView;
 

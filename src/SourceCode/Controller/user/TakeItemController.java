@@ -217,7 +217,7 @@ public class TakeItemController {
 
     /* METHOD FOR POPULATING THE TABLE VIEW */
     public void populateTableView() {
-        System.out.println(barcodeList);
+        //System.out.println(barcodeList);
         //System.out.println(itemBarcodeList + " " + comboBoxList + " " + tfPlaceList);
         // check if we have barcodes scanned twice
 

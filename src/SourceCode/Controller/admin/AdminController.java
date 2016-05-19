@@ -249,7 +249,7 @@ public class AdminController {
             String sql = "SELECT Employee.employeeBarcode, Employee.employeeNo, Employee.employeeName, PhoneNumber.phoneNumber FROM Employee\n" +
                     "INNER JOIN PhoneNumber ON\n" +
                     "Employee.employeeBarcode = PhoneNumber.employeeBarcode\n" +
-                    "ORDER BY employeeNo;";
+                    "ORDER BY employeeNo ASC;";
 
             /* EXECUTION OF QUERY */
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
@@ -290,7 +290,7 @@ public class AdminController {
                 String sql = "SELECT Item.itemBarcode, Item.itemNo, Item.itemName, Category.category FROM Item\n" +
                         "INNER JOIN Category ON\n" +
                         "Item.itemBarcode = Category.itemBarcode\n" +
-                        "ORDER BY category;";
+                        "ORDER BY itemNo ASC;";
 
             /* EXECUTION OF QUERY */
                 PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
@@ -335,7 +335,7 @@ public class AdminController {
                     "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
-                    "ORDER BY timeTaken;";
+                    "ORDER BY timeTaken DESC;";
 
             /* EXECUTION OF QUERY */
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
@@ -382,7 +382,7 @@ public class AdminController {
                     "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "UsedProduct.itemBarcode = Item.itemBarcode\n" +
-                    "ORDER BY timeTaken;";
+                    "ORDER BY timeTaken DESC;";
 
             /* EXECUTION OF QUERY */
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);

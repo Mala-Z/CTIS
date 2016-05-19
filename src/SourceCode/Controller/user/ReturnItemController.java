@@ -99,7 +99,7 @@ public class ReturnItemController {
                         WriteReturnToDB writeReturnToDB = new WriteReturnToDB(itemBarcodeString, timeTaken);
 
                         returnItemList.add(writeReturnToDB);
-                        System.out.println(returnItemList.toString());
+                        //System.out.println(returnItemList.toString());
 
 
                         //add barcodes to list and after check for barcodes scanned twice

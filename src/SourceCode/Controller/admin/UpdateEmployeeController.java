@@ -3,13 +3,11 @@ package SourceCode.Controller.admin;
 import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.Controller.RunView;
 import SourceCode.Controller.main.MainViewController;
-import SourceCode.Model.adminTableViewObjects.EmployeeObj;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.util.ArrayList;
 
 
 public class UpdateEmployeeController {
@@ -104,7 +102,7 @@ public class UpdateEmployeeController {
             if (tfEmployeeBarcode.getLength() > 0 && tfEmployeeNo.getLength() > 0 && tfEmployeeName.getLength() > 0
                     && tfPhoneNumber.getLength() > 0) {
 
-                businessLogic.updateEmployeeTable(employeeBarcode, employeeNo, employeeName, phoneNumber, oldEmployeeBarcode);
+                businessLogic.updateEmployee(employeeBarcode, employeeNo, employeeName, phoneNumber, oldEmployeeBarcode);
 
                 Stage stage = (Stage) btnSubmit.getScene().getWindow();
                 stage.close();

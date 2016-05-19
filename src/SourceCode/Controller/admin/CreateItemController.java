@@ -3,19 +3,14 @@ package SourceCode.Controller.admin;
 import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.Controller.RunView;
 import SourceCode.Controller.main.MainViewController;
-import SourceCode.Model.adminTableViewObjects.ItemObj;
 import SourceCode.Model.categories.Category;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import javax.print.DocFlavor;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class CreateItemController {
     BusinessLogic businessLogic = new BusinessLogic();
@@ -80,7 +75,7 @@ public class CreateItemController {
     private void btnSubmit() {
         try {
             if (tfItemBarcode.getLength() > 0 && tfItemNo.getLength() > 0 && tfItemName.getLength() > 0 && categoryCombo.getSelectionModel().getSelectedIndex() > -1) {
-                    businessLogic.insertItem(Integer.parseInt(tfItemBarcode.getText()), tfItemNo.getText(), tfItemName.getText(),
+                    businessLogic.addItem(Integer.parseInt(tfItemBarcode.getText()), tfItemNo.getText(), tfItemName.getText(),
                             categoryCombo.getValue().toString());
 
                     tfItemBarcode.clear();

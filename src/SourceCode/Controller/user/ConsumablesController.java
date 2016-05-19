@@ -150,7 +150,7 @@ public class ConsumablesController {
                         //tfItemBarcode.setStyle("-fx-text-fill: white");
 
                         tfQuantity.requestFocus();
-                        System.out.println(barcodeList);
+                        //System.out.println(barcodeList);
 
                     }else  if (barcodeList.contains(tfItemBarcode.getText())){
                         MainViewController.updateAlertMessage("You have already scanned this item");

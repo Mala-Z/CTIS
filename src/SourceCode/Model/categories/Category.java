@@ -10,7 +10,7 @@ public abstract class Category {
         ArrayList<String> categoryList = new ArrayList<>();
         categoryList.add("Cleaning product");
         categoryList.add("Clothes");
-        categoryList.add("Green area");
+        categoryList.add("Green apartment");
         categoryList.add("Key");
         categoryList.add("Snow");
 

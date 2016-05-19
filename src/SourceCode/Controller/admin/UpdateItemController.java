@@ -1,7 +1,6 @@
 package SourceCode.Controller.admin;
 
 import SourceCode.BusinessLogic.BusinessLogic;
-import SourceCode.Controller.RunView;
 import SourceCode.Controller.main.MainViewController;
 import SourceCode.Model.categories.Category;
 import javafx.fxml.FXML;
@@ -12,8 +11,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Locale;
 
 import javafx.scene.control.*;
 
@@ -104,7 +101,7 @@ public class UpdateItemController {
             if (tfItemBarcode.getLength() > 0 && tfItemNo.getLength() > 0 && tfItemName.getLength() > 0
                     && categoryCombo.getSelectionModel().getSelectedIndex() > -1) {
 
-                businessLogic.updateItemTable(itemBarcode, itemNo, itemName, itemCategory, oldItemBarcode);
+                businessLogic.updateItem(itemBarcode, itemNo, itemName, itemCategory, oldItemBarcode);
 
                 Stage stage = (Stage) btnSubmit.getScene().getWindow();
                 stage.close();

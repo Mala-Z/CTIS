@@ -33,7 +33,7 @@ public class AdminLoginController {
     private void tfLoginAction() throws IOException{
         if (tfUsername.getText().length() >0  && tfPassword.getText().length() > 0){
             if (businessLogic.checkUsername(tfUsername.getText())){
-                if (businessLogic.checkpassword(tfPassword.getText())){
+                if (businessLogic.checkPassword(tfPassword.getText())){
                     runView.showAdminView();
 
                     Stage stage = (Stage) btnLogin.getScene().getWindow();
@@ -52,7 +52,7 @@ public class AdminLoginController {
     private void btnLoginAction() throws IOException{
         if (tfUsername.getText().length() >0  && tfPassword.getText().length() > 0){
             if (businessLogic.checkUsername(tfUsername.getText())){
-                if (businessLogic.checkpassword(tfPassword.getText())){
+                if (businessLogic.checkPassword(tfPassword.getText())){
                     runView.showAdminView();
 
                     Stage stage = (Stage) btnLogin.getScene().getWindow();
