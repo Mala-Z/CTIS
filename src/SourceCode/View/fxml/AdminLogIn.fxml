@@ -8,29 +8,28 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="361.0" stylesheets="@../CSS/adminLogin.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SourceCode.Controller.admin.AdminLoginController">
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: grey;" BorderPane.alignment="CENTER">
          <children>
-            <Label layoutX="217.0" layoutY="137.0" style="-fx-text-fill: #8CD0BB;" text="Username" textFill="WHITE">
+            <Label layoutX="99.0" layoutY="137.0" style="-fx-text-fill: #8CD0BB;" text="Username" textFill="WHITE">
                <font>
                   <Font name="Arial Black" size="13.0" />
                </font>
             </Label>
-            <Label layoutX="217.0" layoutY="198.0" style="-fx-text-fill: #8CD0BB;" text="Password">
+            <Label layoutX="99.0" layoutY="198.0" style="-fx-text-fill: #8CD0BB;" text="Password">
                <font>
                   <Font name="Arial Black" size="13.0" />
                </font>
             </Label>
-            <Label layoutX="239.0" style="-fx-text-fill: #8CD0BB;" text="Log In" textFill="#6f5c5c">
+            <Label layoutX="121.0" style="-fx-text-fill: #8CD0BB;" text="Log In" textFill="#6f5c5c">
                <font>
                   <Font name="Arial Black" size="36.0" />
                </font>
             </Label>
-            <TextField layoutX="217.0" layoutY="154.0" />
-            <PasswordField layoutX="217.0" layoutY="215.0" />
-            <Button layoutX="217.0" layoutY="262.0" mnemonicParsing="false" style="-fx-background-color: #8CD0BB;" text="Cancel" textFill="WHITE">
+            <TextField fx:id="tfUsername" layoutX="99.0" layoutY="154.0" promptText="enter your username.." />
+            <PasswordField fx:id="tfPassword" layoutX="99.0" layoutY="215.0" onAction="#tfLoginAction" promptText="enter your password.." />
+            <Button fx:id="btnCancel" layoutX="99.0" layoutY="262.0" mnemonicParsing="false" onAction="#btnCancelAction" style="-fx-background-color: #8CD0BB;" text="Cancel" textFill="WHITE">
                <font>
                   <Font name="Arial Black" size="13.0" />
                </font>
@@ -41,7 +40,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button layoutX="316.0" layoutY="262.0" mnemonicParsing="false" style="-fx-background-color: #8CD0BB;" text="Log in" textFill="WHITE">
+            <Button fx:id="btnLogin" layoutX="198.0" layoutY="262.0" mnemonicParsing="false" onAction="#btnLoginAction" style="-fx-background-color: #8CD0BB;" text="Log in" textFill="WHITE">
                <font>
                   <Font name="Arial Black" size="13.0" />
                </font>

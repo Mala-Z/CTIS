@@ -450,7 +450,7 @@ public class BusinessLogic {
     }
 
     /* METHOD FOR CHECKING THE LOGIN CREDENTIALS */
-    public boolean checkLogInCredentials(String username, String password) {
+    public boolean checkLoginCredentials(String username, String password) {
         try {
             String query = "SELECT * FROM Admin WHERE username=? AND password=?";
 
