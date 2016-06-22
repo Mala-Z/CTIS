@@ -37,7 +37,7 @@
                      <font>
                         <Font name="Arial Black" size="15.0" />
                      </font></Label>
-                  <TextField fx:id="tfItemNumber" onAction="#checkTextField" pickOnBounds="false" prefHeight="27.0" prefWidth="160.0" promptText="Item barcode/number.." stylesheets="@../CSS/searchCSS.css" />
+                  <TextField fx:id="tfSearch" onAction="#checkTextField" pickOnBounds="false" prefHeight="27.0" prefWidth="160.0" promptText="item or employee" stylesheets="@../CSS/searchCSS.css" />
                   <Label prefHeight="27.0" prefWidth="62.0" text="  or by" textFill="WHITE">
                      <font>
                         <Font name="Arial Black" size="15.0" />

@@ -296,6 +296,56 @@ public class BusinessLogic {
         return false;
     }
 
+    /* METHOD FOR CHECKING IF THE ITEM IS ALREADY REGISTERED TAKEN */
+    public boolean searchEmployeeByName(String employeeName) {
+        try {
+            String query = "SELECT employeeName FROM Employee"+
+                    " INNER JOIN BorrowedItem ON" +
+                    " Employee.employeeBarcode = BorrowedItem.employeeBarcode" +
+                    " WHERE employeeName =? AND timeReturned is null;";
+
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
+            preparedStatement.setString(1, employeeName);
+
+            ResultSet results = preparedStatement.executeQuery();
+
+            if (results.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in searchEmployeeByName() from BusinessLogic class: " + e.getMessage());
+        }
+        return false;
+    }
+    /* METHOD FOR CHECKING IF THE ITEM IS ALREADY REGISTERED TAKEN */
+    public boolean searchEmployeeByBarcode(String employeeBarcode) {
+        try {
+            String query = "SELECT Employee.employeeBarcode FROM Employee\n" +
+                    "INNER JOIN BorrowedItem ON\n" +
+                    "Employee.employeeBarcode = BorrowedItem.employeeBarcode\n" +
+                    "WHERE Employee.employeeBarcode = ?\n" +
+                    "AND timeReturned is null;";
+
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
+            preparedStatement.setString(1, employeeBarcode);
+
+            ResultSet results = preparedStatement.executeQuery();
+
+            if (results.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in searchEmployeeByBarcode() from BusinessLogic class: " + e.getMessage());
+        }
+        return false;
+    }
+
     /* METHOD FOR CHECKING THE EMPLOYEE BARCODE STORED INTO THE DATABASE */
     public boolean checkEmployeeBarcode(String employeeBarcode) {
 
