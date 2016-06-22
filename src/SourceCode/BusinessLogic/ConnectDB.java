@@ -28,9 +28,9 @@ public class ConnectDB {
 //            String USER = "aime3444";
 //            String PASS = "CTISracoon84";
 
-            String DB_URL = "jdbc:mysql://localhost:3306/Test";
-            String USER = "root";
-            String PASS = "Cristian344";
+            String DB_URL = "jdbc:mysql://sql7.freesqldatabase.com:3306/sql7124928";
+            String USER = "sql7124928";
+            String PASS = "9XriJpDLDw";
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             System.out.println("conn obj created " + conn + " message: ");
         } catch (SQLException e) {
