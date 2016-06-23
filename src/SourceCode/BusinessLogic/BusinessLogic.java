@@ -184,8 +184,24 @@ public class BusinessLogic {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            MainViewController.updateWarningMessage("Error while trying to delete employee");
+            MainViewController.updateWarningMessage("Error while trying to delete item");
             System.out.println("Error in deleteItem() from BusinessLogic class: " + e.getMessage());
+        }
+    }
+
+    public void deleteCategory(String category) {
+        String sql = "DELETE FROM Category WHERE category=?";
+
+        try {
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            preparedStatement.setString(1, category);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            MainViewController.updateWarningMessage("Error while trying to delete category");
+            System.out.println("Error in deleteCategory() from BusinessLogic class: " + e.getMessage());
         }
     }
 

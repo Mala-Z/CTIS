@@ -31,7 +31,7 @@ public class UpdateItemController {
 
     private String readItemBarcode(){
         String content = null;
-        File file = new File("/Users/Cristian/Desktop/CTIS/src/Resources/itemBarcode.txt");
+        File file = new File("src/Resources/itemBarcode.txt");
         FileReader reader = null;
         try{
             reader = new FileReader(file);

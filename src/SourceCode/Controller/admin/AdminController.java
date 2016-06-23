@@ -49,6 +49,8 @@ public class AdminController {
     @FXML
     Tab itemTab;
     @FXML
+    Tab categoryTab;
+    @FXML
     Tab borrowedItemTab;
     @FXML
     Tab usedProductTab;
@@ -144,7 +146,8 @@ public class AdminController {
     }
     @FXML
     private void btnDeleteAction() throws IOException{
-        if (employeeTableView.getSelectionModel().getSelectedItem()!=null || itemTableView.getSelectionModel().getSelectedItem()!=null) {
+        if (employeeTableView.getSelectionModel().getSelectedItem()!=null || itemTableView.getSelectionModel().getSelectedItem()!=null
+                || categoryTableView.getSelectionModel().getSelectedItem()!=null) {
 
             if (employeeTab.isSelected()) {
                 EmployeeObj employeeObj = (EmployeeObj) employeeTableView.getSelectionModel().getSelectedItem();
@@ -163,6 +166,17 @@ public class AdminController {
                 itemTableView.getItems().remove(row); //removes row from tableview
 
                 MainViewController.updateAlertMessage("Item deleted");
+            } else if (categoryTab.isSelected()) {
+
+                CategoryObj categoryObj = (CategoryObj) categoryTableView.getSelectionModel().getSelectedItem();
+                businessLogic.deleteCategory(categoryObj.getCategory());
+
+                int row = categoryTableView.getSelectionModel().getFocusedIndex();
+                categoryTableView.getItems().remove(row);//removes row from tableview
+
+                MainViewController.updateAlertMessage("Category deleted");
+
+
             } else {
                 MainViewController.updateWarningMessage("There has been an error while trying to delete");
                 System.out.println("Error in btnDeleteAction() in AdminController");
@@ -211,7 +225,7 @@ public class AdminController {
             EmployeeObj employeeObj = (EmployeeObj) employeeTableView.getSelectionModel().getSelectedItem();
             list.add(employeeObj);
             employeeBarcode = list.get(0).getEmployeeBarcode();
-            PrintWriter writer = new PrintWriter("/Users/Cristian/Desktop/CTIS/src/Resources/employeeBarcode.txt", "UTF-8");
+            PrintWriter writer = new PrintWriter("src/Resources/employeeBarcode.txt", "UTF-8");///Users/Cristian/Desktop/CTIS/
             writer.println(employeeBarcode);
             writer.close();
         }catch (NullPointerException e){
@@ -228,7 +242,7 @@ public class AdminController {
         ItemObj itemObj = (ItemObj) itemTableView.getSelectionModel().getSelectedItem();
         list.add(itemObj);
         itemBarcode = list.get(0).getItemBarcode();
-        PrintWriter writer = new PrintWriter("/Users/Cristian/Desktop/CTIS/src/Resources/itemBarcode.txt", "UTF-8");
+        PrintWriter writer = new PrintWriter("src/Resources/itemBarcode.txt", "UTF-8");
         writer.println(itemBarcode);
         writer.close();
 

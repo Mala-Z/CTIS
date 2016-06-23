@@ -78,7 +78,7 @@
                         <TableView fx:id="borrowedItemTableView" prefHeight="200.0" prefWidth="200.0">
                           <columns>
                             <TableColumn fx:id="borrowedItemEmployeeNameColumn" prefWidth="195.0" text="Employee" />
-                              <TableColumn fx:id="borrowedItemCategoryColumn" prefWidth="75.0" text="Item itemCategory" />
+                              <TableColumn fx:id="borrowedItemCategoryColumn" prefWidth="75.0" text="Item Category" />
                               <TableColumn fx:id="borrowedItemNumberColumn" prefWidth="75.0" text="Item number" />
                             <TableColumn fx:id="borrowedItemNameColumn" prefWidth="195.0" text="Item info" />
                               <TableColumn fx:id="borrowedItemTimeTakenColumn" prefWidth="195.0" text="Time taken" />

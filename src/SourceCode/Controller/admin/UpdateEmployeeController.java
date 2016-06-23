@@ -28,7 +28,7 @@ public class UpdateEmployeeController {
 
     private String readEmployeeBarcode(){
         String content = null;
-        File file = new File("/Users/Cristian/Desktop/CTIS/src/Resources/employeeBarcode.txt");
+        File file = new File("src/Resources/employeeBarcode.txt");
         FileReader reader = null;
         try{
             reader = new FileReader(file);
