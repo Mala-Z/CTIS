@@ -3,12 +3,10 @@ package SourceCode.BusinessLogic;
 import SourceCode.Controller.main.MainViewController;
 import SourceCode.Model.adminTableViewObjects.EmployeeObj;
 import SourceCode.Model.adminTableViewObjects.ItemObj;
-import SourceCode.Model.dbTablesObjects.Employee;
 import SourceCode.Model.dbTablesObjects.Item;
 import SourceCode.Model.insertIntoDBObjects.WriteConsumablesToDB;
 import SourceCode.Model.insertIntoDBObjects.WriteReturnToDB;
 import SourceCode.Model.insertIntoDBObjects.WriteTakeToDB;
-import com.mysql.jdbc.ResultSetImpl;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,19 +45,20 @@ public class BusinessLogic {
     }
 
     /* METHOD FOR INSERTING ITEM INTO THE DATABASE */
-    public void addItem(int itemBarcode, String itemNo, String itemName, String category) {
-        String sql = "INSERT INTO Item (itemBarcode, itemNo, itemName) VALUES (?, ?, ?); ";
-        String sql2 = "INSERT INTO Category (id, category, itemBarcode) VALUES (null, ?, (SELECT itemBarcode FROM Item WHERE itemBarcode = ?));";
+    public void addItem(int itemBarcode, String itemNo, String itemName, String itemCategory) {
+        String sql = "INSERT INTO Item (itemBarcode, itemNo, itemName, itemCategory) VALUES (?, ?, ?, ?); ";
+        //String sql2 = "INSERT INTO Category (id, category, itemBarcode) VALUES (null, ?, (SELECT itemBarcode FROM Item WHERE itemBarcode = ?));";
         try {
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
-            PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
+            //PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
             preparedStatement.setInt(1, itemBarcode);
             preparedStatement.setString(2, itemNo);
             preparedStatement.setString(3, itemName);
-            preparedStatement2.setString(1, category);
-            preparedStatement2.setInt(2, itemBarcode);
+            preparedStatement.setString(4, itemCategory);
+            //preparedStatement2.setString(1, category);
+            //preparedStatement2.setInt(2, itemBarcode);
             preparedStatement.executeUpdate();
-            preparedStatement2.executeUpdate();
+            //preparedStatement2.executeUpdate();
             MainViewController.updateAlertMessage("Registration successful");
         } catch (SQLException e) {
             MainViewController.updateWarningMessage("Possible duplicates");
@@ -100,10 +99,13 @@ public class BusinessLogic {
 
     /* METHOD FOR UPDATING THE ITEM TABLE */
     public void updateItem(String itemBarcode, String itemNo, String itemName, String itemCategory, String oldBarcode) {
-        String sql = "UPDATE Item, Category\n" +
-                "SET Item.itemBarcode = ?, Item.itemNo = ?, Item.itemName = ?, Category.category = ?\n" +
-                "WHERE Item.itemBarcode = Category.itemBarcode\n" +
-                "AND Item.itemBarcode = ?;";
+//        String sql = "UPDATE Item, Category\n" +
+//                "SET Item.itemBarcode = ?, Item.itemNo = ?, Item.itemName = ?, Category.category = ?\n" +
+//                "WHERE Item.itemBarcode = Category.itemBarcode\n" +
+//                "AND Item.itemBarcode = ?;";
+        String sql = "UPDATE Item\n" +
+                "SET Item.itemBarcode = ?, Item.itemNo = ?, Item.itemName = ?, Item.itemCategory = ?\n" +
+                "WHERE Item.itemBarcode = ?;";
 
         try {
 
@@ -147,14 +149,18 @@ public class BusinessLogic {
 
         String sql = "DELETE FROM Employee WHERE employeeBarcode=?";
         String sql2 = "DELETE FROM PhoneNumber WHERE employeeBarcode=?";
+        String sql3 = "DELETE FROM BorrowedItem WHERE employeeBarcode=?";
         try {
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setString(1, employeeBarcode);
             PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
             preparedStatement2.setString(1, employeeBarcode);
+            PreparedStatement preparedStatement3 = connectDB.preparedStatement(sql3);
+            preparedStatement3.setString(1, employeeBarcode);
 
             preparedStatement.executeUpdate();
             preparedStatement2.executeUpdate();
+            preparedStatement3.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             MainViewController.updateWarningMessage("Error while trying to delete employee");
@@ -165,16 +171,16 @@ public class BusinessLogic {
     /* METHOD FOR DELETING AN ITEM FROM THE DATABASE */
     public void deleteItem(String itemBarcode) {
         String sql = "DELETE FROM Item WHERE itemBarcode=?";
-        String sql2 = "DELETE FROM Category WHERE itemBarcode=?";
+//        String sql2 = "DELETE FROM Category WHERE itemBarcode=?";
 
         try {
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setString(1, itemBarcode);
-            PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
-            preparedStatement2.setString(1, itemBarcode);
+//            PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
+//            preparedStatement2.setString(1, itemBarcode);
 
             preparedStatement.executeUpdate();
-            preparedStatement2.executeUpdate();
+//            preparedStatement2.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -251,9 +257,10 @@ public class BusinessLogic {
     }
 
     /* METHOD FOR CHECKING IF THE ITEM IS ALREADY REGISTERED TAKEN */
-    public boolean searchItem(String itemBarcode) {
+    public boolean searchItemBarcode(String itemBarcode) {
         try {
-            String query = "SELECT itemBarcode FROM BorrowedItem WHERE itemBarcode =? AND timeReturned is null;";
+            String query = "SELECT itemBarcode FROM BorrowedItem " +
+                    "WHERE itemBarcode = ? AND timeReturned is null;";
 
             PreparedStatement preparedStatement = connectDB.preparedStatement(query);
             preparedStatement.setString(1, itemBarcode);
@@ -267,7 +274,7 @@ public class BusinessLogic {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in searchItem() from BusinessLogic class: " + e.getMessage());
+            System.out.println("Error in searchItemBarcode() from BusinessLogic class: " + e.getMessage());
         }
         return false;
     }
@@ -583,7 +590,7 @@ public class BusinessLogic {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error in getCategory() from BusinessLogic class: "  + e.getMessage());
+            System.out.println("Error in getItemCategory() from BusinessLogic class: "  + e.getMessage());
         }
         return observableList;
     }
@@ -676,9 +683,7 @@ public class BusinessLogic {
         ItemObj itemObj = new ItemObj();
 
         try {
-            String sql = "SELECT Item.itemBarcode, itemNo, itemName, category FROM Item\n" +
-                    "INNER JOIN Category ON\n" +
-                    "Item.itemBarcode = Category.itemBarcode\n"+
+            String sql = "SELECT Item.itemBarcode, itemNo, itemName, itemCategory FROM Item\n" +
                     "WHERE Item.itemBarcode = ?";
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
 
@@ -691,12 +696,12 @@ public class BusinessLogic {
                 String barcode = resultSet.getString("itemBarcode");
                 String number = resultSet.getString("itemNo");
                 String name = resultSet.getString("itemName");
-                String category = resultSet.getString("category");
+                String category = resultSet.getString("itemCategory");
 
                 itemObj.setItemBarcode(barcode);
                 itemObj.setItemNo(number);
                 itemObj.setItemName(name);
-                itemObj.setCategory(category);
+                itemObj.setItemCategory(category);
 
                 //observableList.add(employeeObj);
             }

@@ -172,7 +172,7 @@ public class TakeItemController {
 
         try {
                 if (businessLogic.checkItemBarcode(tfItemBarcode.getText())) {
-                    if (!businessLogic.searchItem(tfItemBarcode.getText())) {
+                    if (!businessLogic.searchItemBarcode(tfItemBarcode.getText())) {
                         if (!barcodeList.contains(tfItemBarcode.getText())) {//check for duplicates
 
                             populateTableView();
@@ -201,8 +201,8 @@ public class TakeItemController {
                             MainViewController.updateAlertMessage("You have already scanned this item");
                             tfItemBarcode.clear();
                         }
-                    } else if (businessLogic.searchItem(tfItemBarcode.getText())) {
-                        MainViewController.updateAlertMessage("Item has been already taken by another employee");
+                    } else if (businessLogic.searchItemBarcode(tfItemBarcode.getText())) {
+                        MainViewController.updateAlertMessage("Item has been already taken");
                         tfItemBarcode.setText(null);
                     }
                 } else if (!businessLogic.checkItemBarcode(tfItemBarcode.getText())) {
@@ -224,9 +224,7 @@ public class TakeItemController {
 
             try {
             /* SQL QUERY */
-                String sql = "SELECT itemNo, itemName, category FROM Item \n" +
-                        "INNER JOIN Category ON \n" +
-                        "Item.itemBarcode = Category.itemBarcode\n" +
+                String sql = "SELECT itemNo, itemName, itemCategory FROM Item \n" +
                         "WHERE Item.itemBarcode = ?";
 
             /* EXECUTION OF QUERY */
@@ -240,8 +238,8 @@ public class TakeItemController {
                 while ((result.next())) {
 
                     String itemNo = result.getString("itemNo");
-                    String itemCategory = result.getString("category");
                     String itemName = result.getString("itemName");
+                    String itemCategory = result.getString("itemCategory");
                     String place = placeCombo.getSelectionModel().getSelectedItem().toString(); // here we parse selected category into string
                     String placeReference = tfPlaceReference.getText();
                     TakeObj takeObj = new TakeObj(itemNo, itemCategory, itemName, place, placeReference);

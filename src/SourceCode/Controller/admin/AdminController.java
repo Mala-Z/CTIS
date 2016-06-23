@@ -5,10 +5,7 @@ import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
 import SourceCode.Controller.main.MainViewController;
-import SourceCode.Model.adminTableViewObjects.BorrowedItemObj;
-import SourceCode.Model.adminTableViewObjects.EmployeeObj;
-import SourceCode.Model.adminTableViewObjects.ItemObj;
-import SourceCode.Model.adminTableViewObjects.UsedProductObj;
+import SourceCode.Model.adminTableViewObjects.*;
 import SourceCode.Model.dbTablesObjects.Employee;
 import SourceCode.Model.dbTablesObjects.Item;
 import SourceCode.Model.userTableViewObjects.SearchObj;
@@ -40,6 +37,7 @@ public class AdminController {
     private ObservableList itemTabData = FXCollections.observableArrayList();
     private ObservableList borrowedItemTabData = FXCollections.observableArrayList();
     private ObservableList usedProductTabData = FXCollections.observableArrayList();
+    private ObservableList categoryTabData = FXCollections.observableArrayList();
 
     private ObservableList searchData = FXCollections.observableArrayList();
 
@@ -63,6 +61,8 @@ public class AdminController {
     TableView borrowedItemTableView;
     @FXML
     TableView usedProductTableView;
+    @FXML
+    TableView categoryTableView;
     //Employee columns
     @FXML
     TableColumn employeeBarcodeColumn;
@@ -105,7 +105,8 @@ public class AdminController {
     TableColumn usedProductTimeTakenColumn;
     @FXML
     TableColumn usedProductQuantityColumn;
-    String string;
+    @FXML
+    TableColumn categoryColumn;
     //UpdateEmployeeController updateEmployeeController = new UpdateEmployeeController();
     public ArrayList<EmployeeObj> employeeObjArrayList = new ArrayList<>();
     private RunView runView;
@@ -121,12 +122,6 @@ public class AdminController {
         }
         return adminController;
     }
-
-    public String toString()
-    {
-        return string;
-    }
-
 
     @FXML
     private void btnCreateEmployee() throws IOException {
@@ -204,6 +199,7 @@ public class AdminController {
         populateItem();
         populateBorrowedItem();
         populateUsedProduct();
+        populateCategory();
 
     }
     //stores selected row to file
@@ -287,9 +283,7 @@ public class AdminController {
 
             try {
             /* SQL QUERY */
-                String sql = "SELECT Item.itemBarcode, Item.itemNo, Item.itemName, Category.category FROM Item\n" +
-                        "INNER JOIN Category ON\n" +
-                        "Item.itemBarcode = Category.itemBarcode\n" +
+                String sql = "SELECT Item.itemBarcode, Item.itemNo, Item.itemName, Item.itemCategory FROM Item\n" +
                         "ORDER BY itemNo ASC;";
 
             /* EXECUTION OF QUERY */
@@ -302,8 +296,8 @@ public class AdminController {
                     String itembarcode = result.getString("itemBarcode");
                     String itemNo = result.getString("itemNo");
                     String itemName = result.getString("itemName");
-                    String category = result.getString("category");
-                    ItemObj itemObj = new ItemObj(itembarcode, itemNo, itemName, category);
+                    String itemCategory = result.getString("itemCategory");
+                    ItemObj itemObj = new ItemObj(itembarcode, itemNo, itemName, itemCategory);
 
                     itemTabData.addAll(itemObj);
                 }
@@ -316,7 +310,7 @@ public class AdminController {
             itemBarcodeColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemBarcode"));
             itemNumberColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemNo"));
             itemNameColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemName"));
-            itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("category"));
+            itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemCategory"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
             itemTableView.getItems().addAll(itemTabData);
@@ -328,11 +322,9 @@ public class AdminController {
 
         try {
             /* SQL QUERY */
-            String sql = "SELECT employeeName, itemNo, category, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
+            String sql = "SELECT employeeName, itemNo, itemCategory, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
                     "INNER JOIN Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
-                    "INNER JOIN Category ON\n" +
-                    "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
                     "ORDER BY timeTaken DESC;";
@@ -345,7 +337,7 @@ public class AdminController {
             while ((result.next())) {
 
                 String employeeName = result.getString("employeeName");
-                String itemCategory = result.getString("category");
+                String itemCategory = result.getString("itemCategory");
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
@@ -357,7 +349,7 @@ public class AdminController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Exception in populateBorrowedItem() from TakeItemController class: " + e.getMessage());
+            System.out.println("Exception in populateBorrowedItem() from AdminController class: " + e.getMessage());
         }
 
         /* SETTING VALUES FROM OBJECT INTO COLUMNS */
@@ -1179,6 +1171,40 @@ public class AdminController {
         usedProductTableView.getItems().setAll(searchData);
         //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
 
+    }
+
+    @FXML
+    private void populateCategory() {
+
+        try {
+            /* SQL QUERY */
+            String sql = "SELECT * FROM Category;";
+
+
+            /* EXECUTION OF QUERY */
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+
+            ResultSet result = preparedStatement.executeQuery();
+
+            while ((result.next())) {
+
+                String category = result.getString("category");
+
+                CategoryObj categoryObj = new CategoryObj(category);
+
+                categoryTabData.addAll(categoryObj);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Exception in populateUsedProduct() from AdminController class: " + e.getMessage());
+        }
+
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+        categoryColumn.setCellValueFactory(new PropertyValueFactory<CategoryObj, String>("category"));
+
+
+        /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
+        categoryTableView.getItems().addAll(categoryTabData);
     }
 }
 

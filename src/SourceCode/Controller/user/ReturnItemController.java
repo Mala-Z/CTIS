@@ -84,7 +84,7 @@ public class ReturnItemController {
     private void checkItemBarcode() {
         try {
             if (businessLogic.checkItemBarcode(tfItemBarcode.getText())) { //if barcode exists
-                if (businessLogic.searchItem(tfItemBarcode.getText())) { //if item was taken
+                if (businessLogic.searchItemBarcode(tfItemBarcode.getText())) { //if item was taken
                     // check if we have barcodes scanned twice
                     if (!barcodeList.contains(tfItemBarcode.getText())) {
 
@@ -110,7 +110,7 @@ public class ReturnItemController {
                         MainViewController.updateAlertMessage("You have already scanned this item");
                     }
 
-                } else if (!businessLogic.searchItem(tfItemBarcode.getText())) { //item not taken
+                } else if (!businessLogic.searchItemBarcode(tfItemBarcode.getText())) { //item not taken
                     MainViewController.updateAlertMessage("Item was not taken by any employee");
                     tfItemBarcode.setText(null);
                 }
@@ -128,13 +128,13 @@ public class ReturnItemController {
 
             try {
             /* SQL QUERY */
-                String sql = " SELECT employeeName, itemName, place, timeTaken, category FROM BorrowedItem\n" +
+                String sql = " SELECT employeeName, itemName, place, timeTaken, itemCategory FROM BorrowedItem\n" +
                         "INNER JOIN Employee ON\n" +
                         "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                         "INNER JOIN Item ON\n" +
                         "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
-                        "INNER JOIN Category ON\n" +
-                        "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
+//                        "INNER JOIN Category ON\n" +
+//                        "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
                         "INNER JOIN Place ON\n" +
                         "BorrowedItem.id = Place.borrowedItemID\n" +
                         "WHERE BorrowedItem.itemBarcode = ? and timeReturned IS NULL;";
@@ -155,7 +155,7 @@ public class ReturnItemController {
 //                BorrowedItem borrowedItem = new BorrowedItem(0, 0, 0, result.getString("place"), result.getString("timeTaken"), null);
 
                     String employeeName = result.getString("employeeName");
-                    String itemCategory = result.getString("category");
+                    String itemCategory = result.getString("itemCategory");
                     String itemName = result.getString("itemName");
                     String place = result.getString("place");
                     String timeTaken = result.getString("timeTaken");

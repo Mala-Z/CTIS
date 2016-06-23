@@ -5,7 +5,6 @@ import SourceCode.BusinessLogic.ConnectDB;
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
 import SourceCode.Controller.main.MainViewController;
-import SourceCode.Model.categories.Category;
 import SourceCode.Model.userTableViewObjects.SearchObj;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +21,6 @@ public class SearchItemController {
     ConnectDB connectDB = Factory.connectDB;
 
     private ObservableList searchData = FXCollections.observableArrayList();
-    private ObservableList<String> categoryList = FXCollections.observableArrayList(Category.getCategories());
 
     @FXML
     Button btnSearch;
@@ -58,7 +56,7 @@ public class SearchItemController {
     @FXML
     private void initialize(){
 
-        comboBox.getItems().addAll(categoryList);
+        comboBox.getItems().addAll(businessLogic.getCategory());
     }
 
     @FXML
@@ -97,32 +95,40 @@ public class SearchItemController {
             if (businessLogic.checkItemBarcode(tfSearch.getText()) || businessLogic.checkItemNo(tfSearch.getText())
                     || businessLogic.checkEmployeeName(tfSearch.getText())|| businessLogic.checkEmployeeBarcode(tfSearch.getText())) {
 
-
-
                 //checks if it has been taken
-                if (businessLogic.searchItem(tfSearch.getText())||businessLogic.searchItemByNumber(tfSearch.getText())
-                        ||businessLogic.searchEmployeeByName(tfSearch.getText())||businessLogic.searchEmployeeByBarcode(tfSearch.getText())) {
-
-
+                if (businessLogic.searchItemBarcode(tfSearch.getText())) {
 
                     searchByItemBarcode();
+                    tfSearch.clear();
+
+                }
+                else if (businessLogic.searchItemByNumber(tfSearch.getText())){
                     searchByItemNumber();
+                    tfSearch.clear();
+
+                }
+                else if(businessLogic.searchEmployeeByName(tfSearch.getText())) {
+
                     searchByEmployeeName();
+                    tfSearch.clear();
+
+                }
+                else if (businessLogic.searchEmployeeByBarcode(tfSearch.getText())){
                     searchByEmployeeBarcode();
                     tfSearch.clear();
 
-
-                } else {
+                }
+                else {
                     MainViewController.updateAlertMessage("Item(s) not taken");
                     tfSearch.clear();
                 }
             }else {
-                MainViewController.updateAlertMessage("Please input the correct data");
+                MainViewController.updateAlertMessage("Please input the correct value");
                 tfSearch.clear();
             }
         } catch (Exception e) {
             MainViewController.updateWarningMessage("Error");
-            System.out.println("Exception in checkTextField()/itemNumber() from SearchItemController class:" + e.getMessage());
+            System.out.println("Exception in checkTextField() from SearchItemController class:" + e.getMessage());
         }
     }
 
@@ -142,13 +148,11 @@ public class SearchItemController {
 
             try {
             /* SQL QUERY */
-                String sql = "SELECT employeeName, phoneNumber, itemName, place, placeReference, timeTaken, category FROM BorrowedItem\n" +
+                String sql = "SELECT employeeName, phoneNumber, itemName, place, placeReference, timeTaken, itemCategory FROM BorrowedItem\n" +
                         "INNER JOIN Employee ON\n" +
                         "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                         "INNER JOIN PhoneNumber ON\n" +
                         "BorrowedItem.employeeBarcode = PhoneNumber.employeeBarcode\n" +
-                        "INNER JOIN Category ON\n" +
-                        "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
                         "INNER JOIN Item ON\n" +
                         "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
                         "INNER JOIN Place ON\n" +
@@ -169,14 +173,14 @@ public class SearchItemController {
 
                     String employeeName = result.getString("employeeName");
                     String phoneNumber = result.getString("phoneNumber");
-                    String itemCategory = result.getString("category");
+                    String itemCategory = result.getString("itemCategory");
                     String itemName = result.getString("itemName");
                     String place = result.getString("place");
                     String placeReference = result.getString("placeReference");
                     String timeTaken = result.getString("timeTaken");
                     SearchObj searchObj = new SearchObj(employeeName, phoneNumber, itemCategory,  itemName, place, placeReference, timeTaken);
 
-                    searchData.setAll(searchObj);
+                    searchData.addAll(searchObj);
 
                 }
             } catch (Exception e) {
@@ -195,7 +199,7 @@ public class SearchItemController {
             timeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
-            tableView.getItems().addAll(searchData);
+            tableView.getItems().setAll(searchData);
             searchData.clear();  //i did this because it would duplicate the last element if the item was returned
 
         }
@@ -204,13 +208,11 @@ public class SearchItemController {
 
         try {
             /* SQL QUERY */
-            String sql = "SELECT employeeName, phoneNumber, itemName, place, placeReference, timeTaken, category FROM BorrowedItem\n" +
+            String sql = "SELECT employeeName, phoneNumber, itemName, place, placeReference, timeTaken, itemCategory FROM BorrowedItem\n" +
                     "INNER JOIN Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN PhoneNumber ON\n" +
                     "BorrowedItem.employeeBarcode = PhoneNumber.employeeBarcode\n" +
-                    "INNER JOIN Category ON\n" +
-                    "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
                     "INNER JOIN Place ON\n" +
@@ -228,14 +230,14 @@ public class SearchItemController {
 
                 String employeeName = result.getString("employeeName");
                 String phoneNumber = result.getString("phoneNumber");
-                String itemCategory = result.getString("category");
+                String itemCategory = result.getString("itemCategory");
                 String itemName = result.getString("itemName");
                 String place = result.getString("place");
                 String placeReference = result.getString("placeReference");
                 String timeTaken = result.getString("timeTaken");
                 SearchObj searchObj = new SearchObj(employeeName, phoneNumber, itemCategory,  itemName, place, placeReference, timeTaken);
 
-                searchData.setAll(searchObj);
+                searchData.addAll(searchObj);
 
             }
         } catch (Exception e) {
@@ -254,81 +256,19 @@ public class SearchItemController {
         timeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
-        tableView.getItems().addAll(searchData);
+        tableView.getItems().setAll(searchData);
         searchData.clear();  //i did this because it would duplicate the last element if the item was returned
 
     }
-    public void searchByComboBox() {
-
-
-            try {
-            /* SQL QUERY */
-                String sql = "SELECT employeeName, phoneNumber, itemName, place, placeReference, timeTaken, category FROM BorrowedItem\n" +
-                        "INNER JOIN Employee ON\n" +
-                        "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
-                        "INNER JOIN PhoneNumber ON\n" +
-                        "BorrowedItem.employeeBarcode = PhoneNumber.employeeBarcode\n" +
-                        "INNER JOIN Category ON\n" +
-                        "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
-                        "INNER JOIN Item ON\n" +
-                        "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
-                        "INNER JOIN Place ON\n" +
-                        "BorrowedItem.id = Place.borrowedItemID\n" +
-                        "WHERE Category.category = ? and timeReturned IS NULL;";
-
-            /* EXECUTION OF QUERY */
-                String inputCategory = comboBox.getSelectionModel().getSelectedItem().toString();
-                PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
-                preparedStatement.setString(1, inputCategory);
-
-                ResultSet result = preparedStatement.executeQuery();
-
-                while ((result.next())) {
-
-                    String employeeName = result.getString("employeeName");
-                    String phoneNumber = result.getString("phoneNumber");
-                    String itemCategory = result.getString("category");
-                    String itemName = result.getString("itemName");
-                    String place = result.getString("place");
-                    String placeReference = result.getString("placeReference");
-                    String timeTaken = result.getString("timeTaken");
-                    SearchObj searchObj = new SearchObj(employeeName, phoneNumber, itemCategory, itemName, place, placeReference, timeTaken);
-
-                    searchData.addAll(searchObj);
-
-                }
-            } catch (Exception e) {
-                MainViewController.updateWarningMessage("Error");
-                e.printStackTrace();
-                System.out.println("Exception in searchByComboBox() from SearchItemController class: " + e.getMessage());
-            }
-
-        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
-            employeeNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("employeeName"));
-            telephoneNoColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("phoneNo"));
-            itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemCategory"));
-            itemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
-            placeColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("place"));
-            placeReferenceColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("placeReference"));
-            timeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
-
-        /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
-            tableView.getItems().setAll(searchData);
-            searchData.clear();  //i did this because it would duplicate the last element if the item was returned
-
-
-        }
     public void searchByEmployeeName() {
 
         try {
             /* SQL QUERY */
-            String sql = "SELECT employeeName, phoneNumber, itemName, place, placeReference, timeTaken, category FROM BorrowedItem\n" +
+            String sql = "SELECT employeeName, phoneNumber, itemName, place, placeReference, timeTaken, itemCategory FROM BorrowedItem\n" +
                     "INNER JOIN Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN PhoneNumber ON\n" +
                     "BorrowedItem.employeeBarcode = PhoneNumber.employeeBarcode\n" +
-                    "INNER JOIN Category ON\n" +
-                    "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
                     "INNER JOIN Place ON\n" +
@@ -347,7 +287,7 @@ public class SearchItemController {
 
                 String employeeName = result.getString("employeeName");
                 String phoneNumber = result.getString("phoneNumber");
-                String itemCategory = result.getString("category");
+                String itemCategory = result.getString("itemCategory");
                 String itemName = result.getString("itemName");
                 String place = result.getString("place");
                 String placeReference = result.getString("placeReference");
@@ -381,13 +321,11 @@ public class SearchItemController {
 
         try {
             /* SQL QUERY */
-            String sql = "SELECT employeeName, phoneNumber, itemName, place, placeReference, timeTaken, category FROM BorrowedItem\n" +
+            String sql = "SELECT employeeName, phoneNumber, itemName, place, placeReference, timeTaken, itemCategory FROM BorrowedItem\n" +
                     "INNER JOIN Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN PhoneNumber ON\n" +
                     "BorrowedItem.employeeBarcode = PhoneNumber.employeeBarcode\n" +
-                    "INNER JOIN Category ON\n" +
-                    "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
                     "INNER JOIN Place ON\n" +
@@ -406,7 +344,7 @@ public class SearchItemController {
 
                 String employeeName = result.getString("employeeName");
                 String phoneNumber = result.getString("phoneNumber");
-                String itemCategory = result.getString("category");
+                String itemCategory = result.getString("itemCategory");
                 String itemName = result.getString("itemName");
                 String place = result.getString("place");
                 String placeReference = result.getString("placeReference");
@@ -434,6 +372,64 @@ public class SearchItemController {
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
         tableView.getItems().setAll(searchData);
         searchData.clear();  //i did this because it would duplicate the last element if the item was returned
+
+    }
+    public void searchByComboBox() {
+
+
+        try {
+            /* SQL QUERY */
+            String sql = "SELECT employeeName, phoneNumber, itemName, place, placeReference, timeTaken, itemCategory FROM BorrowedItem\n" +
+                    "INNER JOIN Employee ON\n" +
+                    "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
+                    "INNER JOIN PhoneNumber ON\n" +
+                    "BorrowedItem.employeeBarcode = PhoneNumber.employeeBarcode\n" +
+                    "INNER JOIN Item ON\n" +
+                    "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
+                    "INNER JOIN Place ON\n" +
+                    "BorrowedItem.id = Place.borrowedItemID\n" +
+                    "WHERE Item.itemCategory = ? and timeReturned IS NULL;";
+
+            /* EXECUTION OF QUERY */
+            String inputCategory = comboBox.getSelectionModel().getSelectedItem().toString();
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            preparedStatement.setString(1, inputCategory);
+
+            ResultSet result = preparedStatement.executeQuery();
+
+            while ((result.next())) {
+
+                String employeeName = result.getString("employeeName");
+                String phoneNumber = result.getString("phoneNumber");
+                String itemCategory = result.getString("itemCategory");
+                String itemName = result.getString("itemName");
+                String place = result.getString("place");
+                String placeReference = result.getString("placeReference");
+                String timeTaken = result.getString("timeTaken");
+                SearchObj searchObj = new SearchObj(employeeName, phoneNumber, itemCategory, itemName, place, placeReference, timeTaken);
+
+                searchData.addAll(searchObj);
+
+            }
+        } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
+            e.printStackTrace();
+            System.out.println("Exception in searchByComboBox() from SearchItemController class: " + e.getMessage());
+        }
+
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+        employeeNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("employeeName"));
+        telephoneNoColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("phoneNo"));
+        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemCategory"));
+        itemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
+        placeColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("place"));
+        placeReferenceColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("placeReference"));
+        timeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
+
+        /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
+        tableView.getItems().setAll(searchData);
+        searchData.clear();  //i did this because it would duplicate the last element if the item was returned
+
 
     }
 

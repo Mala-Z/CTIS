@@ -4,16 +4,16 @@ public class ItemObj {
     private String itemBarcode;
     private String itemNo;
     private String itemName;
-    private String category;
+    private String itemCategory;
 
     public ItemObj() {
     }
 
-    public ItemObj(String itemBarcode, String itemNo, String itemName, String category) {
+    public ItemObj(String itemBarcode, String itemNo, String itemName, String itemCategory) {
         this.itemBarcode = itemBarcode;
         this.itemNo = itemNo;
         this.itemName = itemName;
-        this.category = category;
+        this.itemCategory = itemCategory;
     }
 
     public String getItemBarcode() {
@@ -40,11 +40,11 @@ public class ItemObj {
         this.itemName = itemName;
     }
 
-    public String getCategory() {
-        return category;
+    public String getItemCategory() {
+        return itemCategory;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setItemCategory(String itemCategory) {
+        this.itemCategory = itemCategory;
     }
 }

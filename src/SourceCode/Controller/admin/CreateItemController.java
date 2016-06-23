@@ -3,7 +3,6 @@ package SourceCode.Controller.admin;
 import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.Controller.RunView;
 import SourceCode.Controller.main.MainViewController;
-import SourceCode.Model.categories.Category;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,8 +13,6 @@ import java.io.IOException;
 
 public class CreateItemController {
     BusinessLogic businessLogic = new BusinessLogic();
-
-    ObservableList<String> categoryList = FXCollections.observableArrayList(Category.getCategories());
 
     @FXML
     private Button btnSubmit;
@@ -41,7 +38,7 @@ public class CreateItemController {
     private void initialize() {
         btnSubmit.defaultButtonProperty().bind(btnSubmit.focusedProperty());//to allow enter key to fire the button
 
-        categoryCombo.setItems(categoryList);
+        categoryCombo.setItems(businessLogic.getCategory());
         }
     @FXML private void checkItemBarcode(){
         if (tfItemBarcode.getLength()>0){

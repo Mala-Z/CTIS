@@ -2,7 +2,6 @@ package SourceCode.Controller.admin;
 
 import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.Controller.main.MainViewController;
-import SourceCode.Model.categories.Category;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -61,8 +60,9 @@ public class UpdateItemController {
         tfItemBarcode.setText(businessLogic.getItem(readItemBarcode()).getItemBarcode());
         tfItemNo.setText(businessLogic.getItem(readItemBarcode()).getItemNo());
         tfItemName.setText(businessLogic.getItem(readItemBarcode()).getItemName());
-        categoryCombo.getItems().setAll(Category.getCategories());
-        categoryCombo.getSelectionModel().select(businessLogic.getItem(readItemBarcode()).getCategory());
+//        categoryCombo.getItems().setAll(Category.getCategories());
+        categoryCombo.getItems().setAll(businessLogic.getCategory());
+        categoryCombo.getSelectionModel().select(businessLogic.getItem(readItemBarcode()).getItemCategory());
 
 
         btnSubmit.defaultButtonProperty().bind(btnSubmit.focusedProperty());//to allow enter key to fire the button
