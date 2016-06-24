@@ -2,10 +2,10 @@ package SourceCode.Model.userTableViewObjects;
 
 public class ConsumablesObj {
     private String itemName;
-    private String quantity;
+    private int quantity;
     private String timeTaken;
 
-    public ConsumablesObj(String itemName, String quantity, String timeTaken) {
+    public ConsumablesObj(String itemName, int quantity, String timeTaken) {
         this.itemName = itemName;
         this.quantity = quantity;
         this.timeTaken = timeTaken;
@@ -19,11 +19,11 @@ public class ConsumablesObj {
         this.itemName = itemName;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

@@ -134,6 +134,10 @@ public class AdminController {
     private void btnCreateItem() throws IOException {
         runView.showCreateItem();
     }
+    @FXML
+    private void btnCreateCategory() throws IOException {
+        runView.showCreateCategory();
+    }
 
     @FXML
     private void btnLogout() throws IOException {
@@ -188,7 +192,8 @@ public class AdminController {
 
     @FXML
     private void btnUpdateAction() throws IOException {
-        if (employeeTableView.getSelectionModel().getSelectedItem()!=null || itemTableView.getSelectionModel().getSelectedItem()!=null) {
+        if (employeeTableView.getSelectionModel().getSelectedItem()!=null || itemTableView.getSelectionModel().getSelectedItem()!=null
+                ||categoryTableView.getSelectionModel().getSelectedItem() !=null) {
             if (employeeTab.isSelected()) {
                 if (employeeTableView.getSelectionModel().getSelectedItem() != null) {
                     runView.showUpdateEmployee();
@@ -197,6 +202,7 @@ public class AdminController {
                 if (itemTableView.getSelectionModel().getSelectedItem() != null) {
                     runView.showUpdateItem();
                 }
+
             } else {
                 MainViewController.updateAlertMessage("Please select a row to update");
             }
@@ -211,9 +217,9 @@ public class AdminController {
 
         populateEmployee();
         populateItem();
+        populateCategory();
         populateBorrowedItem();
         populateUsedProduct();
-        populateCategory();
 
     }
     //stores selected row to file
@@ -231,7 +237,6 @@ public class AdminController {
         }catch (NullPointerException e){
             e.printStackTrace();
         }
-
     }
 
     //stores selected row to file
@@ -245,6 +250,22 @@ public class AdminController {
         PrintWriter writer = new PrintWriter("src/Resources/itemBarcode.txt", "UTF-8");
         writer.println(itemBarcode);
         writer.close();
+
+    }
+    @FXML
+    public void categoryTableViewAction() throws UnsupportedEncodingException, FileNotFoundException, NullPointerException, InvocationTargetException{
+        try {
+            String category = null;
+            ArrayList<CategoryObj> list = new ArrayList<>();
+            CategoryObj categoryObj = (CategoryObj) categoryTableView.getSelectionModel().getSelectedItem();
+            list.add(categoryObj);
+            category = list.get(0).getCategory();
+            PrintWriter writer = new PrintWriter("src/Resources/category.txt", "UTF-8");///Users/Cristian/Desktop/CTIS/
+            writer.println(category);
+            writer.close();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -332,6 +353,40 @@ public class AdminController {
     }
 
     @FXML
+    private void populateCategory() {
+
+        try {
+            /* SQL QUERY */
+            String sql = "SELECT * FROM Category;";
+
+
+            /* EXECUTION OF QUERY */
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+
+            ResultSet result = preparedStatement.executeQuery();
+
+            while ((result.next())) {
+
+                String category = result.getString("category");
+
+                CategoryObj categoryObj = new CategoryObj(category);
+
+                categoryTabData.addAll(categoryObj);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Exception in populateUsedProduct() from AdminController class: " + e.getMessage());
+        }
+
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+        categoryColumn.setCellValueFactory(new PropertyValueFactory<CategoryObj, String>("category"));
+
+
+        /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
+        categoryTableView.getItems().addAll(categoryTabData);
+    }
+
+    @FXML
     private void populateBorrowedItem() {
 
         try {
@@ -401,7 +456,7 @@ public class AdminController {
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
-                String quantityTaken = result.getString("quantityTaken");
+                int quantityTaken = result.getInt("quantityTaken");
                 UsedProductObj usedProductObj =
                         new UsedProductObj(employeeName, itemNumber, itemName, timeTaken, quantityTaken);
 
@@ -1036,32 +1091,49 @@ public class AdminController {
 
     @FXML
     private void searchByEmployeeNameInUsed() {
+        int total = 0;
 
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken FROM UsedProduct\n" +
-                    "INNER JOIN  Employee ON\n" +
+//            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken FROM UsedProduct\n" +
+//                    "INNER JOIN  Employee ON\n" +
+//                    "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
+//                    "INNER JOIN Item ON\n" +
+//                    "UsedProduct.itemBarcode = Item.itemBarcode\n" +
+//                    "WHERE Employee.employeeName = ?;";
+            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken, SUM(quantityTaken) as Total FROM UsedProduct\n" +
+            "INNER JOIN  Employee ON\n" +
                     "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "UsedProduct.itemBarcode = Item.itemBarcode\n" +
-                    "WHERE Employee.employeeName = ?;";
+                    "WHERE Employee.employeeName = ?\n" +
+                    "AND (timeTaken BETWEEN curdate()-INTERVAL 30 DAY AND CURDATE()+1)\n" +
+                    "GROUP BY itemNo;";
 
             /* EXECUTION OF QUERY */
-            String inputBarcode = tfSearch.getText();
+            String employeeName = tfSearch.getText();
+
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
-            preparedStatement.setString(1, inputBarcode);
+            preparedStatement.setString(1, employeeName);
+//            String itemNo = preparedStatement.
+//                    preparedStatement.setString(2, itemNo);
+//            PreparedStatement totalStatement = connectDB.preparedStatement("select sum(total) from quantityTaken where itemBarcode =?");
+//            ResultSet resultSet = totalStatement.executeQuery();
+//            resultSet.next();
+//            preparedStatement.setString(1, employeeName);
+//            String sum = resultSet.getString(1);
 
             ResultSet result = preparedStatement.executeQuery();
 
             while ((result.next())) {
 
-                String employeeName = result.getString("employeeName");
+                String name = result.getString("employeeName");
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
-                String quantityTaken = result.getString("quantityTaken");
-                UsedProductObj usedProductObj = new UsedProductObj(employeeName, itemNumber, itemName,  timeTaken, quantityTaken);
+                int quantityTaken = result.getInt("Total");
+                UsedProductObj usedProductObj = new UsedProductObj(name, itemNumber, itemName,  timeTaken, quantityTaken);
 
                 searchData.addAll(usedProductObj);
 
@@ -1087,16 +1159,24 @@ public class AdminController {
 
     @FXML
     private void searchByItemNumberInUsed() {
+        int totalQuantityTaken = 0;
 
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken FROM UsedProduct\n" +
+//            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken FROM UsedProduct\n" +
+//                    "INNER JOIN  Employee ON\n" +
+//                    "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
+//                    "INNER JOIN Item ON\n" +
+//                    "UsedProduct.itemBarcode = Item.itemBarcode\n" +
+//                    "WHERE Item.itemNo = ?;";
+            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken, SUM(quantityTaken) AS total FROM UsedProduct\n" +
                     "INNER JOIN  Employee ON\n" +
                     "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "UsedProduct.itemBarcode = Item.itemBarcode\n" +
-                    "WHERE Item.itemNo = ?;";
+                    "WHERE Item.itemNo = ?\n" +
+                    "GROUP BY itemNo;";
 
             /* EXECUTION OF QUERY */
             String inputBarcode = tfSearch.getText();
@@ -1105,18 +1185,26 @@ public class AdminController {
 
             ResultSet result = preparedStatement.executeQuery();
 
-            while ((result.next())) {
+//            while (result.next()){
+//                int quantityTaken = result.getInt("quantityTaken");
+//                totalQuantityTaken = quantityTaken + totalQuantityTaken;
+//                System.out.println(totalQuantityTaken);
+//            }
+
+            if (result.next()) {
 
                 String employeeName = result.getString("employeeName");
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
-                String quantityTaken = result.getString("quantityTaken");
+                int quantityTaken = result.getInt("total");
                 UsedProductObj usedProductObj = new UsedProductObj(employeeName, itemNumber, itemName,  timeTaken, quantityTaken);
 
                 searchData.addAll(usedProductObj);
 
             }
+
+
         } catch (Exception e) {
             MainViewController.updateWarningMessage("Error");
             e.printStackTrace();
@@ -1134,6 +1222,40 @@ public class AdminController {
         usedProductTableView.getItems().setAll(searchData);
         //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
 
+    }
+    private int countQuantity(){
+
+
+        int totalQuantityTaken = 0;
+
+        try {
+
+            /* SQL QUERY */
+            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken FROM UsedProduct\n" +
+                    "INNER JOIN  Employee ON\n" +
+                    "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
+                    "INNER JOIN Item ON\n" +
+                    "UsedProduct.itemBarcode = Item.itemBarcode\n" +
+                    "WHERE Item.itemNo = ?;";
+
+            /* EXECUTION OF QUERY */
+            String employeeName = tfSearch.getText();
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            preparedStatement.setString(1, employeeName);
+
+            ResultSet result = preparedStatement.executeQuery();
+
+            while (result.next()){
+                int quantityTaken = result.getInt("quantityTaken");
+                totalQuantityTaken = quantityTaken + totalQuantityTaken;
+                System.out.println(totalQuantityTaken);
+            }
+        } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
+            e.printStackTrace();
+            System.out.println("Exception in countQuantity() from AdminController class: " + e.getMessage());
+        }
+        return totalQuantityTaken;
     }
 
     @FXML
@@ -1162,7 +1284,7 @@ public class AdminController {
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
-                String quantityTaken = result.getString("quantityTaken");
+                int quantityTaken = result.getInt("quantityTaken");
                 UsedProductObj usedProductObj = new UsedProductObj(employeeName, itemNumber, itemName,  timeTaken, quantityTaken);
 
                 searchData.addAll(usedProductObj);
@@ -1186,42 +1308,13 @@ public class AdminController {
         //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
 
     }
-
-    @FXML
-    private void populateCategory() {
-
-        try {
-            /* SQL QUERY */
-            String sql = "SELECT * FROM Category;";
-
-
-            /* EXECUTION OF QUERY */
-            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
-
-            ResultSet result = preparedStatement.executeQuery();
-
-            while ((result.next())) {
-
-                String category = result.getString("category");
-
-                CategoryObj categoryObj = new CategoryObj(category);
-
-                categoryTabData.addAll(categoryObj);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Exception in populateUsedProduct() from AdminController class: " + e.getMessage());
-        }
-
-        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
-        categoryColumn.setCellValueFactory(new PropertyValueFactory<CategoryObj, String>("category"));
-
-
-        /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
-        categoryTableView.getItems().addAll(categoryTabData);
-    }
 }
-
+/*
+use sql7124928;
+SELECT itemBarcode, SUM(quantityTaken) AS Total
+FROM UsedProduct WHERE employeeBarcode = '1111'
+GROUP BY itemBarcode;
+ */
 
 
 

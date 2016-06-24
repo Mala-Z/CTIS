@@ -168,36 +168,52 @@ public class ConsumablesController {
 
     @FXML
     private void checkQuantity(){
+        if (isInteger(tfQuantity.getText())) {
 
-        try{
-            populateTableView();
-            //attributes for writeTakeToDB object, so we can insert the data in db
-            String employeeBarcodeString = firstEmployeeBarcode.get(0);
-            String itemBarcodeString = tfItemBarcode.getText();
-            java.util.Date date = new java.util.Date();
-            Timestamp timeStamp = new Timestamp(date.getTime());
-            String timeTaken = timeStamp.toString();
-            String quantity = tfQuantity.getText();
+            try {
 
-            WriteConsumablesToDB writeConsumablesToDB = new WriteConsumablesToDB(employeeBarcodeString, itemBarcodeString, quantity, timeTaken);
+                populateTableView();
+                //attributes for writeTakeToDB object, so we can insert the data in db
+                String employeeBarcodeString = firstEmployeeBarcode.get(0);
+                String itemBarcodeString = tfItemBarcode.getText();
+                java.util.Date date = new java.util.Date();
+                Timestamp timeStamp = new Timestamp(date.getTime());
+                String timeTaken = timeStamp.toString();
+                int quantity = Integer.parseInt(tfQuantity.getText());
+
+                WriteConsumablesToDB writeConsumablesToDB = new WriteConsumablesToDB(employeeBarcodeString, itemBarcodeString, quantity, timeTaken);
 
 
-            consumablesList.add(writeConsumablesToDB);// add data to list
-            //System.out.println(takeItemList.toString());
+                consumablesList.add(writeConsumablesToDB);// add data to list
+                //System.out.println(takeItemList.toString());
 
-            //add barcodes to list and after check for barcodes scanned twice
-            tfItemBarcode.setFont(new Font("System", 13));
-            tfItemBarcode.setStyle("-fx-background-color:  white;");
-            barcodeList.add(tfItemBarcode.getText());
-            tfItemBarcode.requestFocus();
-            tfItemBarcode.clear();
-            tfQuantity.clear();
+                //add barcodes to list and after check for barcodes scanned twice
+                tfItemBarcode.setFont(new Font("System", 13));
+                tfItemBarcode.setStyle("-fx-background-color:  white;");
+                barcodeList.add(tfItemBarcode.getText());
+                tfItemBarcode.requestFocus();
+                tfItemBarcode.clear();
+                tfQuantity.clear();
 
-            }catch (Exception e){
+        }catch (Exception e){
             MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in checkQuantity() from ConsumablesController class: " + e.getMessage());
+            }
+        }else {
+            MainViewController.updateWarningMessage("Please insert a number");
+            tfQuantity.clear();
         }
-
+    }
+    public static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch(NumberFormatException e) {
+            return false;
+        } catch(NullPointerException e) {
+            return false;
+        }
+        // only got here if we didn't return false
+        return true;
     }
 
     private void populateTableView() {
@@ -205,7 +221,8 @@ public class ConsumablesController {
         try {
             /* SQL QUERY */
             String sql = " SELECT itemName FROM Item \n" +
-                    "WHERE Item.itemBarcode = ?";
+                    "WHERE Item.itemBarcode = ? \n";
+
 
 
             /* EXECUTION OF QUERY */
@@ -216,9 +233,10 @@ public class ConsumablesController {
 
             ResultSet result = preparedStatement.executeQuery();
 
+
             while ((result.next())) {
                 String itemName = result.getString("itemName");
-                String quantity = tfQuantity.getText();
+                int quantity = Integer.parseInt(tfQuantity.getText());
                 java.util.Date date = new java.util.Date();
                 Timestamp timeStamp = new Timestamp(date.getTime());
                 String timeTaken = timeStamp.toString();
@@ -242,5 +260,6 @@ public class ConsumablesController {
 
         tableView.getItems().addAll(consumablesItemData);
     }
+
 
 }

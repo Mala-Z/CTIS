@@ -63,7 +63,7 @@
                      </content></Tab>
                   <Tab fx:id="categoryTab" text="     Categories     ">
                      <content>
-                        <TableView fx:id="categoryTableView" onMouseClicked="#itemTableViewAction" prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="categoryTableView" onMouseClicked="#categoryTableViewAction" prefHeight="200.0" prefWidth="200.0">
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
@@ -146,8 +146,16 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <TextField fx:id="tfSearch" layoutX="312.0" layoutY="449.0" onAction="#searchTfAction" promptText="               Search" />
+            <TextField fx:id="tfSearch" layoutX="312.0" layoutY="449.0" onAction="#searchTfAction" promptText="              Search" />
             <Button fx:id="btnRefresh" layoutX="701.0" layoutY="447.0" mnemonicParsing="false" onAction="#btnRefreshAction" prefHeight="30.0" prefWidth="73.0" style="-fx-background-color: #8CD0BB;" text="Refresh" textFill="WHITE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font name="Arial Black" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnCreateCategory" layoutX="312.0" layoutY="488.0" mnemonicParsing="false" onAction="#btnCreateCategory" prefHeight="30.0" prefWidth="167.0" style="-fx-background-color: #8CD0BB;" text="Create Category" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

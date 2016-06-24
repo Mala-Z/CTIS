@@ -3,8 +3,6 @@ package SourceCode.Controller.admin;
 import SourceCode.BusinessLogic.BusinessLogic;
 import SourceCode.Controller.RunView;
 import SourceCode.Controller.main.MainViewController;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -72,7 +70,7 @@ public class CreateItemController {
     private void btnSubmit() {
         try {
             if (tfItemBarcode.getLength() > 0 && tfItemNo.getLength() > 0 && tfItemName.getLength() > 0 && categoryCombo.getSelectionModel().getSelectedIndex() > -1) {
-                    businessLogic.addItem(Integer.parseInt(tfItemBarcode.getText()), tfItemNo.getText(), tfItemName.getText(),
+                    businessLogic.insertItem(Integer.parseInt(tfItemBarcode.getText()), tfItemNo.getText(), tfItemName.getText(),
                             categoryCombo.getValue().toString());
 
                     tfItemBarcode.clear();

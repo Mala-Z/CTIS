@@ -3,10 +3,10 @@ package SourceCode.Model.insertIntoDBObjects;
 public class WriteConsumablesToDB {
     private String employeeBarcode;
     private String itemBarcode;
-    private String quantity;
+    private int quantity;
     private String timeTaken;
 
-    public WriteConsumablesToDB(String employeeBarcode, String itemBarcode, String quantity, String timeTaken) {
+    public WriteConsumablesToDB(String employeeBarcode, String itemBarcode, int quantity, String timeTaken) {
         this.employeeBarcode = employeeBarcode;
         this.itemBarcode = itemBarcode;
         this.quantity = quantity;
@@ -29,11 +29,11 @@ public class WriteConsumablesToDB {
         this.itemBarcode = itemBarcode;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

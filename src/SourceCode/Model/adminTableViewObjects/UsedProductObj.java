@@ -5,9 +5,9 @@ public class UsedProductObj {
     private String itemNumber;
     private String itemName;
     private String timeTaken;
-    private String quantityTaken;
+    private int quantityTaken;
 
-    public UsedProductObj(String employeeName, String itemNumber, String itemName, String timeTaken, String quantityTaken) {
+    public UsedProductObj(String employeeName, String itemNumber, String itemName, String timeTaken, int quantityTaken) {
         this.employeeName = employeeName;
         this.itemNumber = itemNumber;
         this.itemName = itemName;
@@ -47,11 +47,11 @@ public class UsedProductObj {
         this.timeTaken = timeTaken;
     }
 
-    public String getQuantityTaken() {
+    public int getQuantityTaken() {
         return quantityTaken;
     }
 
-    public void setQuantityTaken(String quantityTaken) {
+    public void setQuantityTaken(int quantityTaken) {
         this.quantityTaken = quantityTaken;
     }
 }

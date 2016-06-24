@@ -2,18 +2,12 @@ package SourceCode.Controller;
 
 import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.admin.AdminController;
-import SourceCode.Controller.admin.CreateEmployeeController;
-import SourceCode.Controller.admin.CreateItemController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.image.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.awt.*;
-import java.awt.Image;
 import java.io.IOException;
 
 import static com.sun.org.apache.bcel.internal.util.SecuritySupport.getResourceAsStream;
@@ -178,6 +172,18 @@ public class RunView extends Application {
             stage.show();
         } catch (Exception e){
             System.out.println("Exception in showUpdateItem() from RunView class:" + e.getMessage());
+        }
+    }
+    public static void showCreateCategory(){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation((RunView.class.getResource("/SourceCode/View/fxml/CreateCategory.fxml")));
+            BorderPane borderPane = (BorderPane) loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(borderPane));
+            stage.show();
+        } catch (Exception e){
+            System.out.println("Exception in showUpdateCategory() from RunView class:" + e.getMessage());
         }
     }
     public static void showAdminLogin(){

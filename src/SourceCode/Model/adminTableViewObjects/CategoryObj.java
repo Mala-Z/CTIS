@@ -3,6 +3,10 @@ package SourceCode.Model.adminTableViewObjects;
 public class CategoryObj {
     private String category;
 
+    public CategoryObj() {
+
+    }
+
     public CategoryObj(String category) {
         this.category = category;
     }

@@ -1,6 +1,7 @@
 package SourceCode.BusinessLogic;
 
 import SourceCode.Controller.main.MainViewController;
+import SourceCode.Model.adminTableViewObjects.CategoryObj;
 import SourceCode.Model.adminTableViewObjects.EmployeeObj;
 import SourceCode.Model.adminTableViewObjects.ItemObj;
 import SourceCode.Model.dbTablesObjects.Item;
@@ -8,6 +9,7 @@ import SourceCode.Model.insertIntoDBObjects.WriteConsumablesToDB;
 import SourceCode.Model.insertIntoDBObjects.WriteReturnToDB;
 import SourceCode.Model.insertIntoDBObjects.WriteTakeToDB;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -45,7 +47,7 @@ public class BusinessLogic {
     }
 
     /* METHOD FOR INSERTING ITEM INTO THE DATABASE */
-    public void addItem(int itemBarcode, String itemNo, String itemName, String itemCategory) {
+    public void insertItem(int itemBarcode, String itemNo, String itemName, String itemCategory) {
         String sql = "INSERT INTO Item (itemBarcode, itemNo, itemName, itemCategory) VALUES (?, ?, ?, ?); ";
         //String sql2 = "INSERT INTO Category (id, category, itemBarcode) VALUES (null, ?, (SELECT itemBarcode FROM Item WHERE itemBarcode = ?));";
         try {
@@ -63,7 +65,20 @@ public class BusinessLogic {
         } catch (SQLException e) {
             MainViewController.updateWarningMessage("Possible duplicates");
             e.printStackTrace();
-            System.out.println("Error in addItem() from BusinessLogic class: " + e.getMessage());
+            System.out.println("Error in insertItem() from BusinessLogic class: " + e.getMessage());
+        }
+    }
+    public void insertCategory(String category) {
+        String sql = "INSERT INTO Category (category) VALUES (?); ";
+        try {
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            preparedStatement.setString(1, category);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            MainViewController.updateWarningMessage("Possible duplicates");
+            e.printStackTrace();
+            System.out.println("Error in insertCategory() from BusinessLogic class: " + e.getMessage());
         }
     }
 
@@ -124,6 +139,35 @@ public class BusinessLogic {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Error in updateItem() from BusinessLogic class: " + e.getMessage());
+            MainViewController.updateWarningMessage("Possible duplicates!");
+        }
+    }
+
+    public void updateCategory(String category, String newCategory) {
+//        String sql = "UPDATE Item, Category\n" +
+//                "SET Item.itemBarcode = ?, Item.itemNo = ?, Item.itemName = ?, Category.category = ?\n" +
+//                "WHERE Item.itemBarcode = Category.itemBarcode\n" +
+//                "AND Item.itemBarcode = ?;";
+        String sql = "UPDATE Category\n" +
+                "SET Category.category = ?\n" +
+                "WHERE Category.category = ?;";
+
+        try {
+
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            preparedStatement.setString(1, newCategory);
+            preparedStatement.setString(2, category);
+
+            System.out.println(category);
+            System.out.println("new category: "+ newCategory);
+
+            preparedStatement.executeUpdate();
+
+
+            MainViewController.updateAlertMessage("Registration successful");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in updateCategory() from BusinessLogic class: " + e.getMessage());
             MainViewController.updateWarningMessage("Possible duplicates!");
         }
     }
@@ -244,7 +288,7 @@ public class BusinessLogic {
                 PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
                 preparedStatement.setString(1, writeConsumablesToDB.getEmployeeBarcode());
                 preparedStatement.setString(2, writeConsumablesToDB.getItemBarcode());
-                preparedStatement.setString(3, writeConsumablesToDB.getQuantity());
+                preparedStatement.setInt(3, writeConsumablesToDB.getQuantity());
                 preparedStatement.setString(4, writeConsumablesToDB.getTimeTaken());
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
@@ -726,6 +770,30 @@ public class BusinessLogic {
             System.out.println("Error in getItem() from BusinessLogic class: "  + e.getMessage());
         }
         return itemObj;
+    }
+    public CategoryObj getCategory(String category) {
+        CategoryObj categoryObj = new CategoryObj();
+
+        try {
+            String sql = "SELECT category FROM Category\n" +
+                    "WHERE category = ?";
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+
+            preparedStatement.setString(1, category);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+
+                String categoryFound = resultSet.getString("category");
+
+                categoryObj.setCategory(categoryFound);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in getCategory() from BusinessLogic class: "  + e.getMessage());
+        }
+        return categoryObj;
     }
 
     /* METHOD FOR DELETING A ROW FROM BORROWED ITEM TABLE IN THE DATABASE */
