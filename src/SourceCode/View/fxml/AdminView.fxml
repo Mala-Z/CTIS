@@ -89,7 +89,7 @@
                            </columnResizePolicy>
                         </TableView>
                      </content></Tab>
-                  <Tab fx:id="usedProductTab" text="Used Products">
+                  <Tab fx:id="usedProductTab" onSelectionChanged="#usedProductTabAction" text="Used Products">
                      <content>
                         <TableView fx:id="usedProductTableView" prefHeight="200.0" prefWidth="200.0">
                           <columns>
@@ -106,7 +106,7 @@
                      </content></Tab>
               </tabs>
             </TabPane>
-            <Button fx:id="btnCreateEmployee" layoutX="4.0" layoutY="447.0" mnemonicParsing="false" onAction="#btnCreateEmployee" style="-fx-background-color: #8CD0BB;" text="Create Employee" textFill="WHITE">
+            <Button fx:id="btnCreateEmployee" layoutX="4.0" layoutY="447.0" mnemonicParsing="false" onAction="#btnCreateEmployeeAction" style="-fx-background-color: #8CD0BB;" text="Create Employee" textFill="WHITE">
                <font>
                   <Font name="Arial Black" size="13.0" />
                </font>
@@ -114,7 +114,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="btnCreateItem" layoutX="4.0" layoutY="488.0" mnemonicParsing="false" onAction="#btnCreateItem" prefHeight="30.0" prefWidth="139.0" style="-fx-background-color: #8CD0BB;" text="Create Item" textFill="WHITE">
+            <Button fx:id="btnCreateItem" layoutX="4.0" layoutY="488.0" mnemonicParsing="false" onAction="#btnCreateItemAction" prefHeight="30.0" prefWidth="139.0" style="-fx-background-color: #8CD0BB;" text="Create Item" textFill="WHITE">
                <font>
                   <Font name="Arial Black" size="13.0" />
                </font>
@@ -155,7 +155,7 @@
                   <Font name="Arial Black" size="13.0" />
                </font>
             </Button>
-            <Button fx:id="btnCreateCategory" layoutX="312.0" layoutY="488.0" mnemonicParsing="false" onAction="#btnCreateCategory" prefHeight="30.0" prefWidth="167.0" style="-fx-background-color: #8CD0BB;" text="Create Category" textFill="WHITE">
+            <Button fx:id="btnCreateCategory" layoutX="312.0" layoutY="488.0" mnemonicParsing="false" onAction="#btnCreateCategoryAction" prefHeight="30.0" prefWidth="167.0" style="-fx-background-color: #8CD0BB;" text="Create Category" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -163,6 +163,8 @@
                   <Font name="Arial Black" size="13.0" />
                </font>
             </Button>
+            <DatePicker fx:id="fromDatePicker" editable="false" layoutX="91.0" layoutY="449.0" onAction="#fromDateAction" promptText="From" />
+            <DatePicker fx:id="toDatePicker" editable="false" layoutX="91.0" layoutY="491.0" onAction="#toDateAction" promptText="To" />
          </children>
       </AnchorPane>
    </top>

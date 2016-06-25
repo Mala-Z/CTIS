@@ -6,16 +6,11 @@ import SourceCode.BusinessLogic.Factory;
 import SourceCode.Controller.RunView;
 import SourceCode.Controller.main.MainViewController;
 import SourceCode.Model.adminTableViewObjects.*;
-import SourceCode.Model.dbTablesObjects.Employee;
-import SourceCode.Model.dbTablesObjects.Item;
 import SourceCode.Model.userTableViewObjects.SearchObj;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.FileNotFoundException;
@@ -23,9 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Blob;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 
 import static SourceCode.Controller.RunView.adminController;
@@ -109,6 +102,23 @@ public class AdminController {
     TableColumn usedProductQuantityColumn;
     @FXML
     TableColumn categoryColumn;
+    @FXML
+    DatePicker fromDatePicker;
+    @FXML
+    DatePicker toDatePicker;
+    @FXML
+    Button btnCreateEmployee;
+    @FXML
+    Button btnCreateItem;
+    @FXML
+    Button btnCreateCategory;
+    @FXML
+    Button btnUpdate;
+    @FXML
+    Button btnDelete;
+
+
+
     //UpdateEmployeeController updateEmployeeController = new UpdateEmployeeController();
     public ArrayList<EmployeeObj> employeeObjArrayList = new ArrayList<>();
     private RunView runView;
@@ -126,16 +136,16 @@ public class AdminController {
     }
 
     @FXML
-    private void btnCreateEmployee() throws IOException {
+    private void btnCreateEmployeeAction() throws IOException {
         runView.showCreateEmployee();
     }
 
     @FXML
-    private void btnCreateItem() throws IOException {
+    private void btnCreateItemAction() throws IOException {
         runView.showCreateItem();
     }
     @FXML
-    private void btnCreateCategory() throws IOException {
+    private void btnCreateCategoryAction() throws IOException {
         runView.showCreateCategory();
     }
 
@@ -220,6 +230,9 @@ public class AdminController {
         populateCategory();
         populateBorrowedItem();
         populateUsedProduct();
+
+        fromDatePicker.setVisible(false);
+        toDatePicker.setVisible(false);
 
     }
     //stores selected row to file
@@ -523,19 +536,48 @@ public class AdminController {
 
             }
             if (usedProductTab.isSelected()){
-                if (businessLogic.checkEmployeeName(input) || businessLogic.checkItemNo(input) || businessLogic.checkItemName(input)){
-                    searchData.clear();
-                    usedProductTableView.getItems().clear();
-                    searchByEmployeeNameInUsed();
-                    searchByItemNumberInUsed();
-                    searchByItemNameInUsed();
+
+
+
+                if (fromDatePicker.getValue() != null && toDatePicker.getValue() !=null) {
+                    if (businessLogic.checkEmployeeName(input) || businessLogic.checkItemNo(input) || businessLogic.checkItemName(input)) {
+                        searchData.clear();
+                        usedProductTableView.getItems().clear();
+
+                        searchByEmployeeNameInUsed();
+                        searchByItemNumberInUsed();
+                        searchByItemNameInUsed();
+                    } else {
+                        MainViewController.updateWarningMessage("Please check the value again");
+                    }
                 }else {
-                    MainViewController.updateWarningMessage("Please check the value again");
+                    MainViewController.updateWarningMessage("Please select From and To dates");
                 }
             }
         } catch (Exception e) {
             MainViewController.updateWarningMessage("Error");
             System.out.println("Exception in searchTfAction() from AdminController class:" + e.getMessage());
+        }
+    }
+    @FXML
+    private void usedProductTabAction(){
+        if (usedProductTab.isSelected()) {
+            btnCreateEmployee.setVisible(false);
+            btnCreateItem.setVisible(false);
+            btnCreateCategory.setVisible(false);
+            btnUpdate.setVisible(false);
+            btnDelete.setVisible(false);
+            fromDatePicker.setVisible(true);
+            toDatePicker.setVisible(true);
+        }else {
+            btnCreateEmployee.setVisible(true);
+            btnCreateItem.setVisible(true);
+            btnCreateCategory.setVisible(true);
+            btnUpdate.setVisible(true);
+            btnDelete.setVisible(true);
+            fromDatePicker.setVisible(false);
+            toDatePicker.setVisible(false);
+
         }
 
     }
@@ -1108,22 +1150,17 @@ public class AdminController {
                     "INNER JOIN Item ON\n" +
                     "UsedProduct.itemBarcode = Item.itemBarcode\n" +
                     "WHERE Employee.employeeName = ?\n" +
-                    "AND (timeTaken BETWEEN curdate()-INTERVAL 30 DAY AND CURDATE()+1)\n" +
+                    "AND (timeTaken BETWEEN ? AND ?)\n" +
                     "GROUP BY itemNo;";
+//            "AND (timeTaken BETWEEN curdate()-INTERVAL 30 DAY AND CURDATE()+1)\n" +
 
             /* EXECUTION OF QUERY */
             String employeeName = tfSearch.getText();
 
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setString(1, employeeName);
-//            String itemNo = preparedStatement.
-//                    preparedStatement.setString(2, itemNo);
-//            PreparedStatement totalStatement = connectDB.preparedStatement("select sum(total) from quantityTaken where itemBarcode =?");
-//            ResultSet resultSet = totalStatement.executeQuery();
-//            resultSet.next();
-//            preparedStatement.setString(1, employeeName);
-//            String sum = resultSet.getString(1);
-
+            preparedStatement.setDate(2, fromDateAction());
+            preparedStatement.setDate(3, toDateAction());
             ResultSet result = preparedStatement.executeQuery();
 
             while ((result.next())) {
@@ -1156,6 +1193,17 @@ public class AdminController {
         //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
 
     }
+    @FXML
+    private Date fromDateAction(){
+        Date date = Date.valueOf(fromDatePicker.getValue());
+        return date;
+    }
+    @FXML
+    private Date toDateAction(){
+        Date date = Date.valueOf(toDatePicker.getValue());
+        return date;
+    }
+
 
     @FXML
     private void searchByItemNumberInUsed() {
