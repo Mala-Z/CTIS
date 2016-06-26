@@ -30,6 +30,7 @@ public class CreateEmployeeController {
 
     @FXML
     private void initialize() {
+        tfEmployeeBarcode.setText(String.valueOf(businessLogic.getNewEmployeeBarcode()));
         btnSubmit.defaultButtonProperty().bind(btnSubmit.focusedProperty());//to allow enter key to fire the button
     }
 

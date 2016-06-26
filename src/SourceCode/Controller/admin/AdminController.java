@@ -123,6 +123,21 @@ public class AdminController {
     public ArrayList<EmployeeObj> employeeObjArrayList = new ArrayList<>();
     private RunView runView;
 
+    @FXML
+    private void initialize(){
+
+
+        populateEmployee();
+        populateItem();
+        populateCategory();
+        populateBorrowedItem();
+        populateUsedProduct();
+
+        fromDatePicker.setVisible(false);
+        toDatePicker.setVisible(false);
+
+    }
+
     public AdminController(){
 
     }
@@ -139,11 +154,11 @@ public class AdminController {
     private void btnCreateEmployeeAction() throws IOException {
         runView.showCreateEmployee();
     }
-
     @FXML
     private void btnCreateItemAction() throws IOException {
         runView.showCreateItem();
     }
+
     @FXML
     private void btnCreateCategoryAction() throws IOException {
         runView.showCreateCategory();
@@ -153,11 +168,11 @@ public class AdminController {
     private void btnLogout() throws IOException {
         runView.showMainView();
     }
-
     @FXML
     private void btnRefreshAction() throws IOException {
         runView.showAdminView();
     }
+
     @FXML
     private void btnDeleteAction() throws IOException{
         if (employeeTableView.getSelectionModel().getSelectedItem()!=null || itemTableView.getSelectionModel().getSelectedItem()!=null
@@ -219,20 +234,6 @@ public class AdminController {
         }else {
             MainViewController.updateAlertMessage("Please select row to update");
         }
-
-    }
-
-    @FXML
-    private void initialize(){
-
-        populateEmployee();
-        populateItem();
-        populateCategory();
-        populateBorrowedItem();
-        populateUsedProduct();
-
-        fromDatePicker.setVisible(false);
-        toDatePicker.setVisible(false);
 
     }
     //stores selected row to file
@@ -332,7 +333,8 @@ public class AdminController {
             try {
             /* SQL QUERY */
                 String sql = "SELECT Item.itemBarcode, Item.itemNo, Item.itemName, Item.itemCategory FROM Item\n" +
-                        "ORDER BY itemNo ASC;";
+                        "ORDER BY itemNo ASC\n" +
+                        "LIMIT 12";
 
             /* EXECUTION OF QUERY */
                 PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
@@ -361,7 +363,7 @@ public class AdminController {
             itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemCategory"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
-            itemTableView.getItems().addAll(itemTabData);
+            itemTableView.getItems().setAll(itemTabData);
 
     }
 
@@ -409,7 +411,8 @@ public class AdminController {
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
-                    "ORDER BY timeTaken DESC;";
+                    "ORDER BY timeTaken DESC\n" +
+                    "LIMIT 12;";
 
             /* EXECUTION OF QUERY */
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
@@ -456,7 +459,8 @@ public class AdminController {
                     "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "UsedProduct.itemBarcode = Item.itemBarcode\n" +
-                    "ORDER BY timeTaken DESC;";
+                    "ORDER BY timeTaken DESC\n" +
+                    "LIMIT 12;";
 
             /* EXECUTION OF QUERY */
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
@@ -496,17 +500,38 @@ public class AdminController {
         String input = tfSearch.getText();
         try {
             if (itemTab.isSelected()) {
-                if (businessLogic.checkItemBarcode(input) || businessLogic.checkItemNo(input)
-                        || businessLogic.checkItemCategory(input) || businessLogic.checkItemName(input)) {
+                if (businessLogic.checkItemBarcode(input)){
                     searchData.clear();
                     itemTableView.getItems().clear();
                     searchByItemBarcodeInItem();
+                }else if (businessLogic.checkItemNo(input)){
+                    searchData.clear();
+                    itemTableView.getItems().clear();
                     searchByItemNumberInItem();
+                }else if (businessLogic.checkItemCategory(input)){
+                    searchData.clear();
+                    itemTableView.getItems().clear();
                     searchByItemCategoryInItem();
+                }else if (businessLogic.checkItemName(input)){
+                    searchData.clear();
+                    itemTableView.getItems().clear();
                     searchByItemNameInItem();
                 } else {
                     MainViewController.updateAlertMessage("Please check the value again");
                 }
+
+//                if (businessLogic.checkItemBarcode(input) || businessLogic.checkItemNo(input)
+//                        || businessLogic.checkItemCategory(input) || businessLogic.checkItemName(input)) {
+//                    searchData.clear();
+//                    itemTableView.getItems().clear();
+//                    searchByItemBarcodeInItem();
+//                    searchByItemNumberInItem();
+//                    searchByItemCategoryInItem();
+//                    searchByItemNameInItem();
+//                } else {
+//                    MainViewController.updateAlertMessage("Please check the value again");
+//                }
+
             }
             if (employeeTab.isSelected()) {
                 if (businessLogic.checkEmployeeBarcode(input) || businessLogic.checkEmployeeNumber(input) ||
@@ -588,10 +613,8 @@ public class AdminController {
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT Item.itemBarcode, itemNo, itemName, category FROM Item\n" +
-                    "INNER JOIN Category ON\n" +
-                    "Item.itemBarcode = Category.itemBarcode\n" +
-                    "WHERE Item.itemBarcode = ?;";
+            String sql = "SELECT itemBarcode, itemNo, itemName, itemCategory FROM Item\n" +
+                    "WHERE itemBarcode = ?;";
 
             /* EXECUTION OF QUERY */
             String inputBarcode = tfSearch.getText();
@@ -605,7 +628,7 @@ public class AdminController {
                 String itemBarcode = result.getString("itemBarcode");
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
-                String itemCategory = result.getString("category");
+                String itemCategory = result.getString("itemCategory");
                 ItemObj itemObj = new ItemObj(itemBarcode, itemNumber, itemName, itemCategory);
 
                 searchData.addAll(itemObj);
@@ -621,7 +644,7 @@ public class AdminController {
         itemBarcodeColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemBarcode"));
         itemNumberColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemNo"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemName"));
-        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("category"));
+        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemCategory"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
         itemTableView.getItems().setAll(searchData);
@@ -635,9 +658,7 @@ public class AdminController {
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT Item.itemBarcode, Item.itemNo, itemName, category FROM Item\n" +
-                    "INNER JOIN Category ON\n" +
-                    "Item.itemBarcode = Category.itemBarcode\n" +
+            String sql = "SELECT Item.itemBarcode, Item.itemNo, itemName, itemCategory FROM Item\n" +
                     "WHERE Item.itemNo = ?;";
 
             /* EXECUTION OF QUERY */
@@ -652,7 +673,7 @@ public class AdminController {
                 String itemBarcode = result.getString("itemBarcode");
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
-                String itemCategory = result.getString("category");
+                String itemCategory = result.getString("itemCategory");
                 ItemObj itemObj = new ItemObj(itemBarcode, itemNumber, itemName, itemCategory);
 
                 searchData.addAll(itemObj);
@@ -668,7 +689,7 @@ public class AdminController {
         itemBarcodeColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemBarcode"));
         itemNumberColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemNo"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemName"));
-        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("category"));
+        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemCategory"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
         itemTableView.getItems().setAll(searchData);
@@ -682,15 +703,13 @@ public class AdminController {
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT Item.itemBarcode, Item.itemNo, itemName, category FROM Item\n" +
-                    "INNER JOIN Category ON\n" +
-                    "Item.itemBarcode = Category.itemBarcode\n" +
-                    "WHERE Category.category = ?;";
+            String sql = "SELECT itemBarcode, itemNo, itemName, itemCategory FROM Item\n" +
+                    "WHERE itemCategory = ?;";
 
             /* EXECUTION OF QUERY */
-            String inputBarcode = tfSearch.getText();
+            String inputCategory = tfSearch.getText();
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
-            preparedStatement.setString(1, inputBarcode);
+            preparedStatement.setString(1, inputCategory);
 
             ResultSet result = preparedStatement.executeQuery();
 
@@ -699,7 +718,7 @@ public class AdminController {
                 String itemBarcode = result.getString("itemBarcode");
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
-                String itemCategory = result.getString("category");
+                String itemCategory = result.getString("itemCategory");
                 ItemObj itemObj = new ItemObj(itemBarcode, itemNumber, itemName, itemCategory);
 
                 searchData.addAll(itemObj);
@@ -715,7 +734,7 @@ public class AdminController {
         itemBarcodeColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemBarcode"));
         itemNumberColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemNo"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemName"));
-        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("category"));
+        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemCategory"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
         itemTableView.getItems().setAll(searchData);
@@ -729,9 +748,7 @@ public class AdminController {
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT Item.itemBarcode, Item.itemNo, itemName, category FROM Item\n" +
-                    "INNER JOIN Category ON\n" +
-                    "Item.itemBarcode = Category.itemBarcode\n" +
+            String sql = "SELECT Item.itemBarcode, Item.itemNo, itemName, itemCategory FROM Item\n" +
                     "WHERE Item.itemName = ?;";
 
             /* EXECUTION OF QUERY */
@@ -746,7 +763,7 @@ public class AdminController {
                 String itemBarcode = result.getString("itemBarcode");
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
-                String itemCategory = result.getString("category");
+                String itemCategory = result.getString("itemCategory");
                 ItemObj itemObj = new ItemObj(itemBarcode, itemNumber, itemName, itemCategory);
 
                 searchData.addAll(itemObj);
@@ -762,7 +779,7 @@ public class AdminController {
         itemBarcodeColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemBarcode"));
         itemNumberColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemNo"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemName"));
-        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("category"));
+        itemCategoryColumn.setCellValueFactory(new PropertyValueFactory<ItemObj, String>("itemCategory"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
         itemTableView.getItems().setAll(searchData);
@@ -917,9 +934,7 @@ public class AdminController {
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT employeeName, category, itemNo, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
-                    "INNER JOIN Category ON\n" +
-                    "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
+            String sql = "SELECT employeeName, itemCategory, itemNo, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
                     "INNER JOIN  Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
@@ -936,7 +951,7 @@ public class AdminController {
             while ((result.next())) {
 
                 String employeeName = result.getString("employeeName");
-                String itemCategory = result.getString("category");
+                String itemCategory = result.getString("itemCategory");
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
@@ -972,14 +987,12 @@ public class AdminController {
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT employeeName, category, itemNo, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
-                    "INNER JOIN Category ON\n" +
-                    "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
+            String sql = "SELECT employeeName, itemCategory, itemNo, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
                     "INNER JOIN  Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "BorrowedItem.itembarcode = Item.itemBarcode\n" +
-                    "WHERE Category.category = ?;";
+                    "WHERE itemCategory = ?;";
 
             /* EXECUTION OF QUERY */
             String inputBarcode = tfSearch.getText();
@@ -991,7 +1004,7 @@ public class AdminController {
             while ((result.next())) {
 
                 String employeeName = result.getString("employeeName");
-                String itemCategory = result.getString("category");
+                String itemCategory = result.getString("itemCategory");
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
@@ -1027,9 +1040,7 @@ public class AdminController {
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT employeeName, category, itemNo, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
-                    "INNER JOIN Category ON\n" +
-                    "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
+            String sql = "SELECT employeeName, itemCategory, itemNo, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
                     "INNER JOIN  Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
@@ -1046,7 +1057,7 @@ public class AdminController {
             while ((result.next())) {
 
                 String employeeName = result.getString("employeeName");
-                String itemCategory = result.getString("category");
+                String itemCategory = result.getString("itemCategory");
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
@@ -1082,9 +1093,7 @@ public class AdminController {
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT employeeName, category, itemNo, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
-                    "INNER JOIN Category ON\n" +
-                    "BorrowedItem.itemBarcode = Category.itemBarcode\n" +
+            String sql = "SELECT employeeName, itemCategory, itemNo, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
                     "INNER JOIN  Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
@@ -1101,7 +1110,7 @@ public class AdminController {
             while ((result.next())) {
 
                 String employeeName = result.getString("employeeName");
-                String itemCategory = result.getString("category");
+                String itemCategory = result.getString("itemCategory");
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");

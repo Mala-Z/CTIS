@@ -55,7 +55,7 @@ public class TakeItemController {
 
     private ObservableList takeItemData = FXCollections.observableArrayList(); //[tableview]
 
-    private ObservableList<String> placeList = FXCollections.observableArrayList("On Person", "Address", "Car");//[combobox]
+    private ObservableList<String> placeList = FXCollections.observableArrayList("On Person", "Address", "Car", "Custom place");//[combobox]
 
     private ArrayList<String> barcodeList = new ArrayList<>();//[unique item] to check for duplicates so there cant be items taken twice
 

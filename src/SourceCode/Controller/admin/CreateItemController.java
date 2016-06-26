@@ -36,6 +36,7 @@ public class CreateItemController {
     private void initialize() {
         btnSubmit.defaultButtonProperty().bind(btnSubmit.focusedProperty());//to allow enter key to fire the button
 
+        tfItemBarcode.setText(String.valueOf(businessLogic.getNewItemBarcode()));
         categoryCombo.setItems(businessLogic.getCategory());
         }
     @FXML private void checkItemBarcode(){

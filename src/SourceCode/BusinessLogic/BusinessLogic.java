@@ -489,7 +489,8 @@ public class BusinessLogic {
 
             String query = "SELECT itemBarcode FROM Item WHERE itemBarcode = ?";
             PreparedStatement preparedStatement = connectDB.preparedStatement(query);
-            preparedStatement.setString(1, itemBarcode);
+            int code = Integer.valueOf(itemBarcode);
+            preparedStatement.setInt(1, code);
 
             ResultSet results = preparedStatement.executeQuery();
 
@@ -498,8 +499,11 @@ public class BusinessLogic {
             } else {
                 return false;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            System.out.println("Error in checkItemBarcode() from BusinessLogic class: " + e.getMessage());
+        } catch (Exception e){
+//            e.printStackTrace();
             System.out.println("Error in checkItemBarcode() from BusinessLogic class: " + e.getMessage());
         }
         return false;
@@ -527,7 +531,7 @@ public class BusinessLogic {
     public boolean checkItemCategory(String itemCategory) {
 
         try {
-            String query = "SELECT category FROM Category WHERE category = ?";
+            String query = "SELECT itemCategory FROM Item WHERE itemCategory = ?";
             PreparedStatement preparedStatement = connectDB.preparedStatement(query);
             preparedStatement.setString(1, itemCategory);
 
@@ -795,7 +799,6 @@ public class BusinessLogic {
         }
         return categoryObj;
     }
-
     /* METHOD FOR DELETING A ROW FROM BORROWED ITEM TABLE IN THE DATABASE */
     public void deleteBorrowedItem(int id) {
         String sql = "DELETE FROM UsedItem WHERE id=?";
@@ -807,6 +810,41 @@ public class BusinessLogic {
             e.printStackTrace();
             System.out.println("Error in deleteUsedItem() from BusinessLogic class: " + e.getMessage());
         }
+    }
+
+    public int getNewItemBarcode() {
+        int max = 0;
+        try {
+            String sql = "SELECT MAX(itemBarcode) AS max FROM Item";
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                max = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in getNewItemBarcode() from BusinessLogic class: "  + e.getMessage());
+        }
+        return max+1;
+    }
+    public int getNewEmployeeBarcode() {
+        int max = 0;
+        try {
+            String sql = "SELECT MAX(employeeBarcode) AS max FROM Employee";
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                max = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in getNewEmployeeBarcode() from BusinessLogic class: "  + e.getMessage());
+        }
+        return max+1;
     }
 
 }
