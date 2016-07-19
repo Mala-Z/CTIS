@@ -36,7 +36,7 @@ public class CreateItemController {
     private void initialize() {
         btnSubmit.defaultButtonProperty().bind(btnSubmit.focusedProperty());//to allow enter key to fire the button
 
-        tfItemBarcode.setText(String.valueOf(businessLogic.getNewItemBarcode()));
+        chooseBarcode();
         categoryCombo.setItems(businessLogic.getCategory());
         }
     @FXML private void checkItemBarcode(){
@@ -74,10 +74,11 @@ public class CreateItemController {
                     businessLogic.insertItem(Integer.parseInt(tfItemBarcode.getText()), tfItemNo.getText(), tfItemName.getText(),
                             categoryCombo.getValue().toString());
 
-                    tfItemBarcode.clear();
-                    tfItemNo.clear();
-                    tfItemName.clear();
-                    tfItemBarcode.requestFocus();
+//              tfItemBarcode.clear();
+                chooseBarcode();
+                tfItemNo.clear();
+                tfItemName.clear();
+                tfItemBarcode.requestFocus();
 
             } else {
                 MainViewController.updateAlertMessage("Please insert values in all fields to be able to save an item");
@@ -93,6 +94,15 @@ public class CreateItemController {
 
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
+    }
+
+    //Method for letting the user now which barcode is free for taking
+    private void chooseBarcode(){
+        if (businessLogic.checkItemPrimaryKey()){
+            tfItemBarcode.setText("5000");
+        }else {
+            tfItemBarcode.setText(String.valueOf(businessLogic.getNewItemBarcode()));
+        }
     }
 
 }

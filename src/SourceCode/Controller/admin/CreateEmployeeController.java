@@ -29,8 +29,10 @@ public class CreateEmployeeController {
 
 
     @FXML
-    private void initialize() {
+    private void initialize()
+    {
         tfEmployeeBarcode.setText(String.valueOf(businessLogic.getNewEmployeeBarcode()));
+
         btnSubmit.defaultButtonProperty().bind(btnSubmit.focusedProperty());//to allow enter key to fire the button
     }
 
@@ -81,7 +83,8 @@ public class CreateEmployeeController {
                 businessLogic.insertEmployee(Integer.parseInt(tfEmployeeBarcode.getText()), tfEmployeeNo.getText(), tfEmployeeName.getText(), tfPhoneNumber.getText());
 
                 tfEmployeeBarcode.requestFocus();//so we can create a new employee
-                tfEmployeeBarcode.clear();
+                //tfEmployeeBarcode.clear();
+                tfEmployeeBarcode.setText(String.valueOf(businessLogic.getNewEmployeeBarcode()));
                 tfEmployeeNo.clear();
                 tfEmployeeName.clear();
                 tfPhoneNumber.clear();
@@ -99,6 +102,16 @@ public class CreateEmployeeController {
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
     }
+
+//    //Method for letting the user now which barcode is free for taking
+//    private void chooseBarcode(){
+//        if (businessLogic.checkItemPrimaryKey()){
+//            tfEmployeeBarcode.setText("500");
+//
+//        }else {
+//            tfEmployeeBarcode.setText(String.valueOf(businessLogic.getNewEmployeeBarcode()));
+//        }
+//    }
 
 }
 

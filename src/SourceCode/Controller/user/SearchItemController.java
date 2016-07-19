@@ -94,15 +94,12 @@ public class SearchItemController {
         try {
             if (businessLogic.checkItemBarcode(tfSearch.getText()) || businessLogic.checkItemNo(tfSearch.getText())
                     || businessLogic.checkEmployeeName(tfSearch.getText())|| businessLogic.checkEmployeeBarcode(tfSearch.getText())) {
-
-                //checks if it has been taken
-                if (businessLogic.searchItemBarcode(tfSearch.getText())) {
-
+                if (businessLogic.seachItemBarcodeForSearchScreen(tfSearch.getText().toString())) {
                     searchByItemBarcode();
                     tfSearch.clear();
 
                 }
-                else if (businessLogic.searchItemByNumber(tfSearch.getText())){
+                 else if (businessLogic.searchItemByNumber(tfSearch.getText())){
                     searchByItemNumber();
                     tfSearch.clear();
 
@@ -122,6 +119,8 @@ public class SearchItemController {
                     MainViewController.updateAlertMessage("Item(s) not taken");
                     tfSearch.clear();
                 }
+
+                //checks if it has been taken
             }else {
                 MainViewController.updateAlertMessage("Please input the correct value");
                 tfSearch.clear();

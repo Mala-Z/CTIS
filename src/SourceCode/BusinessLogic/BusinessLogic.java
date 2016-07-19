@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -194,6 +195,7 @@ public class BusinessLogic {
         String sql = "DELETE FROM Employee WHERE employeeBarcode=?";
         String sql2 = "DELETE FROM PhoneNumber WHERE employeeBarcode=?";
         String sql3 = "DELETE FROM BorrowedItem WHERE employeeBarcode=?";
+        String sql4 = "DELETE FROM UsedProduct WHERE employeeBarcode=?";
         try {
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setString(1, employeeBarcode);
@@ -201,10 +203,13 @@ public class BusinessLogic {
             preparedStatement2.setString(1, employeeBarcode);
             PreparedStatement preparedStatement3 = connectDB.preparedStatement(sql3);
             preparedStatement3.setString(1, employeeBarcode);
+            PreparedStatement preparedStatement4 = connectDB.preparedStatement(sql4);
+            preparedStatement4.setString(1, employeeBarcode);
 
             preparedStatement.executeUpdate();
             preparedStatement2.executeUpdate();
             preparedStatement3.executeUpdate();
+            preparedStatement4.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             MainViewController.updateWarningMessage("Error while trying to delete employee");
@@ -215,16 +220,20 @@ public class BusinessLogic {
     /* METHOD FOR DELETING AN ITEM FROM THE DATABASE */
     public void deleteItem(String itemBarcode) {
         String sql = "DELETE FROM Item WHERE itemBarcode=?";
-//        String sql2 = "DELETE FROM Category WHERE itemBarcode=?";
+        String sql2 = "DELETE FROM BorrowedItem WHERE itemBarcode=?";
+        String sql3 = "DELETE FROM UsedProduct WHERE itemBarcode=?";
 
         try {
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
             preparedStatement.setString(1, itemBarcode);
-//            PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
-//            preparedStatement2.setString(1, itemBarcode);
+            PreparedStatement preparedStatement2 = connectDB.preparedStatement(sql2);
+            preparedStatement2.setString(1, itemBarcode);
+            PreparedStatement preparedStatement3 = connectDB.preparedStatement(sql3);
+            preparedStatement3.setString(1, itemBarcode);
 
             preparedStatement.executeUpdate();
-//            preparedStatement2.executeUpdate();
+            preparedStatement2.executeUpdate();
+            preparedStatement3.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -321,6 +330,31 @@ public class BusinessLogic {
         try {
             String query = "SELECT itemBarcode FROM BorrowedItem " +
                     "WHERE itemBarcode = ? AND timeReturned is null;";
+
+            PreparedStatement preparedStatement = connectDB.preparedStatement(query);
+            preparedStatement.setString(1, itemBarcode);
+
+            ResultSet results = preparedStatement.executeQuery();
+
+            if (results.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error in searchItemBarcode() from BusinessLogic class: " + e.getMessage());
+        }
+        return false;
+    }
+    public boolean seachItemBarcodeForSearchScreen(String itemBarcode) {
+        try {
+//            String query = "SELECT itemBarcode FROM BorrowedItem " +
+//                    "WHERE itemBarcode = ? AND timeReturned is null;";
+            String query = "SELECT Item.itemBarcode FROM Item" +
+                    " INNER JOIN BorrowedItem ON" +
+                    " Item.itemBarcode = BorrowedItem.itemBarcode" +
+                    " WHERE Item.itemBarcode =? AND timeReturned is null;";
 
             PreparedStatement preparedStatement = connectDB.preparedStatement(query);
             preparedStatement.setString(1, itemBarcode);
@@ -489,8 +523,8 @@ public class BusinessLogic {
 
             String query = "SELECT itemBarcode FROM Item WHERE itemBarcode = ?";
             PreparedStatement preparedStatement = connectDB.preparedStatement(query);
-            int code = Integer.valueOf(itemBarcode);
-            preparedStatement.setInt(1, code);
+            //int code = Integer.valueOf(itemBarcode);
+            preparedStatement.setString(1, itemBarcode);
 
             ResultSet results = preparedStatement.executeQuery();
 
@@ -504,7 +538,8 @@ public class BusinessLogic {
 //            System.out.println("Error in checkItemBarcode() from BusinessLogic class: " + e.getMessage());
         } catch (Exception e){
 //            e.printStackTrace();
-            System.out.println("Error in checkItemBarcode() from BusinessLogic class: " + e.getMessage());
+
+            System.out.println("Error in checkItemBarcode() from BusinessLogic class(usually-just a parse error): " + e.getMessage());
         }
         return false;
     }
@@ -845,6 +880,47 @@ public class BusinessLogic {
             System.out.println("Error in getNewEmployeeBarcode() from BusinessLogic class: "  + e.getMessage());
         }
         return max+1;
+    }
+
+    //Used to determine if there are existing primary keys or not
+    public boolean checkItemPrimaryKey(){
+        try {
+            String sql = "SELECT itemBarcode FROM Item";
+
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()){
+                return false;
+            }else {
+                return true;
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            System.out.println("Error in checkItemPrimaryKey() in BusinessLogic");
+        }
+        return false;
+    }
+    //Used to determine if there are existing primary keys or not
+    public boolean checkEmployeePrimaryKey(){
+        try {
+            String sql = "SELECT employeeBarcode FROM Item";
+
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()){
+                return true;
+            }else {
+                return false;
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            System.out.println("Error in checkEmployeePrimaryKey() in BusinessLogic");
+        }
+        return false;
     }
 
 }

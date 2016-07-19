@@ -126,7 +126,6 @@ public class AdminController {
     @FXML
     private void initialize(){
 
-
         populateEmployee();
         populateItem();
         populateCategory();
@@ -140,14 +139,6 @@ public class AdminController {
 
     public AdminController(){
 
-    }
-
-    public static AdminController getInstance(){
-        if (adminController == null){
-            adminController = new AdminController();
-            return adminController;
-        }
-        return adminController;
     }
 
     @FXML
@@ -334,7 +325,7 @@ public class AdminController {
             /* SQL QUERY */
                 String sql = "SELECT Item.itemBarcode, Item.itemNo, Item.itemName, Item.itemCategory FROM Item\n" +
                         "ORDER BY itemNo ASC\n" +
-                        "LIMIT 12";
+                        "LIMIT 50";
 
             /* EXECUTION OF QUERY */
                 PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
@@ -412,7 +403,7 @@ public class AdminController {
                     "INNER JOIN Item ON\n" +
                     "BorrowedItem.itemBarcode = Item.itemBarcode\n" +
                     "ORDER BY timeTaken DESC\n" +
-                    "LIMIT 12;";
+                    "LIMIT 30;";
 
             /* EXECUTION OF QUERY */
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
@@ -460,7 +451,7 @@ public class AdminController {
                     "INNER JOIN Item ON\n" +
                     "UsedProduct.itemBarcode = Item.itemBarcode\n" +
                     "ORDER BY timeTaken DESC\n" +
-                    "LIMIT 12;";
+                    "LIMIT 30;";
 
             /* EXECUTION OF QUERY */
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);

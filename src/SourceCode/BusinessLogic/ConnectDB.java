@@ -21,21 +21,25 @@ public class ConnectDB {
         System.out.println("***********Welcome to Racoon**************");
         try {
 //            String DB_URL = "jdbc:mysql://ctis-racoon.c7zmk0iubeje.eu-central-1.rds.amazonaws.com:3306/ctisracoon";
-//            String DB_URL = "jdbc:mysql://ctis-racoon.c7zmk0iubeje.eu-central-1.rds.amazonaws.com:3306/ctisracoon"+
-//                    "?verifyServerCertificate=false"+
-//                    "&useSSL=true"+
-//                    "&requireSSL=true";
-//            String USER = "aime3444";
-//            String PASS = "CTISracoon84";
+            String DB_URL = "jdbc:mysql://racooninstance.caqjg8cruidw.us-west-2.rds.amazonaws.com/racoondatabase"+
+                    "?verifyServerCertificate=false"+
+                    "&useSSL=true"+
+                    "&requireSSL=true";
+            String USER = "racoonid";
+            String PASS = "racoonpass";
 
-            String DB_URL = "jdbc:mysql://sql7.freesqldatabase.com:3306/sql7124928";
-            String USER = "sql7124928";
-            String PASS = "9XriJpDLDw";
+//            String DB_URL = "jdbc:mysql://37.139.9.54:3306/newdatabase";
+//            String USER = "user";
+//            String PASS = "Chris344";
+//            String DB_URL = "jdbc:mysql://sql7.freesqldatabase.com:3306/sql7124928";
+//            String USER = "sql7124928";
+//            String PASS = "9XriJpDLDw";
+
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             System.out.println("conn obj created " + conn + " message: ");
         } catch (SQLException e) {
             MainViewController.updateWarningMessage("The application couldn't connect to the database");
-            System.out.println("DB error" + e.getMessage());
+            System.out.println("DB error: " + e.getMessage());
         }
     }
 
