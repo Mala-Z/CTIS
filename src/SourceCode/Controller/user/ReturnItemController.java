@@ -43,6 +43,10 @@ public class ReturnItemController {
     private TableColumn placeColumn;
     @FXML
     private TableColumn timeTakenColumn;
+    @FXML
+    private TableColumn functionalColumn;
+    @FXML
+    private RadioButton radioButton;
 
     private ArrayList<String> barcodeList = new ArrayList<>();//check for duplicates
     private ArrayList<WriteReturnToDB> returnItemList = new ArrayList<>();//[insert DB] add writReturnToDB objects to this list
@@ -51,6 +55,12 @@ public class ReturnItemController {
 
     private RunView runView;
 
+    @FXML
+    private void initialize(){
+
+        radioButton.fire();
+
+    }
 
     @FXML
     private void btnSubmit() {
@@ -95,8 +105,9 @@ public class ReturnItemController {
                         java.util.Date date = new java.util.Date();
                         Timestamp timeStamp = new Timestamp(date.getTime());
                         String timeTaken = timeStamp.toString();
+                        String functional = radioButtonOutput();
 
-                        WriteReturnToDB writeReturnToDB = new WriteReturnToDB(itemBarcodeString, timeTaken);
+                        WriteReturnToDB writeReturnToDB = new WriteReturnToDB(itemBarcodeString, timeTaken, functional);
 
                         returnItemList.add(writeReturnToDB);
                         //System.out.println(returnItemList.toString());
@@ -106,6 +117,7 @@ public class ReturnItemController {
                         barcodeList.add(tfItemBarcode.getText());
 
                         tfItemBarcode.clear();
+                        radioButton.fire();
                     }else if (barcodeList.contains(tfItemBarcode.getText())) {
                         MainViewController.updateAlertMessage("You have already scanned this item");
                     }
@@ -159,7 +171,9 @@ public class ReturnItemController {
                     String itemName = result.getString("itemName");
                     String place = result.getString("place");
                     String timeTaken = result.getString("timeTaken");
-                    ReturnObj returnObj = new ReturnObj(employeeName, itemCategory, itemName, place, timeTaken);
+                    String functional = radioButtonOutput();
+
+                    ReturnObj returnObj = new ReturnObj(employeeName, itemCategory, itemName, place, timeTaken, functional);
 
                     returnItemData.setAll(returnObj);
                 }
@@ -176,10 +190,18 @@ public class ReturnItemController {
             itemNameColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("itemName"));
             placeColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("place"));
             timeTakenColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("timeTaken"));
+            functionalColumn.setCellValueFactory(new PropertyValueFactory<ReturnObj, String>("functional"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
 
             tableView.getItems().addAll(returnItemData);
+    }
+    private String radioButtonOutput(){
+        if (radioButton.isSelected()){
+            return "Yes";
+        }else {
+            return "No";
+        }
     }
 
 }

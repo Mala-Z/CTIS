@@ -21,7 +21,7 @@ public class ConnectDB {
         System.out.println("***********Welcome to Racoon**************");
         try {
 //            String DB_URL = "jdbc:mysql://ctis-racoon.c7zmk0iubeje.eu-central-1.rds.amazonaws.com:3306/ctisracoon";
-            String DB_URL = "jdbc:mysql://racooninstance.caqjg8cruidw.us-west-2.rds.amazonaws.com/racoondatabase"+
+            String DB_URL = "jdbc:mysql://racooninstance2.cvyqa3epehmt.eu-west-1.rds.amazonaws.com:3306/racoondatabase2"+
                     "?verifyServerCertificate=false"+
                     "&useSSL=true"+
                     "&requireSSL=true";

@@ -89,6 +89,8 @@ public class AdminController {
     TableColumn borrowedItemTimeTakenColumn;
     @FXML
     TableColumn borrowedItemTimeReturnedColumn;
+    @FXML
+    TableColumn borrowedItemFunctionalColumn;
     //Used Item columns
     @FXML
     TableColumn usedProductEmployeeNameColumn;
@@ -397,7 +399,7 @@ public class AdminController {
 
         try {
             /* SQL QUERY */
-            String sql = "SELECT employeeName, itemNo, itemCategory, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
+            String sql = "SELECT employeeName, itemNo, itemCategory, itemName, timeTaken, timeReturned, functional FROM BorrowedItem\n" +
                     "INNER JOIN Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
@@ -418,8 +420,10 @@ public class AdminController {
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
                 String timeReturned = result.getString("timeReturned");
+                String functional = result.getString("functional");
+
                 BorrowedItemObj borrowedItemObj =
-                        new BorrowedItemObj(employeeName, itemCategory, itemNumber, itemName, timeTaken, timeReturned);
+                        new BorrowedItemObj(employeeName, itemCategory, itemNumber, itemName, timeTaken, timeReturned, functional);
 
                 borrowedItemTabData.addAll(borrowedItemObj);
             }
@@ -435,6 +439,7 @@ public class AdminController {
         borrowedItemNameColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItemObj, String>("itemName"));
         borrowedItemTimeTakenColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItemObj, String>("timeTaken"));
         borrowedItemTimeReturnedColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItemObj, String>("timeReturned"));
+        borrowedItemFunctionalColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItemObj, String>("functional"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
         borrowedItemTableView.getItems().addAll(borrowedItemTabData);
@@ -556,11 +561,14 @@ public class AdminController {
 
 
                 if (fromDatePicker.getValue() != null && toDatePicker.getValue() !=null) {
-                    if (businessLogic.checkEmployeeName(input) || businessLogic.checkItemNo(input) || businessLogic.checkItemName(input)) {
+                    if (businessLogic.checkEmployeeName(input) || businessLogic.checkItemNo(input) || businessLogic.checkItemName(input)
+                            || businessLogic.checkEmployeeBarcode(input) || businessLogic.checkItemBarcode(input)) {
                         searchData.clear();
                         usedProductTableView.getItems().clear();
 
                         searchByEmployeeNameInUsed();
+                        searchByEmployeeBarcodeInUsed();
+                        searchByItemBarcodeInUsed();
                         searchByItemNumberInUsed();
                         searchByItemNameInUsed();
                     } else {
@@ -925,7 +933,7 @@ public class AdminController {
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT employeeName, itemCategory, itemNo, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
+            String sql = "SELECT employeeName, itemCategory, itemNo, itemName, timeTaken, timeReturned, functional FROM BorrowedItem\n" +
                     "INNER JOIN  Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
@@ -947,7 +955,8 @@ public class AdminController {
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
                 String timeReturned = result.getString("timeReturned");
-                BorrowedItemObj borrowedItemObj = new BorrowedItemObj(employeeName, itemCategory, itemNumber, itemName, timeTaken, timeReturned);
+                String functional = result.getString("functional");
+                BorrowedItemObj borrowedItemObj = new BorrowedItemObj(employeeName, itemCategory, itemNumber, itemName, timeTaken, timeReturned, functional);
 
                 searchData.addAll(borrowedItemObj);
 
@@ -965,6 +974,7 @@ public class AdminController {
         borrowedItemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
         borrowedItemTimeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
         borrowedItemTimeReturnedColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeReturned"));
+        borrowedItemFunctionalColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItemObj, String>("functional"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
         borrowedItemTableView.getItems().setAll(searchData);
@@ -978,7 +988,7 @@ public class AdminController {
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT employeeName, itemCategory, itemNo, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
+            String sql = "SELECT employeeName, itemCategory, itemNo, itemName, timeTaken, timeReturned, functional FROM BorrowedItem\n" +
                     "INNER JOIN  Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
@@ -1000,7 +1010,8 @@ public class AdminController {
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
                 String timeReturned = result.getString("timeReturned");
-                BorrowedItemObj borrowedItemObj = new BorrowedItemObj(employeeName, itemCategory, itemNumber, itemName, timeTaken, timeReturned);
+                String functional = result.getString("functional");
+                BorrowedItemObj borrowedItemObj = new BorrowedItemObj(employeeName, itemCategory, itemNumber, itemName, timeTaken, timeReturned, functional);
 
                 searchData.addAll(borrowedItemObj);
 
@@ -1018,6 +1029,7 @@ public class AdminController {
         borrowedItemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
         borrowedItemTimeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
         borrowedItemTimeReturnedColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeReturned"));
+        borrowedItemFunctionalColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItemObj, String>("functional"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
         borrowedItemTableView.getItems().setAll(searchData);
@@ -1031,7 +1043,7 @@ public class AdminController {
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT employeeName, itemCategory, itemNo, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
+            String sql = "SELECT employeeName, itemCategory, itemNo, itemName, timeTaken, timeReturned, functional FROM BorrowedItem\n" +
                     "INNER JOIN  Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
@@ -1053,7 +1065,8 @@ public class AdminController {
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
                 String timeReturned = result.getString("timeReturned");
-                BorrowedItemObj borrowedItemObj = new BorrowedItemObj(employeeName, itemCategory, itemNumber, itemName, timeTaken, timeReturned);
+                String functional = result.getString("functional");
+                BorrowedItemObj borrowedItemObj = new BorrowedItemObj(employeeName, itemCategory, itemNumber, itemName, timeTaken, timeReturned, functional);
 
                 searchData.addAll(borrowedItemObj);
 
@@ -1071,6 +1084,7 @@ public class AdminController {
         borrowedItemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
         borrowedItemTimeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
         borrowedItemTimeReturnedColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeReturned"));
+        borrowedItemFunctionalColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItemObj, String>("functional"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
         borrowedItemTableView.getItems().setAll(searchData);
@@ -1084,7 +1098,7 @@ public class AdminController {
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT employeeName, itemCategory, itemNo, itemName, timeTaken, timeReturned FROM BorrowedItem\n" +
+            String sql = "SELECT employeeName, itemCategory, itemNo, itemName, timeTaken, timeReturned, functional FROM BorrowedItem\n" +
                     "INNER JOIN  Employee ON\n" +
                     "BorrowedItem.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
@@ -1106,7 +1120,8 @@ public class AdminController {
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
                 String timeReturned = result.getString("timeReturned");
-                BorrowedItemObj borrowedItemObj = new BorrowedItemObj(employeeName, itemCategory, itemNumber, itemName, timeTaken, timeReturned);
+                String functional = result.getString("functional");
+                BorrowedItemObj borrowedItemObj = new BorrowedItemObj(employeeName, itemCategory, itemNumber, itemName, timeTaken, timeReturned, functional);
 
                 searchData.addAll(borrowedItemObj);
 
@@ -1124,11 +1139,23 @@ public class AdminController {
         borrowedItemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
         borrowedItemTimeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
         borrowedItemTimeReturnedColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeReturned"));
+        borrowedItemFunctionalColumn.setCellValueFactory(new PropertyValueFactory<BorrowedItemObj, String>("functional"));
 
         /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
         borrowedItemTableView.getItems().setAll(searchData);
         //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
 
+    }
+
+    @FXML
+    private Date fromDateAction(){
+        Date date = Date.valueOf(fromDatePicker.getValue());
+        return date;
+    }
+    @FXML
+    private Date toDateAction(){
+        Date date = Date.valueOf(toDatePicker.getValue());
+        return date;
     }
 
     @FXML
@@ -1145,7 +1172,7 @@ public class AdminController {
 //                    "UsedProduct.itemBarcode = Item.itemBarcode\n" +
 //                    "WHERE Employee.employeeName = ?;";
             String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken, SUM(quantityTaken) as Total FROM UsedProduct\n" +
-            "INNER JOIN  Employee ON\n" +
+                    "INNER JOIN  Employee ON\n" +
                     "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
                     "UsedProduct.itemBarcode = Item.itemBarcode\n" +
@@ -1193,17 +1220,6 @@ public class AdminController {
         //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
 
     }
-    @FXML
-    private Date fromDateAction(){
-        Date date = Date.valueOf(fromDatePicker.getValue());
-        return date;
-    }
-    @FXML
-    private Date toDateAction(){
-        Date date = Date.valueOf(toDatePicker.getValue());
-        return date;
-    }
-
 
     @FXML
     private void searchByItemNumberInUsed() {
@@ -1271,6 +1287,133 @@ public class AdminController {
         //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
 
     }
+
+    @FXML
+    private void searchByEmployeeBarcodeInUsed() {
+        int total = 0;
+
+        try {
+
+            /* SQL QUERY */
+//            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken FROM UsedProduct\n" +
+//                    "INNER JOIN  Employee ON\n" +
+//                    "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
+//                    "INNER JOIN Item ON\n" +
+//                    "UsedProduct.itemBarcode = Item.itemBarcode\n" +
+//                    "WHERE Employee.employeeName = ?;";
+            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken, SUM(quantityTaken) as Total FROM UsedProduct\n" +
+                    "INNER JOIN  Employee ON\n" +
+                    "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
+                    "INNER JOIN Item ON\n" +
+                    "UsedProduct.itemBarcode = Item.itemBarcode\n" +
+                    "WHERE Employee.employeeBarcode = ?\n" +
+                    "AND (timeTaken BETWEEN ? AND ?)\n" +
+                    "GROUP BY itemNo;";
+//            "AND (timeTaken BETWEEN curdate()-INTERVAL 30 DAY AND CURDATE()+1)\n" +
+
+            /* EXECUTION OF QUERY */
+            String employeeBarcode = tfSearch.getText();
+
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            preparedStatement.setString(1, employeeBarcode);
+            preparedStatement.setDate(2, fromDateAction());
+            preparedStatement.setDate(3, toDateAction());
+            ResultSet result = preparedStatement.executeQuery();
+
+            while ((result.next())) {
+
+                String name = result.getString("employeeName");
+                String itemNumber = result.getString("itemNo");
+                String itemName = result.getString("itemName");
+                String timeTaken = result.getString("timeTaken");
+                int quantityTaken = result.getInt("Total");
+                UsedProductObj usedProductObj = new UsedProductObj(name, itemNumber, itemName,  timeTaken, quantityTaken);
+
+                searchData.addAll(usedProductObj);
+
+            }
+        } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
+            e.printStackTrace();
+            System.out.println("Exception in searchByEmployeeNameInUsed() from AdminController class: " + e.getMessage());
+        }
+
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+        usedProductEmployeeNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("employeeName"));
+        usedProductItemNumberColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemNumber"));
+        usedProductItemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
+        usedProductTimeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
+        usedProductQuantityColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("quantityTaken"));
+
+        /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
+        usedProductTableView.getItems().setAll(searchData);
+        //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
+
+    }
+
+    @FXML
+    private void searchByItemBarcodeInUsed() {
+        int total = 0;
+
+        try {
+
+            /* SQL QUERY */
+//            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken FROM UsedProduct\n" +
+//                    "INNER JOIN  Employee ON\n" +
+//                    "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
+//                    "INNER JOIN Item ON\n" +
+//                    "UsedProduct.itemBarcode = Item.itemBarcode\n" +
+//                    "WHERE Employee.employeeName = ?;";
+            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken, SUM(quantityTaken) as Total FROM UsedProduct\n" +
+                    "INNER JOIN  Employee ON\n" +
+                    "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
+                    "INNER JOIN Item ON\n" +
+                    "UsedProduct.itemBarcode = Item.itemBarcode\n" +
+                    "WHERE Item.itemBarcode = ?\n" +
+                    "AND (timeTaken BETWEEN ? AND ?)\n" +
+                    "GROUP BY itemNo;";
+//            "AND (timeTaken BETWEEN curdate()-INTERVAL 30 DAY AND CURDATE()+1)\n" +
+
+            /* EXECUTION OF QUERY */
+            String employeeBarcode = tfSearch.getText();
+
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            preparedStatement.setString(1, employeeBarcode);
+            preparedStatement.setDate(2, fromDateAction());
+            preparedStatement.setDate(3, toDateAction());
+            ResultSet result = preparedStatement.executeQuery();
+
+            while ((result.next())) {
+
+                String name = result.getString("employeeName");
+                String itemNumber = result.getString("itemNo");
+                String itemName = result.getString("itemName");
+                String timeTaken = result.getString("timeTaken");
+                int quantityTaken = result.getInt("Total");
+                UsedProductObj usedProductObj = new UsedProductObj(name, itemNumber, itemName,  timeTaken, quantityTaken);
+
+                searchData.addAll(usedProductObj);
+
+            }
+        } catch (Exception e) {
+            MainViewController.updateWarningMessage("Error");
+            e.printStackTrace();
+            System.out.println("Exception in searchByEmployeeNameInUsed() from AdminController class: " + e.getMessage());
+        }
+
+        /* SETTING VALUES FROM OBJECT INTO COLUMNS */
+        usedProductEmployeeNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("employeeName"));
+        usedProductItemNumberColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemNumber"));
+        usedProductItemNameColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("itemName"));
+        usedProductTimeTakenColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("timeTaken"));
+        usedProductQuantityColumn.setCellValueFactory(new PropertyValueFactory<SearchObj, String>("quantityTaken"));
+
+        /* ADDING THE OBSERVABLE LIST TO THE TABLE VIEW */
+        usedProductTableView.getItems().setAll(searchData);
+        //searchData.clear();  //i did this because it would duplicate the last element if the item was returned
+
+    }
+
     private int countQuantity(){
 
 

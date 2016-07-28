@@ -25,6 +25,15 @@
             <HBox>
                <children>
                   <TextField fx:id="tfItemBarcode" onAction="#checkItemBarcode" promptText="Item barcode..." stylesheets="@../CSS/returnCSS.css" />
+                  <Label prefHeight="17.0" prefWidth="17.0" text="Label" visible="false" />
+                  <RadioButton fx:id="radioButton" mnemonicParsing="false" prefHeight="33.0" prefWidth="119.0" text="Functional" textFill="WHITE">
+                     <font>
+                        <Font name="Arial Black" size="13.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </RadioButton>
                </children>
             </HBox>
             <TableView fx:id="tableView" prefHeight="260.0" prefWidth="600.0">
@@ -37,6 +46,7 @@
                   <TableColumn fx:id="itemNameColumn" prefWidth="75.0" text="Item info" />
                   <TableColumn fx:id="placeColumn" prefWidth="75.0" text="Place" />
                   <TableColumn fx:id="timeTakenColumn" prefWidth="75.0" text="Time taken" />
+                  <TableColumn fx:id="functionalColumn" maxWidth="3000.0" minWidth="0.0" prefWidth="20.0" text="Functional" />
                </columns>
             </TableView>
             <HBox>

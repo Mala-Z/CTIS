@@ -30,7 +30,7 @@
                 </HBox>
                 <HBox>
                     <children>
-                  <TextField fx:id="tfQuantity" layoutX="10.0" layoutY="10.0" onAction="#checkQuantity" promptText="Quantity.." stylesheets="@../CSS/returnCSS.css" />
+                  <TextField fx:id="tfQuantity" layoutX="10.0" layoutY="10.0" maxHeight="27.0" maxWidth="167.0" minHeight="27.0" minWidth="167.0" onAction="#checkQuantity" prefHeight="27.0" prefWidth="167.0" promptText="Quantity.." stylesheets="@../CSS/returnCSS.css" />
                     </children>
                 </HBox>
                 <TableView fx:id="tableView" prefHeight="230.0" prefWidth="600.0">

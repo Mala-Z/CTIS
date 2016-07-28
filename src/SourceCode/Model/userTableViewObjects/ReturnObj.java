@@ -6,13 +6,15 @@ public class ReturnObj {
     private String itemName;
     private String place;
     private String timeTaken;
+    private String functional;
 
-    public ReturnObj(String employeeName, String itemCategory, String itemName, String place, String timeTaken) {
+    public ReturnObj(String employeeName, String itemCategory, String itemName, String place, String timeTaken, String functional) {
         this.employeeName = employeeName;
         this.itemCategory = itemCategory;
         this.itemName = itemName;
         this.place = place;
         this.timeTaken = timeTaken;
+        this.functional = functional;
     }
 
     public String getEmployeeName() {
@@ -53,5 +55,13 @@ public class ReturnObj {
 
     public void setTimeTaken(String timeTaken) {
         this.timeTaken = timeTaken;
+    }
+
+    public String getFunctional() {
+        return functional;
+    }
+
+    public void setFunctional(String functional) {
+        this.functional = functional;
     }
 }

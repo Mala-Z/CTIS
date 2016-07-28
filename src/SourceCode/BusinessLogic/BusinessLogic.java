@@ -1,5 +1,7 @@
 package SourceCode.BusinessLogic;
 
+import SourceCode.Controller.admin.CreateEmployeeController;
+import SourceCode.Controller.admin.CreateItemController;
 import SourceCode.Controller.main.MainViewController;
 import SourceCode.Model.adminTableViewObjects.CategoryObj;
 import SourceCode.Model.adminTableViewObjects.EmployeeObj;
@@ -27,6 +29,7 @@ public class BusinessLogic {
 
     /* METHOD FOR INSERTING EMPLOYEE INTO THE DATABASE */
     public void insertEmployee(int employeeBarcode, String employeeNo, String employeeName, String telephoneNo) throws MySQLIntegrityConstraintViolationException{
+        CreateEmployeeController createEmpCon = null;
         String sql = "INSERT INTO Employee VALUES (?, ?, ?)";
         String sql2 = "INSERT INTO PhoneNumber (id, phoneNumber, employeeBarcode) VALUES (null, ?, (SELECT employeeBarcode FROM Employee WHERE employeeBarcode =?));";
         try {
@@ -40,6 +43,11 @@ public class BusinessLogic {
             preparedStatement.executeUpdate();
             preparedStatement2.executeUpdate();
             MainViewController.updateAlertMessage("Registration successful");
+
+            createEmpCon.tfEmployeeBarcode.setText(String.valueOf(getNewEmployeeBarcode()));
+            createEmpCon.tfEmployeeNo.clear();
+            createEmpCon.tfEmployeeName.clear();
+            createEmpCon.tfPhoneNumber.clear();
         } catch (SQLException e) {
             e.printStackTrace();
             MainViewController.updateWarningMessage("Possible duplicates");
@@ -49,6 +57,8 @@ public class BusinessLogic {
 
     /* METHOD FOR INSERTING ITEM INTO THE DATABASE */
     public void insertItem(int itemBarcode, String itemNo, String itemName, String itemCategory) {
+        CreateItemController createItemCon = null;
+
         String sql = "INSERT INTO Item (itemBarcode, itemNo, itemName, itemCategory) VALUES (?, ?, ?, ?); ";
         //String sql2 = "INSERT INTO Category (id, category, itemBarcode) VALUES (null, ?, (SELECT itemBarcode FROM Item WHERE itemBarcode = ?));";
         try {
@@ -63,6 +73,11 @@ public class BusinessLogic {
             preparedStatement.executeUpdate();
             //preparedStatement2.executeUpdate();
             MainViewController.updateAlertMessage("Registration successful");
+
+            createItemCon.tfItemNo.clear();
+            createItemCon.tfItemName.clear();
+            createItemCon.tfItemBarcode.clear();
+            createItemCon.tfItemNo.requestFocus();
         } catch (SQLException e) {
             MainViewController.updateWarningMessage("Possible duplicates");
             e.printStackTrace();
@@ -260,7 +275,7 @@ public class BusinessLogic {
 
     /* METHOD FOR INSERTING INTO BORROWED ITEM TABLE */
     public void takeItem(ArrayList<WriteTakeToDB> arrayList) {
-        String sql = "INSERT INTO BorrowedItem VALUES (null, ?, ?, ?, null);";
+        String sql = "INSERT INTO BorrowedItem VALUES (null, ?, ?, ?, null, null);";
         String sql2 = "INSERT INTO Place VALUES (null, ?, ?, (SELECT id FROM BorrowedItem WHERE itemBarcode = ? AND timeReturned IS NULL));";
         Iterator<WriteTakeToDB> it = arrayList.iterator();
         while (it.hasNext()) {
@@ -307,7 +322,7 @@ public class BusinessLogic {
         }
     }
     public void returnItem(ArrayList<WriteReturnToDB> arrayList) {
-        String sql = "UPDATE BorrowedItem SET timeReturned = ? WHERE itemBarcode = ? AND timeReturned IS null;";
+        String sql = "UPDATE BorrowedItem SET timeReturned = ?, functional = ? WHERE itemBarcode = ? AND timeReturned IS null;";
 
         Iterator<WriteReturnToDB> it = arrayList.iterator();
         while (it.hasNext()) {
@@ -316,7 +331,8 @@ public class BusinessLogic {
 
                 PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
                 preparedStatement.setString(1, writeReturnToDB.getTimeReturned());
-                preparedStatement.setString(2, writeReturnToDB.getItembarcode());
+                preparedStatement.setString(2, writeReturnToDB.getFunctional());
+                preparedStatement.setString(3, writeReturnToDB.getItembarcode());
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -847,8 +863,8 @@ public class BusinessLogic {
         }
     }
 
-    public int getNewItemBarcode() {
-        int max = 0;
+    public long getNewItemBarcode() {
+        long max = 0;
         try {
             String sql = "SELECT MAX(itemBarcode) AS max FROM Item";
             PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
@@ -856,7 +872,7 @@ public class BusinessLogic {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                max = resultSet.getInt(1);
+                max = resultSet.getLong(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -864,6 +880,72 @@ public class BusinessLogic {
         }
         return max+1;
     }
+//    public long getNewItemBarcode2(){
+//        System.out.println(1);
+//        CreateItemController createItemCon = new CreateItemController();
+//        long max = 0;
+//        //without key and cleaning department categories
+//        ObservableList<String> filteredList = FXCollections.observableArrayList();
+//        filteredList.addAll(getCategory());
+//        filteredList.remove("Key");
+//        filteredList.remove("Cleaning department");
+//        System.out.println(2);
+////        if (checkItemPrimaryKey()){
+////            System.out.println(3);
+////            createItemCon.tfItemBarcode.setText("10000");
+////        }
+//         if(createItemCon.categoryCombo.getSelectionModel().getSelectedItem().toString().equals("Key")){
+//            System.out.println(4);
+//            try {
+//                String sql = "SELECT MAX(itemBarcode) AS max FROM Item WHERE itemCategory = 'Key'";
+//                PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+//
+//                ResultSet resultSet = preparedStatement.executeQuery();
+//
+//                while (resultSet.next()) {
+//                    max = resultSet.getLong(1);
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//                System.out.println("Error in getNewItemBarcode2() from BusinessLogic class: "  + e.getMessage());
+//            }
+//
+//        }
+//        else if(createItemCon.categoryCombo.getSelectionModel().getSelectedItem().toString().equals("Cleaning department")){
+//            System.out.println(5);
+//            try {
+//                String sql = "SELECT MAX(itemBarcode) AS max FROM Item WHERE itemCategory = 'Cleaning department'";
+//                PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+//
+//                ResultSet resultSet = preparedStatement.executeQuery();
+//
+//                while (resultSet.next()) {
+//                    max = resultSet.getLong(1);
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//                System.out.println("Error in getNewItemBarcode2() from BusinessLogic class: "  + e.getMessage());
+//            }
+//
+//        }
+//        else if(createItemCon.categoryCombo.getSelectionModel().getSelectedItem().equals(filteredList)){
+//            System.out.println(6);
+//            try {
+//                String sql = "SELECT MAX(itemBarcode) AS max FROM Item WHERE itemCategory != 'Cleaning department' AND itemCategory != 'Key'";
+//                PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+//
+//                ResultSet resultSet = preparedStatement.executeQuery();
+//
+//                while (resultSet.next()) {
+//                    max = resultSet.getLong(1);
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//                System.out.println("Error in getNewItemBarcode2() from BusinessLogic class: "  + e.getMessage());
+//            }
+//        }
+//        return max+1;
+//    }
     public int getNewEmployeeBarcode() {
         int max = 0;
         try {
@@ -902,6 +984,26 @@ public class BusinessLogic {
         }
         return false;
     }
+//    public String checkItemCategory() {
+//        try {
+//            String sql = "SELECT itemCategory FROM Item";
+//
+//            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+//
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//
+//            if (resultSet.next()) {
+//                return false;
+//            } else {
+//                return true;
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            System.out.println("Error in checkItemPrimaryKey() in BusinessLogic");
+//        }
+//        return false;
+//    }
+
     //Used to determine if there are existing primary keys or not
     public boolean checkEmployeePrimaryKey(){
         try {
@@ -922,5 +1024,20 @@ public class BusinessLogic {
         }
         return false;
     }
+    public void insertFunctional(String itemBarcode, String functional) {
+        String sql = "INSERT INTO Functional (itemBarcode, functional) VALUES (?, ?); ";
+        try {
+            PreparedStatement preparedStatement = connectDB.preparedStatement(sql);
+            preparedStatement.setString(1, itemBarcode);
+            preparedStatement.setString(2, functional);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            MainViewController.updateWarningMessage("Error");
+            e.printStackTrace();
+            System.out.println("Error in insertFunctional() from BusinessLogic class: " + e.getMessage());
+        }
+    }
+
 
 }

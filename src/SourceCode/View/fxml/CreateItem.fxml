@@ -62,7 +62,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <ComboBox fx:id="categoryCombo" layoutX="118.0" layoutY="277.0" prefHeight="27.0" prefWidth="166.0" promptText="Category.." />
+            <ComboBox fx:id="categoryCombo" layoutX="118.0" layoutY="277.0" onAction="#checkCategoryCombo" prefHeight="27.0" prefWidth="166.0" promptText="Category.." />
          </children>
       </AnchorPane>
    </center>

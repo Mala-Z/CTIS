@@ -32,7 +32,7 @@
                <children>
                   <TextField fx:id="tfEmployeeBarcode" maxHeight="27.0" maxWidth="167.0" minHeight="27.0" minWidth="167.0" onAction="#checkEmployeeBarcode" pickOnBounds="false" prefHeight="27.0" prefWidth="167.0" promptText="Employee barcode..." stylesheets="@../CSS/takeCSS.css" />
                   <Region prefHeight="27.0" prefWidth="30.0" />
-                  <ComboBox fx:id="placeCombo" onAction="#comboBoxAction" opacity="0.76" prefHeight="27.0" prefWidth="208.0" promptText="Select placement the item">
+                  <ComboBox fx:id="placeCombo" maxHeight="27.0" maxWidth="208.0" minHeight="27.0" minWidth="208.0" onAction="#comboBoxAction" opacity="0.76" prefHeight="27.0" prefWidth="208.0" promptText="Select placement the item">
                      <effect>
                         <InnerShadow color="#a5ddca" />
                      </effect>
@@ -42,9 +42,9 @@
             </HBox>
             <HBox>
                <children>
-                  <TextField fx:id="tfItemBarcode" onAction="#checkItemBarcode" pickOnBounds="false" promptText="Item barcode..." stylesheets="@../CSS/takeCSS.css" />
+                  <TextField fx:id="tfItemBarcode" maxHeight="27.0" maxWidth="167.0" minHeight="27.0" minWidth="167.0" onAction="#checkItemBarcode" pickOnBounds="false" prefHeight="27.0" prefWidth="167.0" promptText="Item barcode..." stylesheets="@../CSS/takeCSS.css" />
                   <Region prefHeight="27.0" prefWidth="30.0" />
-                  <TextField fx:id="tfPlaceReference" prefHeight="27.0" prefWidth="208.0" promptText="Placement info..." />
+                  <TextField fx:id="tfPlaceReference" maxHeight="27.0" maxWidth="208.0" minHeight="27.0" minWidth="208.0" prefHeight="27.0" prefWidth="208.0" promptText="Placement info..." />
                </children>
             </HBox>
             <TableView fx:id="tableView" prefHeight="260.0" prefWidth="400.0">

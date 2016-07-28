@@ -17,15 +17,14 @@ public class CreateEmployeeController {
     @FXML
     private Button btnCancel;
     @FXML
-    private TextField tfEmployeeBarcode;
+    public TextField tfEmployeeBarcode;
     @FXML
-    private TextField tfEmployeeNo;
+    public TextField tfEmployeeNo;
     @FXML
-    private TextField tfEmployeeName;
+    public TextField tfEmployeeName;
     @FXML
-    private TextField tfPhoneNumber;
+    public TextField tfPhoneNumber;
 
-    private RunView runView;
 
 
     @FXML
@@ -79,15 +78,17 @@ public class CreateEmployeeController {
     @FXML
     private void btnSubmit() throws Exception{
         try {
-            if (tfEmployeeBarcode.getLength() > 0 && tfEmployeeNo.getLength() > 0 && tfEmployeeName.getLength() > 0 && tfPhoneNumber.getLength() > 0) {
+            if (tfEmployeeBarcode.getLength() > 0 && tfEmployeeNo.getLength() > 0 && tfEmployeeName.getLength() > 0 && tfPhoneNumber.getLength() > 0)
+            {
                 businessLogic.insertEmployee(Integer.parseInt(tfEmployeeBarcode.getText()), tfEmployeeNo.getText(), tfEmployeeName.getText(), tfPhoneNumber.getText());
+                //we clear the textfields inside the method "insertEmployee"
 
                 tfEmployeeBarcode.requestFocus();//so we can create a new employee
                 //tfEmployeeBarcode.clear();
-                tfEmployeeBarcode.setText(String.valueOf(businessLogic.getNewEmployeeBarcode()));
-                tfEmployeeNo.clear();
-                tfEmployeeName.clear();
-                tfPhoneNumber.clear();
+//                tfEmployeeBarcode.setText(String.valueOf(businessLogic.getNewEmployeeBarcode()));
+//                tfEmployeeNo.clear();
+//                tfEmployeeName.clear();
+//                tfPhoneNumber.clear();
             } else {
                 MainViewController.updateAlertMessage("Please insert values in all fields to be able to save an employee");
             }

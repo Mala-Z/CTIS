@@ -8,14 +8,16 @@ public class BorrowedItemObj {
     private String itemName;
     private String timeTaken;
     private String timeReturned;
+    private String functional;
 
-    public BorrowedItemObj(String employeeName, String itemCategory, String itemNumber, String itemName, String timeTaken, String timeReturned) {
+    public BorrowedItemObj(String employeeName, String itemCategory, String itemNumber, String itemName, String timeTaken, String timeReturned, String functional) {
         this.employeeName = employeeName;
         this.itemCategory = itemCategory;
         this.itemNumber = itemNumber;
         this.itemName = itemName;
         this.timeTaken = timeTaken;
         this.timeReturned = timeReturned;
+        this.functional = functional;
     }
 
     public String getEmployeeName() {
@@ -64,5 +66,13 @@ public class BorrowedItemObj {
 
     public void setTimeReturned(String timeReturned) {
         this.timeReturned = timeReturned;
+    }
+
+    public String getFunctional() {
+        return functional;
+    }
+
+    public void setFunctional(String functional) {
+        this.functional = functional;
     }
 }
