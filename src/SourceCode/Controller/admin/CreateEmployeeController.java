@@ -27,6 +27,13 @@ public class CreateEmployeeController {
 
 
 
+
+    public void setEmployeeBarcodeTextField(String text){
+        tfEmployeeBarcode.setText(text);
+    }
+    public void setEmployeeName(){
+        tfEmployeeName.clear();
+    }
     @FXML
     private void initialize()
     {
@@ -82,19 +89,22 @@ public class CreateEmployeeController {
             {
                 businessLogic.insertEmployee(Integer.parseInt(tfEmployeeBarcode.getText()), tfEmployeeNo.getText(), tfEmployeeName.getText(), tfPhoneNumber.getText());
                 //we clear the textfields inside the method "insertEmployee"
+//                System.out.println(1);
 
-                tfEmployeeBarcode.requestFocus();//so we can create a new employee
+                tfEmployeeNo.requestFocus();//so we can create a new employee
+//                System.out.println(2);
                 //tfEmployeeBarcode.clear();
 //                tfEmployeeBarcode.setText(String.valueOf(businessLogic.getNewEmployeeBarcode()));
 //                tfEmployeeNo.clear();
 //                tfEmployeeName.clear();
 //                tfPhoneNumber.clear();
+                tfEmployeeBarcode.setText(String.valueOf(businessLogic.getNewEmployeeBarcode()));
             } else {
                 MainViewController.updateAlertMessage("Please insert values in all fields to be able to save an employee");
             }
 
         } catch(Exception e) {
-            System.out.println("Exception in btnsubmit, CreateEmployee: " + e);
+            System.out.println("Exception in btnsubmit, CreateEmployee class: " + e);
         }
     }
 

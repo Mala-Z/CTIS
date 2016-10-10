@@ -1,7 +1,10 @@
 package SourceCode.BusinessLogic;
 
+import SourceCode.Controller.admin.CreateEmployeeController;
+
 public class Factory {
     public static ConnectDB connectDB = null;
+    public static CreateEmployeeController createEmployeeController = null;
 
     /* CONSTRUCTOR */
     public Factory() throws Exception{
@@ -15,5 +18,12 @@ public class Factory {
             return connectDB;
         }
         return connectDB;
+    }
+    public static CreateEmployeeController getEmployeeInstance() throws Exception{
+        if (createEmployeeController == null){
+            createEmployeeController = new CreateEmployeeController();
+            return createEmployeeController;
+        }
+        return createEmployeeController;
     }
 }

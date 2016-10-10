@@ -14,6 +14,7 @@ import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationExceptio
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TextField;
 
 import java.sql.*;
 import java.text.ParseException;
@@ -29,7 +30,6 @@ public class BusinessLogic {
 
     /* METHOD FOR INSERTING EMPLOYEE INTO THE DATABASE */
     public void insertEmployee(int employeeBarcode, String employeeNo, String employeeName, String telephoneNo) throws MySQLIntegrityConstraintViolationException{
-        CreateEmployeeController createEmpCon = null;
         String sql = "INSERT INTO Employee VALUES (?, ?, ?)";
         String sql2 = "INSERT INTO PhoneNumber (id, phoneNumber, employeeBarcode) VALUES (null, ?, (SELECT employeeBarcode FROM Employee WHERE employeeBarcode =?));";
         try {
@@ -44,10 +44,7 @@ public class BusinessLogic {
             preparedStatement2.executeUpdate();
             MainViewController.updateAlertMessage("Registration successful");
 
-            createEmpCon.tfEmployeeBarcode.setText(String.valueOf(getNewEmployeeBarcode()));
-            createEmpCon.tfEmployeeNo.clear();
-            createEmpCon.tfEmployeeName.clear();
-            createEmpCon.tfPhoneNumber.clear();
+
         } catch (SQLException e) {
             e.printStackTrace();
             MainViewController.updateWarningMessage("Possible duplicates");
@@ -57,7 +54,7 @@ public class BusinessLogic {
 
     /* METHOD FOR INSERTING ITEM INTO THE DATABASE */
     public void insertItem(int itemBarcode, String itemNo, String itemName, String itemCategory) {
-        CreateItemController createItemCon = null;
+//        CreateItemController createItemCon = null;
 
         String sql = "INSERT INTO Item (itemBarcode, itemNo, itemName, itemCategory) VALUES (?, ?, ?, ?); ";
         //String sql2 = "INSERT INTO Category (id, category, itemBarcode) VALUES (null, ?, (SELECT itemBarcode FROM Item WHERE itemBarcode = ?));";
@@ -74,10 +71,10 @@ public class BusinessLogic {
             //preparedStatement2.executeUpdate();
             MainViewController.updateAlertMessage("Registration successful");
 
-            createItemCon.tfItemNo.clear();
-            createItemCon.tfItemName.clear();
-            createItemCon.tfItemBarcode.clear();
-            createItemCon.tfItemNo.requestFocus();
+//            createItemCon.tfItemNo.clear();
+//            createItemCon.tfItemName.clear();
+//            createItemCon.tfItemBarcode.clear();
+//            createItemCon.tfItemNo.requestFocus();
         } catch (SQLException e) {
             MainViewController.updateWarningMessage("Possible duplicates");
             e.printStackTrace();

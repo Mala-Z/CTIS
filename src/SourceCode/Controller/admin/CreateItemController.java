@@ -120,11 +120,11 @@ public class CreateItemController {
 
     //Method for letting the user now which barcode is free for taking
     private void chooseBarcode(){
-        if (businessLogic.checkItemPrimaryKey()){
-            tfItemBarcode.setText("10000");
-        }else {
+//        if (businessLogic.checkItemPrimaryKey()){
+//            tfItemBarcode.setText("10000");
+//        }else {
             tfItemBarcode.setText(String.valueOf(getNewItemBarcode()));
-        }
+//        }
     }
     public long getNewItemBarcode(){
         ConnectDB connectDB = Factory.connectDB;

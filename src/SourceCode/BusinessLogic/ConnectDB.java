@@ -20,17 +20,17 @@ public class ConnectDB {
     private static void connectToDatabase() throws Exception{
         System.out.println("***********Welcome to Racoon**************");
         try {
-//            String DB_URL = "jdbc:mysql://ctis-racoon.c7zmk0iubeje.eu-central-1.rds.amazonaws.com:3306/ctisracoon";
-            String DB_URL = "jdbc:mysql://racooninstance2.cvyqa3epehmt.eu-west-1.rds.amazonaws.com:3306/racoondatabase2"+
-                    "?verifyServerCertificate=false"+
-                    "&useSSL=true"+
-                    "&requireSSL=true";
-            String USER = "racoonid";
-            String PASS = "racoonpass";
+////            String DB_URL = "jdbc:mysql://ctis-racoon.c7zmk0iubeje.eu-central-1.rds.amazonaws.com:3306/ctisracoon";
+//            String DB_URL = "jdbc:mysql://"+
+//                    "?verifyServerCertificate=false"+
+//                    "&useSSL=true"+
+//                    "&requireSSL=true";
+//            String USER = "";
+//            String PASS = "";
 
-//            String DB_URL = "jdbc:mysql://37.139.9.54:3306/newdatabase";
-//            String USER = "user";
-//            String PASS = "Chris344";
+            String DB_URL = "jdbc:mysql://127.0.0.1:8889/test";
+            String USER = "root";
+            String PASS = "root";
 //            String DB_URL = "jdbc:mysql://sql7.freesqldatabase.com:3306/sql7124928";
 //            String USER = "sql7124928";
 //            String PASS = "9XriJpDLDw";

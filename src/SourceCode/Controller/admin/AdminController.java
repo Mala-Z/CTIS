@@ -1455,7 +1455,7 @@ public class AdminController {
         try {
 
             /* SQL QUERY */
-            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, quantityTaken FROM UsedProduct\n" +
+            String sql = "SELECT employeeName, itemNo, itemName, timeTaken, SUM(quantityTaken) total FROM UsedProduct\n" +
                     "INNER JOIN  Employee ON\n" +
                     "UsedProduct.employeeBarcode = Employee.employeeBarcode\n" +
                     "INNER JOIN Item ON\n" +
@@ -1475,7 +1475,7 @@ public class AdminController {
                 String itemNumber = result.getString("itemNo");
                 String itemName = result.getString("itemName");
                 String timeTaken = result.getString("timeTaken");
-                int quantityTaken = result.getInt("quantityTaken");
+                int quantityTaken = result.getInt("total");
                 UsedProductObj usedProductObj = new UsedProductObj(employeeName, itemNumber, itemName,  timeTaken, quantityTaken);
 
                 searchData.addAll(usedProductObj);

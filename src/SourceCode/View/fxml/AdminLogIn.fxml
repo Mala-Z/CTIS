@@ -27,8 +27,8 @@
                   <Font name="Arial Black" size="36.0" />
                </font>
             </Label>
-            <TextField fx:id="tfUsername" layoutX="99.0" layoutY="154.0" promptText="enter your username.." text="user" />
-            <PasswordField fx:id="tfPassword" layoutX="99.0" layoutY="215.0" onAction="#tfLoginAction" promptText="enter your password.." text="pass" />
+            <TextField fx:id="tfUsername" layoutX="99.0" layoutY="154.0" promptText="enter your username.." />
+            <PasswordField fx:id="tfPassword" layoutX="99.0" layoutY="215.0" onAction="#tfLoginAction" promptText="enter your password.." />
             <Button fx:id="btnCancel" layoutX="99.0" layoutY="262.0" mnemonicParsing="false" onAction="#btnCancelAction" style="-fx-background-color: #8CD0BB;" text="Cancel" textFill="WHITE">
                <font>
                   <Font name="Arial Black" size="13.0" />
