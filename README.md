@@ -29,3 +29,5 @@ Cristian Pandele, Paula Patrunuel, Marco Suarez
 License
 
 license (Java, JavaFx, MySQL, etc.)
+
+![stack Overflow](http://lmsotfy.com/so.png)
